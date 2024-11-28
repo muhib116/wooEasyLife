@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.toplevel_page_woo-life-changer :is(#wpcontent, #wpfooter) {
+    margin-left: 140px !important;
+}
+
+.toplevel_page_woo-life-changer.folded :is(#wpcontent, #wpfooter) {
+    margin-left: 16px !important;
+}
+.toplevel_page_woo-life-changer {
+    h1, h2, h3, h4, h5, h6{
+        color: inherit;
+    }
+}

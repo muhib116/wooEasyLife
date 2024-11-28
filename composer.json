@@ -1,0 +1,23 @@
+{
+    "name": "wooeasylife/wooeasylife-plugin",
+    "type": "wordpress-plugin",
+    "description": "WooEasyLife is a WordPress plugin for WooCommerce enhancements.",
+    "autoload": {
+        "psr-4": {
+            "WooEasyLife\\Admin\\": "admin/",
+            "WooEasyLife\\Frontend\\": "frontend/",
+            "WooEasyLife\\Includes\\": "includes/",
+            "WooEasyLife\\API\\": "api/"
+        },
+        "files": [
+            "helpers/helpers.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Muhibbullah Ansary",
+            "email": "muhibbullah611@gmail.com"
+        }
+    ],
+    "require": {}
+}
