@@ -1,6 +1,6 @@
 <template>
     <div class="grid gap-4">
-        <div v-if="shippingAddressClone && shippingAddressClone.type == 'shipping'" class="flex gap-4">
+        <div v-if="address && address.type == 'shipping'" class="flex gap-4">
             <Button.Native 
                 class="font-light text-blue-500 hover:text-orange-500"
                 @click="loadShippingAddress"
@@ -69,7 +69,7 @@
                 v-model="shippingAddressClone.country"
             />
         </div>
-        <div class="grid grid-cols-2 gap-4">
+        <div v-if="address.type=='billing'" class="grid grid-cols-2 gap-4">
             <Input.Primary
                 label="Email"
                 v-model="shippingAddressClone.email"
@@ -79,13 +79,13 @@
                 v-model="shippingAddressClone.phone"
             />
         </div>
-        <div v-if="shippingAddressClone.hasOwnProperty('transaction_id')">
+        <div v-if="address.hasOwnProperty('transaction_id')">
             <Input.Primary
                 label="Transaction ID"
                 v-model="shippingAddressClone.transaction_id"
             />
         </div>
-        <div v-if="shippingAddressClone.hasOwnProperty('customer_note')">
+        <div v-if="address.hasOwnProperty('customer_note')">
             <Textarea.Native
                 label="Transaction ID"
                 v-model="shippingAddressClone.customer_note"
@@ -110,7 +110,10 @@
         if(!confirm('Copy billing information to shipping information? This will remove any currently entered shipping information.')) {
             return
         }
-        shippingAddressClone.value = props.billingAddress
+        if(props.address.type == 'shipping'){
+            shippingAddressClone.value = props.billingAddress
+            shippingAddressClone.value.type = 'shipping'
+        }
     }
 
     const loadShippingAddress = () => {

@@ -5,26 +5,40 @@
                 {{ title }}
             </h3>
 
-            <Button.Primary
-                v-if="isEditable"
-                :class="isEditable ? 'animate-bounce' : 'opacity-60'"
-                @onClick="handleUpdate"
-                icon="PhCheck"
-                title="Click to save"
-            >
-                Save
-            </Button.Primary>
-            <Button.Native
-                v-else
-                class="!p-0 bg-transparent shadow-none opacity-60"
-                @onClick="handleUpdate"
-                title="Click to edit"
-            >
-                <Icon
-                    name="PhNotePencil"
-                    size="25"
-                />
-            </Button.Native>
+            <div class="flex gap-4">
+                <Button.Native
+                    v-if="isEditable"
+                    @onClick="isEditable = false"
+                    title="Back to preview"
+                    class="gap-1"
+                >
+                    <Icon
+                        name="PhCaretLeft"
+                        size="25"
+                    />
+                    Back
+                </Button.Native>
+                <Button.Primary
+                    v-if="isEditable"
+                    :class="isEditable ? 'animate-pulse' : 'opacity-60'"
+                    @onClick="handleUpdate"
+                    icon="PhCheck"
+                    title="Click to save"
+                >
+                    Save
+                </Button.Primary>
+                <Button.Native
+                    v-else
+                    class="!p-0 bg-transparent shadow-none opacity-60"
+                    @onClick="handleUpdate"
+                    title="Click to edit"
+                >
+                    <Icon
+                        name="PhNotePencil"
+                        size="25"
+                    />
+                </Button.Native>
+            </div>
         </div>
 
         <AddressForm
@@ -53,15 +67,22 @@
 
     const {
         handleAddressEdit
+        
     } = inject('useAddress')
-    const isEditable = ref(false)
+    const {
+        getOrders
+    } = inject('useOrders')
 
+    const isEditable = ref(false)
     const handleUpdate = async (btn) => {
         if(isEditable.value){
             try {
                 btn.isLoading = true
-                const data = await handleAddressEdit(props.address)
-                console.log(data)
+                await handleAddressEdit(props.address)
+
+                if(props.address.type='shipping'){
+                    getOrders()
+                }
             } finally {
                 btn.isLoading = false
             }

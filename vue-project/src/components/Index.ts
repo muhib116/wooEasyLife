@@ -9,6 +9,7 @@ import Button from './button/Index'
 import Loader from './loader/Index.vue'
 import Input from './input/Index'
 import Textarea from './textarea/Index'
+import Image from './image/Image.vue'
 
 export {
     Icon,
@@ -21,5 +22,6 @@ export {
     Button,
     Loader,
     Input,
-    Textarea
+    Textarea,
+    Image
 }

@@ -88,47 +88,19 @@ const menus = [
     title: "Dashboard",
     to: {
         name: "home",
-    },
-    icon: "",
-    type: "link",
+    }
   },
   {
     title: "Orders",
     to: {
         name: "orders",
-    },
-    icon: "",
-    type: "link",
+    }
   },
   {
-    title: "Customer Followup",
-    path: "/customer-followup",
-    icon: "",
-    type: "link",
-  },
-  {
-    title: "Courier Manage",
-    path: "/courier-manage",
-    icon: "/",
-    type: "link",
-  },
-  {
-    title: "SMS Manage",
-    path: "./",
-    icon: "",
-    type: "link",
-  },
-  {
-    title: "IP Blocker",
-    path: "./",
-    icon: "",
-    type: "link",
-  },
-  {
-    title: "",
-    path: "",
-    icon: "",
-    type: "link",
+    title: "Fraud Check",
+    to: {
+        name: "fraudCheck",
+    }
   },
 ];
 </script>

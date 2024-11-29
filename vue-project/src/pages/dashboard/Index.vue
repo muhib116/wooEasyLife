@@ -1,7 +1,7 @@
 <template>
     <Layout>
         <Container>
-            <div class="grid gap-8 py-10">
+            <div class="grid gap-8">
                 <TodaysData />
                 <FilteredData />
             </div>

@@ -33,11 +33,13 @@
             <slot v-if="!hideFooter" name="footer">
                 <footer class="flex justify-end gap-5 items-center border-t pt-3">
                     <Button.Outline
+                        v-if="cancelText"
                         @click="$emit('close')"
                     >
                         {{ cancelText }}
                     </Button.Outline>
                     <Button.Primary
+                        v-if="confirmText"
                         @click="$emit('confirm')"
                     >
                         {{ confirmText }}
@@ -66,8 +68,6 @@
     }
     withDefaults(defineProps<Props>(), {
         title: "Title",
-        cancelText: 'Cancel',
-        confirmText: 'Confirm',
         hideHeader: false,
         hideFooter: false,
     })

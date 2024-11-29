@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <div class="flex gap-2">
             <strong>Name: </strong>
             <div>
@@ -46,13 +45,20 @@
                 {{ address.country }}
             </div>
         </div>
-        <div v-if="address.email" class="flex gap-2">
+        
+        <div 
+            v-if="address.email && address.type == 'billing'" 
+            class="flex gap-2"
+        >
             <strong>Email: </strong>
             <div>
                 {{ address.email }}
             </div>
         </div>
-        <div class="flex gap-2">
+        <div
+            v-if="address.phone && address.type == 'billing'"  
+            class="flex gap-2"
+        >
             <strong>Phone: </strong>
             <div>
                 {{ address.phone || 'n/a' }}

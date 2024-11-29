@@ -7,17 +7,15 @@ if(location.hostname == 'localhost'){
     baseUrl = location.origin
 }
 
-console.log({baseUrl})
-
 export const localApiBaseURL = `${baseUrl}/wp-json/wooeasylife/v1`
+
+// local function
 export const getPaymentMethods = async () => {
     return await axios.get(`${localApiBaseURL}/payment-methods`)
 }
-
 export const getOrderList = async () => {
     return await axios.get(`${localApiBaseURL}/orders`)
 }
-
 export const updateAddress = async (payload) => {
     return await axios.post(`${localApiBaseURL}/update-address/${payload.order_id}`, payload)
 }
