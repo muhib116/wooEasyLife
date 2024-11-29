@@ -1,0 +1,3 @@
+<template>
+    Sms config
+</template>

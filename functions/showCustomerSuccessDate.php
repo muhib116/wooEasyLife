@@ -90,7 +90,6 @@ function add_custom_heading_after_order_details($order) {
             .fraud-history-container .fraud-history-table {
                 width: 100%;
                 border-collapse: collapse;
-                margin-top: 15px;
             }
 
             .fraud-history-container .fraud-history-table thead th {
@@ -99,7 +98,7 @@ function add_custom_heading_after_order_details($order) {
                 font-weight: 400;
                 text-align: left;
                 padding: 12px;
-                border-bottom: 2px solid #ddd;
+                border-bottom: 1px solid #ddd;
             }
 
             .fraud-history-container .fraud-history-table tbody td {

@@ -50,12 +50,14 @@
 
             <ul class="flex gap-3">
                 <li>
-                <a
-                    href="#"
-                    class="text-gray-400 hover:text-gray-500 py-4 inline-flex"
-                >
-                    <Icon name="PhGearSix" size="28" />
-                </a>
+                    <RouterLink
+                        :to="{
+                            name: 'config'
+                        }"
+                        class="text-gray-400 hover:text-gray-500 py-4 inline-flex"
+                    >
+                        <Icon name="PhGearSix" size="28" />
+                    </RouterLink>
                 </li>
                 <li>
                 <a
