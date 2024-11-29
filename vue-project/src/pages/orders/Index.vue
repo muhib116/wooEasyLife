@@ -1,14 +1,12 @@
 <template>
     <Layout>
         <Container>
-            <div class="flex gap-6 w-full">
+            <div class="flex gap-6 w-full items-start">
                 <Card.Native class="flex-1 !px-0">
                     <OrderList />
                 </Card.Native>
-                <Card.Native class="basis-1/4">
-                    <ActionMenu
-                        class="sticky top-0"
-                    />
+                <Card.Native class="basis-1/4 px-0 sticky top-12">
+                    <ActionMenu />
                 </Card.Native>
             </div>
         </Container>

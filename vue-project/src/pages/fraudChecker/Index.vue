@@ -2,7 +2,7 @@
     <Layout>
         <Container>
             <div class="max-w-[600px] mx-auto mt-20">
-                <div class="bg-red-100 flex rounded-l shadow mb-4">
+                <div class="bg-red-100 flex rounded-l shadow mb-4 text-lg">
                     <Input.Native 
                         name="phone"
                         class="flex-1 w-full px-5"
@@ -12,7 +12,7 @@
                     <Button.Primary
                         @onClick="handleFraudCheck"
                         class="bg-orange-500"
-                        :class="phone.length == 11 ? '' : 'opacity-60 pointer-events-none'"
+                        :class="phone.length == 11 ? '' : 'opacity-80 pointer-events-none'"
                     >
                         Check Now
                     </Button.Primary>

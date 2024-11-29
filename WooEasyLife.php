@@ -27,6 +27,7 @@ require_once __DIR__ . '/functions/loadAdminScripts.php';
 
 add_action( 'plugins_loaded', function(){
     // Initialize the API class
+    require_once __DIR__ . '/functions/showCustomerSuccessDate.php';
 
     /**
      * API Path
@@ -67,4 +68,11 @@ add_action( 'plugins_loaded', function(){
      *   }
      */
     new WooEasyLife\Admin\UpdateAddress();
+
+    /**
+     * customer ip, phone block, list, and edit
+     */
+    // new WooEasyLife\Admin\BlockFakeCustomer();
+
+
 });

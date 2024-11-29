@@ -15,6 +15,16 @@
             subtitle="Book courier for selected items."
             iconName="PhTruck"
         />
+        <MenuButton
+            title="Block Ip"
+            subtitle="Book courier for selected items."
+            iconName="PhTruck"
+        />
+        <MenuButton
+            title="Block Phone"
+            subtitle="Block phone number for selected items."
+            iconName="PhSimCard"
+        />
     </div>
 </template>
 
