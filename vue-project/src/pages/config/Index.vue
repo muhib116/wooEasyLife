@@ -8,10 +8,10 @@
                     <h3 class="text-2xl font-semibold">Settings</h3>
                 </div>
                 <div class="flex h-full">
-                    <LeftSideMenu
-                        class="w-[255px] border-r h-full pr-5 py-5"
-                    />
-                    <div class="p-5">
+                    <div class="h-[calc(100%-50px)] flex-shrink-0 overflow-auto w-[255px] pr-5 py-5">
+                        <LeftSideMenu />
+                    </div>
+                    <div class="p-5 border-l bg-gray-100 w-full h-[calc(100%-50px)] overflow-auto">
                         <RouterView />
                     </div>
                 </div>

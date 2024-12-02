@@ -50,6 +50,13 @@
         },
         {
             to: {
+                name: "courier"
+            },
+            title: 'Courier',
+            iconName: 'PhPackage'
+        },
+        {
+            to: {
                 name: "recharge"
             },
             title: 'Recharge',
