@@ -10,6 +10,8 @@ import Loader from './loader/Index.vue'
 import Input from './input/Index'
 import Textarea from './textarea/Index'
 import Image from './image/Image.vue'
+import ColorPicker from './ColorPicker.vue'
+import ThreeDotActionButton from './ThreeDotActionButton.vue'
 
 export {
     Icon,
@@ -23,5 +25,7 @@ export {
     Loader,
     Input,
     Textarea,
-    Image
+    Image,
+    ColorPicker,
+    ThreeDotActionButton
 }

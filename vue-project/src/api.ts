@@ -29,3 +29,10 @@ export const getOrderStatistics = async (payload: {
     const { data } = await axios.get(`${localApiBaseURL}/order-stats`, { params:payload })
     return data
 }
+
+
+// custom order status
+export const getCustomStatusList = async () => {
+    const { data } = await axios.get(`${localApiBaseURL}/statuses`)
+    return data
+}

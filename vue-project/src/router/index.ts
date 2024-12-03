@@ -6,9 +6,10 @@ import ConfigView from '@/pages/config/Index.vue'
 import SMSConfigView from '@/pages/config/smsConfig/Index.vue'
 import LicenseView from '@/pages/config/license/Index.vue'
 import SendSmsView from '@/pages/config/sendSms/Index.vue'
-import RechargeView from '@/pages/config/recherge/Index.vue'
+import RechargeView from '@/pages/config/recharge/Index.vue'
 import IntegrationView from '@/pages/config/integration/Index.vue'
 import CourierView from '@/pages/config/courier/Index.vue'
+import CustomStatusView from '@/pages/config/customStatus/Index.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -62,6 +63,11 @@ const router = createRouter({
           path: '/courier',
           name: 'courier',
           component: CourierView
+        },
+        {
+          path: '/custom-status',
+          name: 'customStatus',
+          component: CustomStatusView
         },
       ]
     },

@@ -5,6 +5,8 @@
             <p class="opacity-60 text-[18px]">Here is the filtered data, now you are watching last 7 days data</p>
         </div>
 
+        {{ orderStatistics }}
+
         <div class="grid grid-cols-4 gap-6">
             <Card.Stylist
                 class="bg-green-600"
@@ -74,4 +76,9 @@
 </template>
 <script setup lang="ts">
     import { Card } from '@components'
+    import { inject } from 'vue'
+
+    const {
+        orderStatistics
+    } = inject('useDashboard')
 </script>

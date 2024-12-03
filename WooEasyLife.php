@@ -76,4 +76,6 @@ add_action( 'plugins_loaded', function(){
 
 
     new WooEasyLife\Admin\OrderStatisticsAPI();
+    new WooEasyLife\Admin\CustomOrderStatusAPI();
+
 });

@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-    import { Table, Loader, Heading, Icon } from '@components'
+    import { Table, Loader, Heading } from '@components'
     import { inject } from 'vue'
     import TableHeader from './fragments/TableHeader.vue'
     import TableRow from './fragments/TableRow.vue'

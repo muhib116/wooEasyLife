@@ -6,35 +6,35 @@
         />
         <TabHeader
             :activeTab="activeTab"
-            :data="courierCompanyNames"
+            :data="tabs"
             :hasUnsavedData="hasUnsavedData"
-            @onTabChange="changeTab"
+            @onTabChange="tabChange"
         />
         <Card.Native
-            v-if="courierCompanyNames.length"
-            class="bg-white h-full w-full p-4 rounded-t-none"
+            class="bg-white h-full w-full p-4 rounded-t-none py-10"
         >
-            <Form />
+            <component
+                :is="components[activeTab]"
+            />
         </Card.Native>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { Card, Loader, Input, Button } from '@components'
-    import { useCourier } from './useCourier'
+    import { Card, Loader } from '@components'
+    import { useCustomStatus } from './useCustomStatus'
     import { provide } from 'vue'
-    import Form from './fragments/Form.vue'
     import TabHeader from '@/pages/config/fragments/TabHeader.vue'
 
-
-    const _useCourier = useCourier()
+    const _useCustomStatus = useCustomStatus()
     const { 
         isLoading, 
         activeTab, 
-        courierCompanyNames, 
-        hasUnsavedData,
-        changeTab
-    } = _useCourier
+        tabs, 
+        hasUnsavedData, 
+        components,
+        tabChange
+    } = _useCustomStatus
 
-    provide('useCourier', _useCourier)
+    provide('useCustomStatus', _useCustomStatus)
 </script>

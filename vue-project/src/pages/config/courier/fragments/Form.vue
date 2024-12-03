@@ -15,7 +15,6 @@
             v-model="form.secret_key"
             @input="hasUnsavedData = true"
         />
-
         <Button.Primary 
             class="ml-auto"
             :class="hasUnsavedData ? '' : 'pointer-events-none opacity-60'"

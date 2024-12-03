@@ -57,6 +57,13 @@
         },
         {
             to: {
+                name: "customStatus"
+            },
+            title: 'Custom Status',
+            iconName: 'PhTag'
+        },
+        {
+            to: {
                 name: "recharge"
             },
             title: 'Recharge',
