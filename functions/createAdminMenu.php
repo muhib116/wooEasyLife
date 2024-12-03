@@ -13,7 +13,6 @@ function wel_add_menu() {
     );
 }
 
-require_once __DIR__ . '/dashboard/index.php';
 // Render Admin Page
 function wel_render_admin_page() {
     echo '

@@ -82,9 +82,10 @@ function add_custom_heading_after_order_details($order) {
                 text-align: center;
             }
             .fraud-history-container .fraud-history-title {
-                font-size: 16px;
-                color: #333333;
-                margin-bottom: 15px;
+                font-size: 16px !important;
+                color: #333333 !important;
+                margin-top: 10px !important;
+                margin-bottom: 15px !important;
             }
 
             .fraud-history-container .fraud-history-table {
@@ -96,13 +97,11 @@ function add_custom_heading_after_order_details($order) {
                 background-color: #e5e7eb;
                 color: #333333;
                 font-weight: 400;
-                text-align: left;
                 padding: 12px;
                 border-bottom: 1px solid #ddd;
             }
 
             .fraud-history-container .fraud-history-table tbody td {
-                text-align: left;
                 padding: 10px 12px;
                 border-bottom: 1px solid #eee;
             }

@@ -27,7 +27,7 @@ require_once __DIR__ . '/functions/loadAdminScripts.php';
 
 add_action( 'plugins_loaded', function(){
     // Initialize the API class
-    require_once __DIR__ . '/functions/showCustomerSuccessDate.php';
+    require_once __DIR__ . '/functions/showCustomerFraudDate.php';
 
     /**
      * API Path
@@ -75,4 +75,5 @@ add_action( 'plugins_loaded', function(){
     // new WooEasyLife\Admin\BlockFakeCustomer();
 
 
+    new WooEasyLife\Admin\OrderStatisticsAPI();
 });

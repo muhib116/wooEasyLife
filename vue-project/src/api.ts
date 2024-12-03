@@ -19,3 +19,13 @@ export const getOrderList = async () => {
 export const updateAddress = async (payload) => {
     return await axios.post(`${localApiBaseURL}/update-address/${payload.order_id}`, payload)
 }
+
+
+
+export const getOrderStatistics = async (payload: {
+    startDate: string,
+    endDate: string
+}) => {
+    const { data } = await axios.get(`${localApiBaseURL}/order-stats`, { params:payload })
+    return data
+}

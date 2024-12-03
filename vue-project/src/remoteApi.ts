@@ -17,7 +17,7 @@ export const checkCustomer = async (payload: {
 }
 
 
-
+// courier start
 export const getCourierCompanies = async () => {
     const { data } = await axios.post(`${remoteApiBaseURL}/courier/list`, null, headers)
     return data
@@ -36,3 +36,4 @@ export const getCourierConfig = async () => {
   const { data } = await axios.post(`${remoteApiBaseURL}/courier/get-configuration`, null, headers)
   return data
 }
+// courier end
