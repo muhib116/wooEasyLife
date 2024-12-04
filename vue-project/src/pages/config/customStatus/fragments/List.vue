@@ -1,5 +1,5 @@
 <template>
-    <div class="relative">
+    <div v-if="Object.keys(statusList).length" class="relative">
         <Heading
             title="Status list"
             class="mb-2"
@@ -12,29 +12,12 @@
                 <Table.Th class="text-center">Actions</Table.Th>
             </Table.THead>
             <Table.TBody>
-                <Table.Tr
-                    v-for="(item, index) in statusList"
-                    :key="index"
-                >
-                    <Table.Td>{{ item.label }}</Table.Td>
-                    <Table.Td>{{ item.description }}</Table.Td>
-                    <Table.Td>
-                        <span 
-                            class="block mx-auto size-8 rounded-full border-2 shadow cursor-pointer border-white" 
-                            :style="{backgroundColor: item.color}"
-                        ></span>
-                    </Table.Td>
-                    <Table.Td class="text-center">
-                        <ThreeDotActionButton
-                            :edit="(btn:object) => {
-                                console.log(btn, 'edit')
-                            }"
-                            :delete="(btn:object) => {
-                                console.log(btn, 'delete')
-                            }"
-                        />
-                    </Table.Td>
-                </Table.Tr>
+                <TableRow
+                    v-for="(item: object, id: string) in statusList"
+                    :key="id"
+                    :item="item"
+                    :id="id"
+                />
             </Table.TBody>
         </Table.Table>
     </div>
@@ -42,9 +25,10 @@
 
 <script setup lang="ts">
     import { inject } from 'vue'
-    import { Table, ThreeDotActionButton, Heading } from '@components'
+    import { Table, Heading } from '@components'
+    import TableRow from './TableRow.vue'
 
     const {
-        statusList
+        statusList,
     } = inject('useCustomStatus')
 </script>

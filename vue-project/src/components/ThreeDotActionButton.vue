@@ -2,19 +2,18 @@
     <button 
         class="mx-auto group relative"
         title="Take action!"
+        v-click-outside="()=>toggleActionMenu = false"
+        @click="toggleActionMenu = !toggleActionMenu"
     >
         <Icon
-            class="group-hover:text-orange-500"
+            :class="toggleActionMenu ? 'text-orange-500' : ''"
             name="PhDotsThreeOutline"
             size="16"
         />
 
         <div 
-            class="absolute bg-white top-1/2 
-            -translate-y-1/2 right-full flex shadow rounded overflow-hidden border [&>*+*]:border-l 
-             -mr-2 group-hover:mr-0 duration-300 pointer-events-none group-hover:pointer-events-auto 
-             opacity-0 group-hover:opacity-100
-            "
+            v-if="toggleActionMenu"
+            class="absolute bg-white bottom-0 -translate-y-1/2 right-0 flex shadow rounded overflow-hidden border [&>*+*]:border-l"
         >
             <template
                 v-for="(item, index) in actionButtons"
@@ -41,9 +40,8 @@
 
 <script setup lang="ts">
     import { Button, Icon } from '@components'
-    import { computed } from 'vue'
+    import { computed, ref } from 'vue'
     import { getContrastColor } from '@/helper'
-
 
     const props = defineProps<{
         create?: () => void
@@ -52,7 +50,7 @@
         delete?: () => void
     }>()
 
-
+    const toggleActionMenu = ref(false)
     const actionButtons = computed(() => {
         return [
             {

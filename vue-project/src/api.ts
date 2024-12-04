@@ -32,7 +32,19 @@ export const getOrderStatistics = async (payload: {
 
 
 // custom order status
+export const createCustomStatus = async (payload) => {
+    const { data } = await axios.post(`${localApiBaseURL}/statuses`, payload)
+    return data
+}
+export const updateCustomStatus = async (payload, id) => {
+    const { data } = await axios.put(`${localApiBaseURL}/statuses/${id}`, payload)
+    return data
+}
 export const getCustomStatusList = async () => {
     const { data } = await axios.get(`${localApiBaseURL}/statuses`)
+    return data
+}
+export const deleteCustomStatus = async (id:string) => {
+    const { data } = await axios.delete(`${localApiBaseURL}/statuses/${id}`)
     return data
 }

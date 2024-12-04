@@ -63,10 +63,11 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
      */
     public function get_statuses() {
         $statuses = get_option('custom_order_statuses', []);
+        $statuses_desc = array_reverse($statuses, true); // true to preserve keys
 
         return new WP_REST_Response([
             'status' => 'success',
-            'data'   => $statuses,
+            'data'   => $statuses_desc,
         ], 200);
     }
 
@@ -83,7 +84,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
 
         return new WP_REST_Response([
             'status' => 'success',
-            'data'   => $statuses[$status_id],
+            'data'   => $statuses[$status_id]
         ], 200);
     }
 
@@ -94,10 +95,10 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
         $statuses = get_option('custom_order_statuses', []);
 
         // Generate a unique ID if not provided
-        $id = sanitize_title($request->get_param('id') ?? uniqid('status_'));
+        $id = sanitize_title($request->get_param('label'));
 
         if (isset($statuses[$id])) {
-            return new WP_Error('status_exists', 'A status with this ID already exists', [ 'status' => 400 ]);
+            return new WP_Error('status_exists', 'A status with this "Title" already exists', [ 'status' => 400 ]);
         }
 
         $data = [
@@ -122,25 +123,37 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
     public function update_status(WP_REST_Request $request) {
         $statuses = get_option('custom_order_statuses', []);
         $id = sanitize_title($request->get_param('id'));
-
+    
+        // Check if the status exists
         if (!isset($statuses[$id])) {
             return new WP_Error('not_found', 'Status not found', [ 'status' => 404 ]);
         }
-
+    
+        $new_label = sanitize_text_field($request->get_param('label'));
+    
+        // Validate uniqueness of the label (excluding the current item)
+        foreach ($statuses as $key => $status) {
+            if ($key !== $id && strtolower($status['label']) === strtolower($new_label)) {
+                return new WP_Error('duplicate_label', 'A status with this title already exists.', [ 'status' => 400 ]);
+            }
+        }
+    
+        // Update the status
         $statuses[$id] = [
-            'label'       => sanitize_text_field($request->get_param('label')),
+            'label'       => $new_label,
             'color'       => sanitize_hex_color($request->get_param('color')),
             'description' => sanitize_textarea_field($request->get_param('description')),
         ];
-
+    
         update_option('custom_order_statuses', $statuses);
-
+    
         return new WP_REST_Response([
             'status'  => 'success',
             'message' => 'Status updated successfully',
             'data'    => $statuses[$id],
         ], 200);
     }
+    
 
     /**
      * Delete a custom status

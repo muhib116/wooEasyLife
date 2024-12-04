@@ -12,6 +12,7 @@ import Textarea from './textarea/Index'
 import Image from './image/Image.vue'
 import ColorPicker from './ColorPicker.vue'
 import ThreeDotActionButton from './ThreeDotActionButton.vue'
+import MessageBox from './MessageBox.vue'
 
 export {
     Icon,
@@ -27,5 +28,6 @@ export {
     Textarea,
     Image,
     ColorPicker,
-    ThreeDotActionButton
+    ThreeDotActionButton,
+    MessageBox
 }

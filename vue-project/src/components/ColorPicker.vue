@@ -1,13 +1,13 @@
 <template>
     <div>
         {{ label }}
-        <div class="flex gap-4">
+        <div class="flex flex-wrap gap-4">
             <span
                 v-for="(color, index) in colors"
                 :key="index"
                 :style="{backgroundColor: color}"
-                class="block size-8 rounded-full border-2 shadow cursor-pointer"
-                :class="color == modelValue ? 'border-orange-400' : 'border-white'"
+                class="block size-8 rounded-full border-2 cursor-pointer flex-shrink-0 flex-grow-0"
+                :class="color == modelValue ? 'border-orange-400 scale ring-2' : 'border-white shadow'"
                 @click="() => {
                     modelValue = color
                     $emit('onChange', color)
@@ -15,7 +15,7 @@
             ></span>
     
             <label 
-                class="block size-8 rounded-full border-2 border-white shadow relative cursor-pointer"
+                class="block size-8 rounded-full border-2 border-white shadow relative cursor-pointer flex-shrink-0 flex-grow-0"
                 :style="{backgroundColor: modelValue, color: getContrastColor(modelValue)}"
             >
                 <Input.Native

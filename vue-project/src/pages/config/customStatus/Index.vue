@@ -1,5 +1,5 @@
 <template>
-    <div class="relative min-h-[300px]">
+    <div class="relative">
         <Loader
             class="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2"
             :active="isLoading"
@@ -11,7 +11,7 @@
             @onTabChange="tabChange"
         />
         <Card.Native
-            class="bg-white h-full w-full p-4 rounded-t-none py-10"
+            class="bg-white min-h-[200px] h-full w-full p-4 rounded-t-none py-10"
         >
             <component
                 :is="components[activeTab]"
