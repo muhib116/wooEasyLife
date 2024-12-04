@@ -21,14 +21,27 @@
             </Table.TBody>
         </Table.Table>
     </div>
+    <div 
+        v-else
+        class="text-center text-gray-300 flex flex-col items-center gap-4"
+    >
+        No custom status available
+        <Button.Primary
+            class="px-auto animate-bounce"
+            @click="tabChange('create')"
+        >
+            Create custom order status
+        </Button.Primary>
+    </div>
 </template>
 
 <script setup lang="ts">
     import { inject } from 'vue'
-    import { Table, Heading } from '@components'
+    import { Table, Heading, Button } from '@components'
     import TableRow from './TableRow.vue'
 
     const {
         statusList,
+        tabChange
     } = inject('useCustomStatus')
 </script>

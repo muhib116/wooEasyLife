@@ -62,7 +62,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
      * Get all custom statuses
      */
     public function get_statuses() {
-        $statuses = get_option('custom_order_statuses', []);
+        $statuses = get_option('woo_easy_life_custom_order_statuses', []);
         $statuses_desc = array_reverse($statuses, true); // true to preserve keys
 
         return new WP_REST_Response([
@@ -75,7 +75,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
      * Get a single custom status
      */
     public function get_status(WP_REST_Request $request) {
-        $statuses = get_option('custom_order_statuses', []);
+        $statuses = get_option('woo_easy_life_custom_order_statuses', []);
         $status_id = $request->get_param('id');
 
         if (!isset($statuses[$status_id])) {
@@ -92,7 +92,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
      * Create a new custom status
      */
     public function create_status(WP_REST_Request $request) {
-        $statuses = get_option('custom_order_statuses', []);
+        $statuses = get_option('woo_easy_life_custom_order_statuses', []);
 
         // Generate a unique ID if not provided
         $id = sanitize_title($request->get_param('label'));
@@ -108,7 +108,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
         ];
 
         $statuses[$id] = $data;
-        update_option('custom_order_statuses', $statuses);
+        update_option('woo_easy_life_custom_order_statuses', $statuses);
 
         return new WP_REST_Response([
             'status'  => 'success',
@@ -121,7 +121,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
      * Update an existing custom status
      */
     public function update_status(WP_REST_Request $request) {
-        $statuses = get_option('custom_order_statuses', []);
+        $statuses = get_option('woo_easy_life_custom_order_statuses', []);
         $id = sanitize_title($request->get_param('id'));
     
         // Check if the status exists
@@ -145,7 +145,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
             'description' => sanitize_textarea_field($request->get_param('description')),
         ];
     
-        update_option('custom_order_statuses', $statuses);
+        update_option('woo_easy_life_custom_order_statuses', $statuses);
     
         return new WP_REST_Response([
             'status'  => 'success',
@@ -159,7 +159,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
      * Delete a custom status
      */
     public function delete_status(WP_REST_Request $request) {
-        $statuses = get_option('custom_order_statuses', []);
+        $statuses = get_option('woo_easy_life_custom_order_statuses', []);
         $id = sanitize_title($request->get_param('id'));
 
         if (!isset($statuses[$id])) {
@@ -167,7 +167,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
         }
 
         unset($statuses[$id]);
-        update_option('custom_order_statuses', $statuses);
+        update_option('woo_easy_life_custom_order_statuses', $statuses);
 
         return new WP_REST_Response([
             'status'  => 'success',
