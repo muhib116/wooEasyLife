@@ -67,8 +67,8 @@ export const useCustomStatus = () => {
             btn.isLoading = true
             const { data } = await createCustomStatus(form.value)
             statusList.value = {
+                ...data,
                 ...statusList.value,
-                data
             }
             alertMessage.value.message = "Status created successfully!"
             alertMessage.value.type = 'success'
@@ -132,10 +132,19 @@ export const useCustomStatus = () => {
             btn.isLoading = true
             await deleteCustomStatus(id)
             delete statusList.value[id]
+            alertMessage.value.message = 'Status deleted successfully!'
+            alertMessage.value.type = 'success'
+        } catch ({ response }) {
+            alertMessage.value.message = response.data.message
+            alertMessage.value.type = 'danger'
         } finally{
             isLoading.value = false
             btn.isLoading = false
         }
+
+        setTimeout(() => {
+            alertMessage.value.message = ''
+        }, 5000)
     }
 
     onMounted(() => {

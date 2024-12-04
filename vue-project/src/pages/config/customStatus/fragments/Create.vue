@@ -1,7 +1,6 @@
 <template>
     <div class="max-w-[450px] mx-auto space-y-4 relative">
         <MessageBox
-            class="absolute top-0 z-50 w-full"
             :title="alertMessage?.message"
             :type="alertMessage?.type"
         />

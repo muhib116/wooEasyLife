@@ -113,7 +113,9 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
         return new WP_REST_Response([
             'status'  => 'success',
             'message' => 'Status created successfully',
-            'data'    => $data,
+            'data'    => [
+                $id => $data
+            ],
         ], 201);
     }
 

@@ -1,5 +1,9 @@
 <template>
     <div v-if="Object.keys(statusList).length" class="relative">
+        <MessageBox
+            :title="alertMessage?.message"
+            :type="alertMessage?.type"
+        />
         <Heading
             title="Status list"
             class="mb-2"
@@ -22,7 +26,7 @@
         </Table.Table>
     </div>
     <div 
-        v-else
+        v-else-if="!isLoading"
         class="text-center text-gray-300 flex flex-col items-center gap-4"
     >
         No custom status available
@@ -37,11 +41,13 @@
 
 <script setup lang="ts">
     import { inject } from 'vue'
-    import { Table, Heading, Button } from '@components'
+    import { Table, Heading, Button, MessageBox } from '@components'
     import TableRow from './TableRow.vue'
 
     const {
         statusList,
-        tabChange
+        tabChange,
+        isLoading,
+        alertMessage
     } = inject('useCustomStatus')
 </script>
