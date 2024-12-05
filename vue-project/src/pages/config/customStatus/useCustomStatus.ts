@@ -20,18 +20,20 @@ export const useCustomStatus = () => {
     })
     const activeTab = ref('list')
     const defaultFormData = {
-        label: '',
+        title: '',
         color: '',
         description: ''
     }
 
     const statusList = ref<{
-        label: string,
+        title: string,
+        slug: string,
         color: string,
         description: string
     }>({})
+
     const form = ref<{
-        label: string
+        title: string
         color: string
         description: string
     }>({...defaultFormData})
@@ -57,9 +59,10 @@ export const useCustomStatus = () => {
     }
 
     const handleCustomStatusCreate = async (btn) => {
-        const { label, color, description } = form.value
-        if(!label || !color || !description) {
-            alert("The fields for Label, Color, and Description are mandatory!")
+        const { title, color } = form.value
+        if(!title || !color) {
+            alertMessage.value.message = 'The fields for Title, and Color are mandatory!'
+            alertMessage.value.type = 'danger'
             return
         }
         try {
@@ -99,9 +102,10 @@ export const useCustomStatus = () => {
     }
 
     const handleCustomStatusUpdate = async (item: object, id: string, btn: {isLoading: boolean}) => {
-        const { label, color, description } = form.value
-        if(!label || !color || !description) {
-            alert("The fields for Label, Color, and Description are mandatory!")
+        const { title, color } = form.value
+        if(!title || !color) {
+            alertMessage.value.message = 'The fields for Title, and Color are mandatory!'
+            alertMessage.value.type = 'danger'
             return
         }
 
@@ -109,6 +113,7 @@ export const useCustomStatus = () => {
             isLoading.value = true
             btn.isLoading = true
             await updateCustomStatus(item, id)
+            loadCustomStatusList()
             alertMessage.value.message = 'Status updated successfully!'
             alertMessage.value.type = 'success'
             

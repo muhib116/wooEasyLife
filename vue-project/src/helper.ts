@@ -21,3 +21,14 @@ export const getContrastColor = (hexColor: string) => {
     // Return white (#ffffff) for dark backgrounds, black (#000000) for light backgrounds
     return luminance > 0.5 ? '#000000' : '#ffffff'
 }
+
+export const generateSlug = (title: string) => {
+    return title
+        .toLowerCase() // Convert to lowercase
+        .trim() // Remove leading and trailing whitespace
+        .replace(/&/g, 'and') // Replace '&' with 'and'
+        .replace(/[^a-z0-9 -]/g, '') // Remove invalid characters
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/-+/g, '-') // Collapse multiple hyphens into one
+        .replace(/^-+|-+$/g, ''); // Remove leading and trailing hyphens
+}

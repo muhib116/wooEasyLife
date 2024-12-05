@@ -4,7 +4,10 @@
     >
         <template #btn>
             <Button.Primary
-                @onClick="(btn) => handleCustomStatusUpdate(item, id, btn)"
+                @onClick="async (btn) => {
+                    await handleCustomStatusUpdate(item, id, btn)
+                    $emit('onUpdate')
+                }"
                 class="ml-auto"
             >
                 Update Status

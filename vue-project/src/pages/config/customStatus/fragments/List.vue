@@ -1,5 +1,5 @@
 <template>
-    <div v-if="Object.keys(statusList).length" class="relative">
+    <div v-if="statusList && Object.keys(statusList).length" class="relative">
         <MessageBox
             :title="alertMessage?.message"
             :type="alertMessage?.type"
@@ -11,6 +11,7 @@
         <Table.Table>
             <Table.THead class="truncate">
                 <Table.Th>Title</Table.Th>
+                <Table.Th>Slug</Table.Th>
                 <Table.Th>Description</Table.Th>
                 <Table.Th class="text-center">Color</Table.Th>
                 <Table.Th class="text-center">Actions</Table.Th>

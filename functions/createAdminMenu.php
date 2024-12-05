@@ -6,7 +6,7 @@ function wel_add_menu() {
         'WEL',
         'Woo Life Changer',
         'manage_options',
-        'woo life changer',
+        'woo-life-changer',
         'wel_render_admin_page',
         'dashicons-smiley',
         100

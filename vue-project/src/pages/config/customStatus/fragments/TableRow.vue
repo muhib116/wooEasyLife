@@ -1,6 +1,7 @@
 <template>
     <Table.Tr>
-        <Table.Td>{{ item.label }}</Table.Td>
+        <Table.Td>{{ item.title }}</Table.Td>
+        <Table.Td>{{ item.slug }}</Table.Td>
         <Table.Td>{{ item.description }}</Table.Td>
         <Table.Td>
             <span 
@@ -24,6 +25,7 @@
         <Edit
             :item="item"
             :id="id"
+            @onUpdate="toggleEdit = false"
         />
     </Modal>
 </template>
@@ -35,7 +37,7 @@
 
     defineProps<{
         item: {
-            label: string
+            title: string
             color: string
             description: string
         },

@@ -13,7 +13,15 @@
         <Input.Primary
             label="Title *"
             placeholder="Enter title"
-            v-model="form.label"
+            v-model="form.title"
+        />
+
+        <Input.Primary
+            label="Slug *"
+            placeholder="Enter slug"
+            disabled
+            :modelValue="generateSlug(form.title)"
+            wrapper-class="[&>*+*]:bg-gray-100"
         />
 
         <div class="px-1">
@@ -24,7 +32,7 @@
         </div>
         
         <Input.Primary
-            label="Description *"
+            label="Description"
             v-model="form.description"
         />
 
@@ -41,7 +49,8 @@
 
 <script setup lang="ts">
     import { Input, ColorPicker, Heading, Button, MessageBox } from '@components'
-    import { inject } from 'vue'
+    import { computed, inject } from 'vue'
+    import { generateSlug } from '@/helper'
 
     const {
         form,
@@ -52,4 +61,6 @@
     defineProps<{
         hideTitle: boolean
     }>()
+
+    // const getSlug = computed(() => generateSlug(form.value.title))
 </script>

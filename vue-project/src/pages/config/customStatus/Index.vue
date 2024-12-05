@@ -1,7 +1,7 @@
 <template>
     <div class="relative">
         <Loader
-            class="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2"
+            class="absolute inset-1/2 top-20 -translate-x-1/2 -translate-y-1/2"
             :active="isLoading"
         />
         <TabHeader
