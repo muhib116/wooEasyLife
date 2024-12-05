@@ -7,6 +7,7 @@ $css_file_name = $manifest['src/main.ts']['css'][0] ?? null;
 $js_file_name = $manifest['src/main.ts']['file'] ?? null;
 
 function wel_enqueue_scripts($hook_suffix) {
+    if($hook_suffix != 'toplevel_page_woo-life-changer') return;
     global $manifest_path;
     global $js_file_name;
     global $css_file_name;

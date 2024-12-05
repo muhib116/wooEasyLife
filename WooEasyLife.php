@@ -28,7 +28,17 @@ require_once __DIR__ . '/functions/loadAdminScripts.php';
 add_action( 'plugins_loaded', function(){
     // Initialize the API class
     require_once __DIR__ . '/functions/showCustomerFraudDate.php';
-    
+
+
+
+    // frontend start
+    new WooEasyLife\Frontend\OTPValidatorForOrderPlace();
+    // frontend end
+
+    add_action('woocommerce_checkout_order_review', 'storeapps_checkout_order_review');
+    function storeapps_checkout_order_review() {
+        echo '<h2>woocommerce_checkout_order_review</h2>';
+    }
 
     /**
      * API Path
