@@ -62,10 +62,11 @@ function add_custom_heading_after_order_details($order) {
     if (is_wp_error($fraud_data)) {
         echo '<p>Error: ' . esc_html($fraud_data->get_error_message()) . '</p>';
     } else {
-
-    ?>
-        <style>
+    //---------
+?>
+        <style> 
             .fraud-history-container {
+                text-align: center;
                 width: 490px;
                 margin: 20px auto;
                 text-align: center;
@@ -76,7 +77,7 @@ function add_custom_heading_after_order_details($order) {
                 overflow: hidden;
                 font-family: Arial, sans-serif;
                 border: 1px solid #4442;
-                font-size: 16px;
+                font-size: 14px;
             }
             .fraud-history-container .fraud-history-table .text-center{
                 text-align: center;
@@ -87,78 +88,91 @@ function add_custom_heading_after_order_details($order) {
                 margin-top: 10px !important;
                 margin-bottom: 15px !important;
             }
-
             .fraud-history-container .fraud-history-table {
                 width: 100%;
                 border-collapse: collapse;
             }
-
             .fraud-history-container .fraud-history-table thead th {
-                background-color: #e5e7eb;
-                color: #333333;
+                background-color: #374151;
+                color: #f3f4f6;
                 font-weight: 400;
                 padding: 12px;
                 border-bottom: 1px solid #ddd;
             }
-
             .fraud-history-container .fraud-history-table tbody td {
                 padding: 10px 12px;
                 border-bottom: 1px solid #eee;
             }
-
             .fraud-history-container .fraud-history-table tbody tr:last-child td {
                 border-bottom: none;
             }
-
-            .fraud-history-container .fraud-history-table tbody .confirm {
-                background-color: #d4edda;
-                color: #155724;
-                font-weight: bold;
-                text-align: center;
-            }
-
-            .fraud-history-container .fraud-history-table tbody .cancel {
-                background-color: #f8d7da;
-                color: #721c24;
-                font-weight: bold;
-                text-align: center;
-            }
-
-            .fraud-history-container .fraud-history-table tbody .success-rate {
-                background-color: #cce5ff;
-                color: #004085;
-                font-weight: bold;
-                text-align: center;
-            }
-
-            /* Updated Footer Row (Total) */
-            .fraud-history-container .fraud-history-table .total-row td {
-                font-weight: bold;
-                background-color: #e5e7eb; /* Match footer with a neutral gray */
-                color: #333333;
-                text-align: center;
-                border-top: 1px solid #ddd;
-            }
-            .fraud-history-container .fraud-history-table .header-row .confirm {
-                background-color: #dcfce7;
-            }
-            .fraud-history-container .fraud-history-table .header-row .cancel {
-                background-color: #fee2e1;
-            }
-            .fraud-history-container .fraud-history-table .header-row .success-rate {
-                background-color: #e0f2fe;
-            }
-            .fraud-history-container .fraud-history-table .total-row .confirm {
-                background-color: #17a34a;
-                color: white;
-            }
-            .fraud-history-container .fraud-history-table .total-row .cancel {
-                background-color: #dc2625;
-                color: white;
-            }
-            .fraud-history-container .fraud-history-table .total-row .success-rate {
-                background-color: #0084c7;
-                color: white;
+            .fraud-history-container .progress-bar{
+                background: red;
+                height: 15px;
+                margin: 25px 0 25px;
+                position: relative;
+                div{
+                    height: 100%;
+                    width: 10%;
+                    background: #22c55d;
+                    position: relative;
+                    ::before {
+                        content: '';
+                        position: absolute;
+                        width: 6px;
+                        height: 6px;
+                        bottom: calc(100% - 3px);
+                        left: calc(50% - 3px);
+                        background: #fff;
+                        border: 1px solid #3334;
+                        border-right: none;
+                        border-bottom: none;
+                        rotate: 45deg;
+                    }
+                }
+                span{
+                    position: absolute;
+                    font-size: 10px;
+                    background: #22c55d;
+                    bottom: 100%;
+                    margin-bottom: 4px;
+                    left: calc(100% - 30px);
+                    border: 1px solid #3334;
+                    padding: 1px 4px;
+                    border-radius: 2px;
+                    color: white;
+                }
+                span.cancel {
+                    bottom: unset;
+                    top: 100%;
+                    margin-top: 4px;
+                    left: unset;
+                    right: 10px;
+                    background: #ef4444;
+                    z-index: 9999;
+                }
+                span::before {
+                    content: '';
+                    position: absolute;
+                    width: 6px;
+                    height: 6px;
+                    bottom: calc(100% - 3px);
+                    left: calc(50% - 3px);
+                    background: #22c55d;
+                    border: 1px solid #3334;
+                    border-left: none;
+                    border-top: none;
+                    rotate: 45deg;
+                    top: calc(100% - 3px);
+                }
+                span.cancel::before {
+                    background: #ef4444;
+                    border: 1px solid #3334;
+                    border-right: none;
+                    border-bottom: none;
+                    top: unset;
+                    bottom: calc(100% - 3px);
+                }
             }
         </style>
 
@@ -171,41 +185,65 @@ function add_custom_heading_after_order_details($order) {
                 ?>
             </h2>
 
-            <?php if($fraud_data && $fraud_data[0]['report']['total_order'] > 0) { ?>
+        <?php 
+            if($fraud_data && $fraud_data[0]['report']['total_order'] > 0) { 
+                $success_rate = isset($fraud_data[0]['report']['success_rate']) ? htmlspecialchars($fraud_data[0]['report']['success_rate'], ENT_QUOTES, 'UTF-8') : 0;
+            //------
+        ?>
                 <table class="fraud-history-table">
                     <thead>
                         <tr class="header-row">
                             <th>Courier Name</th>
-                            <th class="confirm">Confirm</th>
-                            <th class="cancel">Cancel</th>
-                            <th class="success-rate">Success Rate</th>
+                            <th>Confirm</th>
+                            <th>Cancel</th>
+                            <th>Success Rate</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($fraud_data[0]['report']['courier'] as $item) { ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($item['title'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                <td class="text-center bg-green-500 text-white"><?php echo htmlspecialchars($item['report']['confirmed'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                <td class="text-center bg-red-500 text-white"><?php echo htmlspecialchars($item['report']['cancel'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                <td class="text-center bg-sky-500 text-white"><?php echo htmlspecialchars($item['report']['success_rate'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td class="text-center" style="background: #dcfce7;">
+                                    <?php echo htmlspecialchars($item['report']['confirmed'], ENT_QUOTES, 'UTF-8'); ?>
+                                </td>
+                                <td class="text-center" style="background: #fee2e1;">
+                                    <?php echo htmlspecialchars($item['report']['cancel'], ENT_QUOTES, 'UTF-8'); ?>
+                                </td>
+                                <td class="text-center" style="background: #e0f2fe;">
+                                    <?php echo htmlspecialchars($item['report']['success_rate'], ENT_QUOTES, 'UTF-8'); ?>
+                                </td>
                             </tr>
                         <?php } ?>
-
-
-                        <tr class="total-row table_footer">
-                            <td>Total</td>
-                            <td class="confirm">
+                    </tbody>
+                    <tfooter>
+                        <tr class="total-row table_footer" style="font-weight: bold;">
+                            <td class="text-center" style="background: #374151; color: #fff;">Total</td>
+                            <td class="text-center" style="background: #22c55d; color: #fff;">
                                 <?php echo isset($fraud_data[0]['report']['confirmed']) ? htmlspecialchars($fraud_data[0]['report']['confirmed'], ENT_QUOTES, 'UTF-8') : 0; ?>
                             </td>
-                            <td class="cancel">
+                            <td class="text-center" style="background: #ef4444; color: #fff;">
                                 <?php echo $fraud_data[0]['report']['cancel']; ?>
                             </td>
-                            <td class="success-rate">
-                                <?php echo isset($fraud_data[0]['report']['success_rate']) ? htmlspecialchars($fraud_data[0]['report']['success_rate'], ENT_QUOTES, 'UTF-8') : '0%'; ?>
+                            <td class="text-center" style="background: #0ca5e9; color: #fff;">
+                                <?php echo $success_rate; ?>
                             </td>
                         </tr>
-                    </tbody>
+                    <tfooter>
                 </table>
+
+                <div class="progress-bar">
+                    <div style="width: <?php echo $success_rate; ?>">
+                        <span>
+                            <?php echo $success_rate; ?>
+                        </span>
+                    </div>
+
+                    <?php if(100 - (int)$success_rate){ ?>
+                        <span class="cancel">
+                            <?php echo 100 - (int)$success_rate; ?>%
+                        </span>
+                    <?php } ?>
+                </div>
             <?php } ?>
 
             <?php if($fraud_data && $fraud_data[0]['report']['total_order'] == 0) { ?>
