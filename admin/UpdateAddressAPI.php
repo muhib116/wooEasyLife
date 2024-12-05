@@ -7,7 +7,7 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_Error;
 
-class UpdateAddress extends WP_REST_Controller {
+class UpdateAddressAPI extends WP_REST_Controller {
 
     public function __construct() {
         add_action('rest_api_init', [ $this, 'register_routes' ]);

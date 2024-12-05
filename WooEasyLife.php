@@ -31,62 +31,12 @@ add_action( 'plugins_loaded', function(){
 
 
 
+    // add_action('woocommerce_checkout_order_review', 'storeapps_checkout_order_review');
+    // function storeapps_checkout_order_review() {
+    //     echo '<h2>woocommerce_checkout_order_review</h2>';
+    // }
+
     // frontend start
-    new WooEasyLife\Frontend\OTPValidatorForOrderPlace();
-    // frontend end
-
-    add_action('woocommerce_checkout_order_review', 'storeapps_checkout_order_review');
-    function storeapps_checkout_order_review() {
-        echo '<h2>woocommerce_checkout_order_review</h2>';
-    }
-
-    /**
-     * API Path
-     * /wp-json/wooeasylife/v1/orders
-     * method: get
-     */
-    new WooEasyLife\Admin\OrderList();
-
-    /**
-     * API Path
-     * /wp-json/wooeasylife/v1/payment-methods
-     * method: get
-     */
-    new WooEasyLife\Admin\PaymentMethods();
-
-    /**
-     * API Path
-     * /wp-json/wooeasylife/v1/update-address/{order_id}
-     * method: post
-     * payload:
-     * {
-     *       "billing": {
-     *           "address_1": "123 Main St",
-     *           "city": "New York",
-     *           "state": "NY",
-     *           "postcode": "10001",
-     *           "country": "US",
-     *           "email": "customer@example.com",
-     *           "phone": "555-1234"
-     *       },
-     *       "shipping": {
-     *           "address_1": "123 Main St",
-     *           "city": "New York",
-     *           "state": "NY",
-     *           "postcode": "10001",
-     *           "country": "US"
-     *       }
-     *   }
-     */
-    new WooEasyLife\Admin\UpdateAddress();
-
-    /**
-     * customer ip, phone block, list, and edit
-     */
-    // new WooEasyLife\Admin\BlockFakeCustomer();
-
-
-    new WooEasyLife\Admin\OrderStatisticsAPI();
-    new WooEasyLife\Admin\CustomOrderStatusAPI();
-
+    new WooEasyLife\Includes\Frontend_Class_Register();
+    new WooEasyLife\Includes\Admin_API_Register();
 });

@@ -5,8 +5,9 @@ class OTPValidatorForOrderPlace {
     function __construct()
     {
         // add_action('wp_footer', [$this, 'wooeasylife_check_if_checkout_page']);
-        add_filter('woocommerce_order_button_html', [$this, 'customize_place_order_button'], 30);
         // add_filter('proceedToCheckoutButtonLabel', [$this, 'customize_place_order_button']);
+        add_filter('woocommerce_order_button_html', [$this, 'customize_place_order_button'], 30);
+        add_filter('woocommerce_checkout_order_button_text', [$this, 'change_order_button_text'], 15);
     }
 
     function customize_place_order_button($button_html) {
@@ -16,6 +17,11 @@ class OTPValidatorForOrderPlace {
         $custom_button .= '</button>';
     
         return $custom_button;
+    }
+
+    function change_order_button_text() {
+        // Set a constant custom text
+        return 'Confirm Donation';
     }
     
 }

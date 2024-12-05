@@ -2,7 +2,7 @@
 
 namespace WooEasyLife\Admin;
 
-class PaymentMethods {
+class PaymentMethodsAPI {
 
     public function __construct() {
         add_action('rest_api_init', [$this, 'register_routes']);
