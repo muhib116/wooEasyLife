@@ -2,6 +2,7 @@
     <Table.Tr
         class="group"
         :active="selectedOrders.has(order) || activeOrder.id == order.id"
+        @click="setActiveOrder(order)"  
     >
         <Table.Td>
             <input
@@ -13,7 +14,6 @@
         </Table.Td>
         <Table.Td>
             <div
-                @click="setActiveOrder(order)"
                 class="flex gap-1"
             >
                 #{{ order.id }}

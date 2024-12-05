@@ -16,7 +16,6 @@
 </template>
 
 <script setup lang="ts">
-    import { Heading, Table } from '@components'
     import { computed } from 'vue'
     import FraudData from '@/pages/fraudChecker/FraudData.vue'
 
