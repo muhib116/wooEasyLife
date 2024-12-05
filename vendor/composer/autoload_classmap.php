@@ -7,4 +7,16 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'WooEasyLife\\API\\API_Register' => $baseDir . '/api/API_Register.php',
+    'WooEasyLife\\API\\Admin\\CustomOrderStatusAPI' => $baseDir . '/api/Admin/CustomOrderStatusAPI.php',
+    'WooEasyLife\\API\\Admin\\OrderListAPI' => $baseDir . '/api/Admin/OrderListAPI.php',
+    'WooEasyLife\\API\\Admin\\OrderStatisticsAPI' => $baseDir . '/api/Admin/OrderStatisticsAPI.php',
+    'WooEasyLife\\API\\Admin\\PaymentMethodsAPI' => $baseDir . '/api/Admin/PaymentMethodsAPI.php',
+    'WooEasyLife\\API\\Admin\\UpdateAddressAPI' => $baseDir . '/api/Admin/UpdateAddressAPI.php',
+    'WooEasyLife\\Admin\\Admin_Class_Register' => $baseDir . '/admin/Admin_Class_Register.php',
+    'WooEasyLife\\Admin\\ShowCustomerFraudDataToOrderDetailsPage' => $baseDir . '/admin/ShowCustomerFraudDataToOrderDetailsPage.php',
+    'WooEasyLife\\Frontend\\Frontend_Class_Register' => $baseDir . '/frontend/Frontend_Class_Register.php',
+    'WooEasyLife\\Frontend\\OTPValidatorForOrderPlace' => $baseDir . '/frontend/OTPValidatorForOrderPlace.php',
+    'WooEasyLife\\Includes\\Admin_API_Register' => $baseDir . '/includes/Admin_API_Register.php',
+    'WooEasyLife\\Includes\\Frontend_Class_Register' => $baseDir . '/includes/Frontend_Class_Register.php',
 );

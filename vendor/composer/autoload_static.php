@@ -13,6 +13,7 @@ class ComposerStaticInit4bd325c6d539e219feefd4ea170fecd7
     public static $prefixLengthsPsr4 = array (
         'W' => 
         array (
+            'WooEasyLife\\Init\\' => 17,
             'WooEasyLife\\Includes\\' => 21,
             'WooEasyLife\\Frontend\\' => 21,
             'WooEasyLife\\Admin\\' => 18,
@@ -21,6 +22,10 @@ class ComposerStaticInit4bd325c6d539e219feefd4ea170fecd7
     );
 
     public static $prefixDirsPsr4 = array (
+        'WooEasyLife\\Init\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/init',
+        ),
         'WooEasyLife\\Includes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/includes',
@@ -41,6 +46,18 @@ class ComposerStaticInit4bd325c6d539e219feefd4ea170fecd7
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'WooEasyLife\\API\\API_Register' => __DIR__ . '/../..' . '/api/API_Register.php',
+        'WooEasyLife\\API\\Admin\\CustomOrderStatusAPI' => __DIR__ . '/../..' . '/api/Admin/CustomOrderStatusAPI.php',
+        'WooEasyLife\\API\\Admin\\OrderListAPI' => __DIR__ . '/../..' . '/api/Admin/OrderListAPI.php',
+        'WooEasyLife\\API\\Admin\\OrderStatisticsAPI' => __DIR__ . '/../..' . '/api/Admin/OrderStatisticsAPI.php',
+        'WooEasyLife\\API\\Admin\\PaymentMethodsAPI' => __DIR__ . '/../..' . '/api/Admin/PaymentMethodsAPI.php',
+        'WooEasyLife\\API\\Admin\\UpdateAddressAPI' => __DIR__ . '/../..' . '/api/Admin/UpdateAddressAPI.php',
+        'WooEasyLife\\Admin\\Admin_Class_Register' => __DIR__ . '/../..' . '/admin/Admin_Class_Register.php',
+        'WooEasyLife\\Admin\\ShowCustomerFraudDataToOrderDetailsPage' => __DIR__ . '/../..' . '/admin/ShowCustomerFraudDataToOrderDetailsPage.php',
+        'WooEasyLife\\Frontend\\Frontend_Class_Register' => __DIR__ . '/../..' . '/frontend/Frontend_Class_Register.php',
+        'WooEasyLife\\Frontend\\OTPValidatorForOrderPlace' => __DIR__ . '/../..' . '/frontend/OTPValidatorForOrderPlace.php',
+        'WooEasyLife\\Includes\\Admin_API_Register' => __DIR__ . '/../..' . '/includes/Admin_API_Register.php',
+        'WooEasyLife\\Includes\\Frontend_Class_Register' => __DIR__ . '/../..' . '/includes/Frontend_Class_Register.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

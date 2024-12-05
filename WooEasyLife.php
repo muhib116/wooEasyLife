@@ -12,6 +12,7 @@
  * Domain Path: /languages
  */
 
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -21,22 +22,20 @@ require_once 'vendor/autoload.php';
 
 
 
-require_once __DIR__ . '/functions/createAdminMenu.php';
+
+new WooEasyLife\Init\InitClass();
 require_once __DIR__ . '/functions/wooCommerceExist.php';
-require_once __DIR__ . '/functions/loadAdminScripts.php';
+
 
 add_action( 'plugins_loaded', function(){
     // Initialize the API class
-    require_once __DIR__ . '/functions/showCustomerFraudDate.php';
-
-
 
     // add_action('woocommerce_checkout_order_review', 'storeapps_checkout_order_review');
     // function storeapps_checkout_order_review() {
     //     echo '<h2>woocommerce_checkout_order_review</h2>';
     // }
 
-    // frontend start
-    new WooEasyLife\Includes\Frontend_Class_Register();
-    new WooEasyLife\Includes\Admin_API_Register();
+    new WooEasyLife\Admin\Admin_Class_Register();
+    new WooEasyLife\Frontend\Frontend_Class_Register();
+    new WooEasyLife\API\API_Register();
 });

@@ -1,6 +1,6 @@
 <?php
 
-namespace WooEasyLife\Admin;
+namespace WooEasyLife\API\Admin;
 
 class PaymentMethodsAPI {
 

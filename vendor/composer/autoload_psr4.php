@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'WooEasyLife\\Init\\' => array($baseDir . '/init'),
     'WooEasyLife\\Includes\\' => array($baseDir . '/includes'),
     'WooEasyLife\\Frontend\\' => array($baseDir . '/frontend'),
     'WooEasyLife\\Admin\\' => array($baseDir . '/admin'),

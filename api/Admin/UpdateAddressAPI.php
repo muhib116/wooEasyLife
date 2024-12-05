@@ -1,6 +1,6 @@
 <?php
 
-namespace WooEasyLife\Admin;
+namespace WooEasyLife\API\Admin;
 
 use WP_REST_Controller;
 use WP_REST_Request;
