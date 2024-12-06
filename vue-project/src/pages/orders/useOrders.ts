@@ -1,14 +1,20 @@
 import axios from "axios"
 import { onMounted, ref, watch } from "vue"
-import { getOrderList } from '@/api'
+import { getOrderList, getOrderStatusListWithCounts } from '@/api'
 import { checkCustomer } from '@/remoteApi'
 
 export const useOrders = () => {
     const orders = ref([])
+    const orderStatusWithCounts = ref([])
     const activeOrder = ref([])
     const selectedOrders = ref(new Set([]))
     const selectAll = ref(false)
     const isLoading = ref(false)
+    const orderFilter = ref({
+        page: 1,
+        per_page: 10,
+        status: ''
+    })
 
     const setActiveOrder = (item) => {
         if (!selectedOrders.value.has(item)) {
@@ -59,20 +65,28 @@ export const useOrders = () => {
         }
     }
 
+    const getOrders = async () => {
+        isLoading.value = true
+        const { data } = await getOrderList(orderFilter.value)
+        orders.value = data
+        isLoading.value = false
+    }
+
+    const loadOrderStatusList = async () => {
+        isLoading.value = true
+        const { data } = await getOrderStatusListWithCounts()
+        orderStatusWithCounts.value = data
+        isLoading.value = false
+    }
+
+
     watch(() => selectedOrders, (newVal) => {
         selectAll.value = selectedOrders.value.size === orders.value.length
     }, {
         deep: true
     })
-
-    const getOrders = async () => {
-        isLoading.value = true
-        const { data } = await getOrderList()
-        orders.value = data
-        isLoading.value = false
-    }
-
     onMounted(() => {
+        loadOrderStatusList();
         getOrders()
     })
 
@@ -82,9 +96,12 @@ export const useOrders = () => {
         isLoading,
         activeOrder,
         selectedOrders,
+        orderStatusWithCounts,
         getOrders,
+        orderFilter,
         setActiveOrder,
         toggleSelectAll,
         handleFraudCheck,
+        loadOrderStatusList,
     }
 }

@@ -18,7 +18,7 @@
         <MenuButton
             title="Block Ip"
             subtitle="Book courier for selected items."
-            iconName="PhTruck"
+            iconName="PhCellTower"
         />
         <MenuButton
             title="Block Phone"

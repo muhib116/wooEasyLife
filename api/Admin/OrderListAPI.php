@@ -40,6 +40,15 @@ class OrderListAPI {
                 ],
             ]
         );
+        register_rest_route(
+            'wooeasylife/v1', // Namespace and version.
+            '/status-with-counts',         // Endpoint: /orders
+            [
+                'methods'             => 'GET',
+                'callback'            => [ $this, 'get_order_status_with_counts' ],
+                'permission_callback' => '__return_true', // Allow public access (modify as needed).
+            ]
+        );
     }
 
     /**
@@ -123,26 +132,36 @@ class OrderListAPI {
 
         return new \WP_REST_Response([
             'status' => 'success',
-            'data'   => $data,
+            'data'   => $data
         ], 200);
     }
 
     public function get_order_status_with_counts() {
         $statuses = wc_get_order_statuses(); // Retrieve all order statuses
-        $order_counts = [];
-    
         foreach ($statuses as $status_key => $status_label) {
             // Query orders by status
             $args = [
                 'status' => str_replace('wc-', '', $status_key), // Remove 'wc-' prefix for the query
                 'limit'  => -1,
+                'type'     => 'shop_order',
                 'return' => 'ids',
             ];
             $orders = wc_get_orders($args);
-            $order_counts[$status_key] = count($orders); // Count orders per status
+            $order_count = count($orders);
+
+            if($order_count>0) {
+                $order_counts[] = [
+                    "title" => $status_label,
+                    "slug" => str_replace('wc-', '', $status_key),
+                    "count" => $order_count
+                ]; // Count orders per status
+            }
         }
     
-        return $order_counts;
+        return new \WP_REST_Response([
+            'status' => 'success',
+            'data'   => $order_counts
+        ], 200);
     }
 }
 

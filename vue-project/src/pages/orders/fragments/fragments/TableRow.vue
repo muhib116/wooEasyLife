@@ -1,6 +1,7 @@
 <template>
     <Table.Tr
         class="group"
+        :class="`status-${order.status}`"
         :active="selectedOrders.has(order) || activeOrder.id == order.id"
         @click="setActiveOrder(order)"  
     >
@@ -37,7 +38,9 @@
             </div>
         </Table.Td>
         <Table.Td>
-            <Badge.Native>{{ order.status }}</Badge.Native>
+            <button class="order-status capitalize px-3" :class="`status-${order.status}`">
+                {{ order.status.replaceAll('-', ' ') }}
+            </button>
         </Table.Td>
         <Table.Td>{{ order.payment_method_title || 'n/a' }}</Table.Td>
         <Table.Td>

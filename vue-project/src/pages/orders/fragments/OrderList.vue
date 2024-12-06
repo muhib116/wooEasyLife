@@ -8,6 +8,8 @@
             class="absolute left-1/2 -translate-x-1/2 z-30"
             :active="isLoading"
         />
+
+        <TableFilter />
         <Table.Table v-if="orders.length">
             <TableHeader />
             <Table.TBody>
@@ -26,6 +28,7 @@
     import { inject } from 'vue'
     import TableHeader from './fragments/TableHeader.vue'
     import TableRow from './fragments/TableRow.vue'
+    import TableFilter from './fragments/TableFilter.vue'
 
     const {
         orders,

@@ -1,9 +1,9 @@
 <template>
     <Button.Native 
-        class="flex gap-3 hover:bg-[#fef8f5] px-6 py-4 w-full text-sm"
+        class="flex gap-3 hover:bg-[#fef8f5] px-4 py-4 w-full text-sm"
         @onClick="cb"
     >
-        <span class="shadow-custom size-14 flex-shrink-0 flex-grow-0 text-orange-500 bg-white 2xl flex items-center justify-center rounded-full relative">
+        <span class="size-8 flex-shrink-0 flex-grow-0 text-orange-500 bg-white 2xl flex items-center justify-center rounded-full relative">
             <Icon
                 :name="iconName"
                 size="30"

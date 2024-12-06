@@ -15,7 +15,7 @@
                 v-if="data && data?.report?.total_order"
                 class="w-full"
             >
-                <Table.THead class="bg-gray-700 text-gray-100">
+                <Table.THead class="bg-gray-700 !text-gray-100">
                     <Table.Th>Courier Name</Table.Th>
                     <Table.Th class="text-center">Confirm</Table.Th>
                     <Table.Th class="text-center">Cancel</Table.Th>

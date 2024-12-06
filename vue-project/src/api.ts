@@ -13,8 +13,14 @@ export const localApiBaseURL = `${baseUrl}/wp-json/wooeasylife/v1`
 export const getPaymentMethods = async () => {
     return await axios.get(`${localApiBaseURL}/payment-methods`)
 }
-export const getOrderList = async () => {
-    const { data } = await axios.get(`${localApiBaseURL}/orders`)
+export const getOrderList = async (payload) => {
+    const { data } = await axios.get(`${localApiBaseURL}/orders`, {
+        params: payload
+    })
+    return data
+}
+export const getOrderStatusListWithCounts = async () => {
+    const { data } = await axios.get(`${localApiBaseURL}/status-with-counts`)
     return data
 }
 export const updateAddress = async (payload) => {
