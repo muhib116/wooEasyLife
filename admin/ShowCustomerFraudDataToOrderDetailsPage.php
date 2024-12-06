@@ -60,8 +60,8 @@ class ShowCustomerFraudDataToOrderDetailsPage {
 
 
     function add_custom_heading_after_order_details($order) {
-        $order_id = $order->get_id();
         $billing_phone = $order->get_billing_phone();
+        if(empty($billing_phone)) return;
 
         // Output the custom heading
         $fraud_data = $this->getCustomerFraudData($billing_phone);

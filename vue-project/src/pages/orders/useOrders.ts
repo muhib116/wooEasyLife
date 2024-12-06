@@ -54,7 +54,6 @@ export const useOrders = () => {
                     })
                 })
             }
-            console.log(_selectedOrders)
         } finally {
             button.isLoading = false
         }

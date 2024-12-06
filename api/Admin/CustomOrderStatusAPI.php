@@ -21,6 +21,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
     }
 
 
+    
     /**
      * 1. Dynamically Register Custom Statuses
      * Make sure all your custom statuses are registered using register_post_status. This ensures WooCommerce recognizes your custom statuses.
@@ -57,7 +58,9 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
                 foreach ($custom_statuses as $_key => $_status) {
                     $new_order_statuses['wc-'.$_key] = $_status['title'];
                 }
+                $status = 'New Order'; // modify "Processing" status text by "New Order" 
             }
+
             $new_order_statuses[ $key ] = $status;
         }
 
@@ -78,6 +81,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
                 foreach ($custom_statuses as $_key => $_status) {
                     $new_order_statuses['mark_'.$_key] = $_status['title'];
                 }
+                $status = 'New Order'; // modify "Processing" status text by "New Order" 
             }
             $new_order_statuses[ $key ] = $status;
         }
@@ -101,14 +105,26 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
                     background-color:'.$_status["color"].' !important;
                     color: '.get_contrast_color($_status["color"]).' !important;
                     border-radius: 2px !important;
-                    box-shadow: 0 1px 5px 0px #0003 !important;
                     height: 30px !important;
                     display: inline-flex !important;
                     align-items: center !important;
                 }
             ';
         }
-        echo '</style>';
+        echo '
+            tr.status-processing {
+                background-color: #027bff22 !important;
+            }
+            .order-status.status-processing {
+                background-color:#027bff !important;
+                color: '.get_contrast_color('#027bff').' !important;
+                border-radius: 2px !important;
+                height: 30px !important;
+                display: inline-flex !important;
+                align-items: center !important;
+            }
+        </style>
+        ';
     }
 
 
@@ -165,7 +181,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
      */
     public function get_statuses() {
         $statuses = get_option('woo_easy_life_custom_order_statuses', []);
-        $statuses_desc = array_reverse($statuses, true); // true to preserve keys
+        $statuses_desc = $statuses; // true to preserve keys
 
         return new WP_REST_Response([
             'status' => 'success',
@@ -219,6 +235,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
         $data = [
             'title'       => $title,
             'slug'        => $slug,
+            'is_default' => false,
             'color'       => sanitize_hex_color($request->get_param('color')),
             'description' => sanitize_textarea_field($request->get_param('description')),
         ];
@@ -313,6 +330,11 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
             'color' => [
                 'required'    => true,
                 'type'        => 'string',
+                'description' => 'Hex color for the status.',
+            ],
+            'is_default' => [
+                'required'    => false,
+                'type'        => 'boolean',
                 'description' => 'Hex color for the status.',
             ],
             'description' => [

@@ -58,6 +58,7 @@ class OrderListAPI {
             'status'   => $status,
             'limit'    => $per_page,
             'page'     => $page,
+            'type'     => 'shop_order',
             'return'   => 'objects',
         ];
 
@@ -120,7 +121,28 @@ class OrderListAPI {
             ];
         }
 
-        return rest_ensure_response($data);
+        return new \WP_REST_Response([
+            'status' => 'success',
+            'data'   => $data,
+        ], 200);
+    }
+
+    public function get_order_status_with_counts() {
+        $statuses = wc_get_order_statuses(); // Retrieve all order statuses
+        $order_counts = [];
+    
+        foreach ($statuses as $status_key => $status_label) {
+            // Query orders by status
+            $args = [
+                'status' => str_replace('wc-', '', $status_key), // Remove 'wc-' prefix for the query
+                'limit'  => -1,
+                'return' => 'ids',
+            ];
+            $orders = wc_get_orders($args);
+            $order_counts[$status_key] = count($orders); // Count orders per status
+        }
+    
+        return $order_counts;
     }
 }
 

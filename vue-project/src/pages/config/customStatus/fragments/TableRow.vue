@@ -11,6 +11,7 @@
         </Table.Td>
         <Table.Td class="text-center">
             <ThreeDotActionButton
+                v-if="!item.is_default"
                 :edit="() => toggleEdit = true"
                 :delete="(btn) => handleCustomStatusDelete(id, btn)"
             />
@@ -40,6 +41,7 @@
             title: string
             color: string
             description: string
+            is_default: boolean
         },
         id: string
     }>()

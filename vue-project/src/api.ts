@@ -14,7 +14,8 @@ export const getPaymentMethods = async () => {
     return await axios.get(`${localApiBaseURL}/payment-methods`)
 }
 export const getOrderList = async () => {
-    return await axios.get(`${localApiBaseURL}/orders`)
+    const { data } = await axios.get(`${localApiBaseURL}/orders`)
+    return data
 }
 export const updateAddress = async (payload) => {
     return await axios.post(`${localApiBaseURL}/update-address/${payload.order_id}`, payload)
