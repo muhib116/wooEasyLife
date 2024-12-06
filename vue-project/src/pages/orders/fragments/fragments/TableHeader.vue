@@ -1,5 +1,5 @@
 <template>
-    <Table.THead class="truncate">
+    <Table.THead class="truncate bg-gray-700 text-white">
         <Table.Th>
             <label class="flex gap-2">
                 <input
