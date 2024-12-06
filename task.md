@@ -3,8 +3,13 @@
 👉🏻 kun kun user otp dise ar kun kun user otp dey nai tar akta list dekhate hobe phone number soho
 👉🏻 Invoice printing er bebosta rakhte hobe
 
+order place korar somoy koro nio:
 
+otp verification enable kora thakle, otp validate kore tar por order place korte hobe
+ip block kina dekhte hobe
+phone number block kina dekh te hobe
 
+order place korar por froud check kore froud data soho admin ke akta sms dite hobe arekta sms dite hobe customer ke
 
 
 

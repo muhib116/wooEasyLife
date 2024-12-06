@@ -11,3 +11,8 @@
         Only bangladeshi ip <br />
     </div>
 </template>
+
+
+<script setup>
+    
+</script>

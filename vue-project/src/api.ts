@@ -9,7 +9,8 @@ if(location.hostname == 'localhost'){
 
 export const localApiBaseURL = `${baseUrl}/wp-json/wooeasylife/v1`
 
-// local function
+
+// functions for order list
 export const getPaymentMethods = async () => {
     return await axios.get(`${localApiBaseURL}/payment-methods`)
 }
@@ -26,9 +27,6 @@ export const getOrderStatusListWithCounts = async () => {
 export const updateAddress = async (payload) => {
     return await axios.post(`${localApiBaseURL}/update-address/${payload.order_id}`, payload)
 }
-
-
-
 export const getOrderStatistics = async (payload: {
     startDate: string,
     endDate: string
@@ -36,6 +34,10 @@ export const getOrderStatistics = async (payload: {
     const { data } = await axios.get(`${localApiBaseURL}/order-stats`, { params:payload })
     return data
 }
+// functions for order list
+
+
+
 
 
 // custom order status
@@ -53,5 +55,13 @@ export const getCustomStatusList = async () => {
 }
 export const deleteCustomStatus = async (id:string) => {
     const { data } = await axios.delete(`${localApiBaseURL}/statuses/${id}`)
+    return data
+}
+
+
+// configuration integration
+export const createOrUpdateConfigIntegration = () => {}
+export const getConfigIntegration = await () => {
+    const { data } = await axios.get(`${localApiBaseURL}/config-integration`)
     return data
 }

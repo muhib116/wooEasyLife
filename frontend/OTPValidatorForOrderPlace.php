@@ -6,19 +6,28 @@ class OTPValidatorForOrderPlace
 {
     function __construct()
     {
-        // add_action('wp_footer', [$this, 'wooeasylife_check_if_checkout_page']);
-        // add_filter('proceedToCheckoutButtonLabel', [$this, 'customize_place_order_button']);
         add_filter('woocommerce_order_button_html', [$this, 'customize_place_order_button'], 30);
         add_filter('woocommerce_checkout_order_button_text', [$this, 'change_order_button_text'], 15);
+        add_action('woocommerce_after_checkout_form', [$this, 'pushPopupTemplateToAfterCheckoutForm'], 15);
     }
 
-    function customize_place_order_button($button_html)
+    public function customize_place_order_button()
     {
         // Customize the button text or add extra attributes
-        $custom_button = '<button style="background: blue;" type="submit" class="button alt custom-class" name="woocommerce_checkout_place_order" id="place_order" value="Place Order Now">';
+        $custom_button = '<button type="button" id="wooEasyLifeOtpModalOpener">';
         $custom_button .= 'Confirm & Pay'; // Custom text for the button
         $custom_button .= '</button>';
 
         return $custom_button;
+    }
+
+    public function pushPopupTemplateToAfterCheckoutForm () {
+        include_once plugin_dir_path(__DIR__) . 'includes/checkoutPage/CheckOutOtpPopup.php';
+    }
+
+    public function enqueue_checkout_footer_script() {
+        if (is_checkout()) {
+            wp_enqueue_script('woo-easy-life-custom-js-script', plugin_dir_url(__DIR__) . 'includes/checkoutPage/popup.js', [], null, true);
+        }
     }
 }
