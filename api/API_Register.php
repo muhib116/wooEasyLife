@@ -51,6 +51,6 @@ class API_Register {
 
         new \WooEasyLife\API\Admin\OrderStatisticsAPI();
         new \WooEasyLife\API\Admin\CustomOrderStatusAPI();
-        new \WooEasyLife\API\Admin\ConfigAPI();
+        new \WooEasyLife\API\Admin\WPOptionAPI();
     }
 }

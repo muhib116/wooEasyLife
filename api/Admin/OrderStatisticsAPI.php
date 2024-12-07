@@ -7,22 +7,25 @@ use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
 
-class OrderStatisticsAPI extends WP_REST_Controller {
+class OrderStatisticsAPI extends WP_REST_Controller
+{
 
-    public function __construct() {
-        add_action('rest_api_init', [ $this, 'register_routes' ]);
+    public function __construct()
+    {
+        add_action('rest_api_init', [$this, 'register_routes']);
     }
 
     /**
      * Register REST API routes.
      */
-    public function register_routes() {
+    public function register_routes()
+    {
         register_rest_route(
-            'wooeasylife/v1',
+            __API_NAMESPACE,
             '/order-stats',
             [
                 'methods'             => 'GET',
-                'callback'            => [ $this, 'get_order_statistics' ],
+                'callback'            => [$this, 'get_order_statistics'],
                 'permission_callback' => '__return_true',
             ]
         );
@@ -31,7 +34,8 @@ class OrderStatisticsAPI extends WP_REST_Controller {
     /**
      * Callback to get WooCommerce order statistics.
      */
-    public function get_order_statistics(WP_REST_Request $request) {
+    public function get_order_statistics(WP_REST_Request $request)
+    {
         // Check if WooCommerce is active
         if (!class_exists('WooCommerce')) {
             return new WP_Error(
@@ -89,7 +93,8 @@ class OrderStatisticsAPI extends WP_REST_Controller {
     /**
      * Generate a WooCommerce-compatible date query for a range.
      */
-    private function get_date_query($start_date, $end_date) {
+    private function get_date_query($start_date, $end_date)
+    {
         return [
             'after'     => date('Y-m-d 00:00:00', strtotime($start_date)),
             'before'    => date('Y-m-d 23:59:59', strtotime($end_date)),

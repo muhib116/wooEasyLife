@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name: WooEasyLife
  * Plugin URI: https://example.com/wooeasylife
@@ -13,50 +14,78 @@
  */
 
 // Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) {
-    die( 'Invalid request.' );
+if (! defined('ABSPATH')) {
+    die('Invalid request.');
 }
 
+define('__PREFIX', 'woo_easy_life_');
+define('__API_NAMESPACE', 'wooeasylife/v1');
+$config_data;
 
-if(!class_exists('WooEasyLife')) :
+
+
+if (!class_exists('WooEasyLife')) :
     require_once 'vendor/autoload.php';
 
-    class WooEasyLife {
+    class WooEasyLife
+    {
         public $handleDBTable;
         public function __construct()
         {
             register_activation_hook(__FILE__, [$this, 'woo_easy_life_activation_hook']);
-            register_deactivation_hook(__FILE__,[$this, 'woo_easy_life_deactivation_hook']);
+            register_deactivation_hook(__FILE__, [$this, 'woo_easy_life_deactivation_hook']);
             add_action('woocommerce_checkout_create_order', [$this, 'set_new_order_as_default'], 10, 2);
-            
+
             new WooEasyLife\Init\InitClass();
             new WooEasyLife\API\API_Register();
             new WooEasyLife\Admin\Admin_Class_Register();
             new WooEasyLife\Frontend\Frontend_Class_Register();
             $this->handleDBTable = new WooEasyLife\Admin\DBTable\HandleDBTable();
+            $this->get_and_set_config_data();
         }
 
-        public function woo_easy_life_activation_hook(){
-            if(empty(get_option('woo_easy_life_apiKey'))) update_option('woo_easy_life_apiKey', '');
-            if(empty(get_option('woo_easy_life_balance'))) update_option('woo_easy_life_balance', '200');
+        private function get_and_set_config_data() {
+            global $config_data;
+
+            $config_data = get_option(__PREFIX.'config');
+
+            // Decode the JSON data into an associative array
+            $decoded_config_data = is_string($config_data) ? json_decode($config_data, true) : $config_data;
+
+            // Ensure it's an array
+            if (!is_array($decoded_config_data)) {
+                $decoded_config_data = [];
+            }
+
+            $config_data = $decoded_config_data;
+        }
+
+        public function woo_easy_life_activation_hook()
+        {
+            if (empty(get_option('woo_easy_life_apiKey'))) update_option('woo_easy_life_apiKey', '');
+            if (empty(get_option('woo_easy_life_balance'))) update_option('woo_easy_life_balance', '200');
 
             // Save a flag to indicate the table was created
-            if(empty(get_option('woo_easy_life_plugin_installed'))) update_option('woo_easy_life_plugin_installed', true);
+            if (empty(get_option('woo_easy_life_plugin_installed'))) update_option('woo_easy_life_plugin_installed', true);
             $this->handleDBTable->create();
             $this->create_static_statuses();
+            $this->save_default_config();
         }
 
-        public function woo_easy_life_deactivation_hook(){
-            if(get_option('woo_easy_life_apiKey') !== false) delete_option('woo_easy_life_apiKey');
-            if(get_option('woo_easy_life_balance') !== false) delete_option('woo_easy_life_balance');
+        public function woo_easy_life_deactivation_hook()
+        {
+            if (get_option('woo_easy_life_apiKey') !== false) delete_option('woo_easy_life_apiKey');
+            if (get_option('woo_easy_life_balance') !== false) delete_option('woo_easy_life_balance');
+            if (get_option('woo_easy_life_config') !== false) delete_option('woo_easy_life_config');
 
             // Remove plugin-specific options
-            delete_option('woo_easy_life_plugin_installed');
-            delete_option('woo_easy_life_custom_order_statuses');
+            if (get_option('woo_easy_life_plugin_installed') !== false) delete_option('woo_easy_life_plugin_installed');
+            if (get_option('woo_easy_life_custom_order_statuses') !== false) delete_option('woo_easy_life_custom_order_statuses');
             $this->handleDBTable->delete();
         }
 
-        public function create_static_statuses() {
+        public function create_static_statuses()
+        {
             // Define static statuses
             $static_statuses = [
                 'processing' => [
@@ -172,10 +201,28 @@ if(!class_exists('WooEasyLife')) :
                     'description' => 'Payment refunded to the customer.',
                 ],
             ];
-        
+
             // Save the updated statuses
-            if(empty(get_option('woo_easy_life_custom_order_statuses'))){
+            if (empty(get_option('woo_easy_life_custom_order_statuses'))) {
                 update_option('woo_easy_life_custom_order_statuses', $static_statuses);
+            }
+        }
+
+        public function save_default_config()
+        {
+            $config = [
+                "ip_block" => true,
+                "phone_number_block" => true,
+                "place_order_sms_for_customer" => false,
+                "place_order_sms_for_admin" => false,
+                "place_order_otp_verification" => false,
+                "daily_order_place_limit_per_customer" => 3,
+                "only_bd_ip" => false
+            ];
+
+            // Save the updated config
+            if (empty(get_option('woo_easy_life_config'))) {
+                update_option('woo_easy_life_config', $config);
             }
         }
     }

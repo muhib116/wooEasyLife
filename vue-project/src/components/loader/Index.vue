@@ -3,8 +3,8 @@
         v-if="active"
         class="flex gap-1 items-end"
         :style="{
-            width: `${size || 32}px`,
-            height: `${size || 32}px`,
+            width: `${size || 36}px`,
+            height: `${size || 36}px`,
         }"
     >
         <Icon

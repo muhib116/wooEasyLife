@@ -7,38 +7,41 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_Error;
 
-class CustomOrderStatusAPI extends WP_REST_Controller {
+class CustomOrderStatusAPI extends WP_REST_Controller
+{
 
-    public function __construct() {
-        add_action('init', [ $this, 'wooeasylife_register_custom_order_statuses' ]);
-        add_filter('wc_order_statuses', [ $this, 'wooeasylife_add_custom_order_statuses' ]);
-        add_filter('bulk_actions-edit-shop_order', [ $this, 'wooeasylife_add_custom_bulk_actions' ], 10);
+    public function __construct()
+    {
+        add_action('init', [$this, 'wooeasylife_register_custom_order_statuses']);
+        add_filter('wc_order_statuses', [$this, 'wooeasylife_add_custom_order_statuses']);
+        add_filter('bulk_actions-edit-shop_order', [$this, 'wooeasylife_add_custom_bulk_actions'], 10);
         // Compatibility with new orders page on HPOS/COT
-        add_filter('bulk_actions-woocommerce_page_wc-orders', [ $this, 'wooeasylife_add_custom_bulk_actions' ], 10);
-        add_action('admin_head', [ $this, 'wooeasylife_highlight_custom_statuses' ]);
+        add_filter('bulk_actions-woocommerce_page_wc-orders', [$this, 'wooeasylife_add_custom_bulk_actions'], 10);
+        add_action('admin_head', [$this, 'wooeasylife_highlight_custom_statuses']);
 
-        add_action('rest_api_init', [ $this, 'register_routes' ]);
+        add_action('rest_api_init', [$this, 'register_routes']);
     }
 
 
-    
+
     /**
      * 1. Dynamically Register Custom Statuses
      * Make sure all your custom statuses are registered using register_post_status. This ensures WooCommerce recognizes your custom statuses.
      */
-    public function wooeasylife_register_custom_order_statuses() { 
+    public function wooeasylife_register_custom_order_statuses()
+    {
         $custom_statuses = get_option('woo_easy_life_custom_order_statuses', []);
 
         foreach ($custom_statuses as $slug => $details) {
-            register_post_status('wc-'.$slug, [
+            register_post_status('wc-' . $slug, [
                 'label'                     => $details['title'],
                 'public'                    => true,
                 'show_in_admin_status_list' => true,
                 'show_in_admin_all_list'    => true,
                 'exclude_from_search'       => false,
                 'label_count'               => _n_noop(
-                    $details['title'] . ' (%s)', 
-                    $details['title'] . ' (%s)', 
+                    $details['title'] . ' (%s)',
+                    $details['title'] . ' (%s)',
                     'wooeasylife'
                 ),
             ]);
@@ -50,18 +53,19 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
      * You must hook into the wc_order_statuses filter to add your custom statuses to the WooCommerce orders filter dropdown.
      */
 
-    public function wooeasylife_add_custom_order_statuses($statuses) {
+    public function wooeasylife_add_custom_order_statuses($statuses)
+    {
         $custom_statuses = get_option('woo_easy_life_custom_order_statuses', []);
         $new_order_statuses = [];
-        foreach ( $statuses as $key => $status ) {
-            if ( 'wc-processing' === $key ) {
+        foreach ($statuses as $key => $status) {
+            if ('wc-processing' === $key) {
                 foreach ($custom_statuses as $_key => $_status) {
-                    $new_order_statuses['wc-'.$_key] = $_status['title'];
+                    $new_order_statuses['wc-' . $_key] = $_status['title'];
                 }
                 $status = 'New Order'; // modify "Processing" status text by "New Order" 
             }
 
-            $new_order_statuses[ $key ] = $status;
+            $new_order_statuses[$key] = $status;
         }
 
         return $new_order_statuses;
@@ -71,19 +75,20 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
      * 3. Add Custom Statuses to Bulk Actions
      * To include your custom statuses in the bulk actions dropdown (e.g., "Mark as Shipped"), use the following code:
      */
-    public function wooeasylife_add_custom_bulk_actions($bulk_actions) {
+    public function wooeasylife_add_custom_bulk_actions($bulk_actions)
+    {
         // Retrieve custom statuses from options
         $custom_statuses = get_option('woo_easy_life_custom_order_statuses', []);
         $new_order_statuses = [];
 
-        foreach ( $bulk_actions as $key => $status ) {
-            if ( 'mark_processing' === $key ) {
+        foreach ($bulk_actions as $key => $status) {
+            if ('mark_processing' === $key) {
                 foreach ($custom_statuses as $_key => $_status) {
-                    $new_order_statuses['mark_'.$_key] = $_status['title'];
+                    $new_order_statuses['mark_' . $_key] = $_status['title'];
                 }
                 $status = 'New Order'; // modify "Processing" status text by "New Order" 
             }
-            $new_order_statuses[ $key ] = $status;
+            $new_order_statuses[$key] = $status;
         }
 
         return $new_order_statuses;
@@ -93,17 +98,18 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
      * 4. Style the Custom Statuses in the Orders Table
      * To make the custom statuses visually identifiable, apply custom colors in the orders table:
      */
-    public function wooeasylife_highlight_custom_statuses() {
+    public function wooeasylife_highlight_custom_statuses()
+    {
         $custom_statuses = get_option('woo_easy_life_custom_order_statuses', []);
         echo '<style>';
         foreach ($custom_statuses as $_key => $_status) {
             echo '
-                tr.status-'.$_key.' {
-                    background-color:'.$_status["color"].'22 !important;
+                tr.status-' . $_key . ' {
+                    background-color:' . $_status["color"] . '22 !important;
                 }
-                .order-status.status-'.$_key.' {
-                    background-color:'.$_status["color"].' !important;
-                    color: '.get_contrast_color($_status["color"]).' !important;
+                .order-status.status-' . $_key . ' {
+                    background-color:' . $_status["color"] . ' !important;
+                    color: ' . get_contrast_color($_status["color"]) . ' !important;
                     border-radius: 2px !important;
                     height: 30px !important;
                     display: inline-flex !important;
@@ -117,7 +123,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
             }
             .order-status.status-processing {
                 background-color:#027bff !important;
-                color: '.get_contrast_color('#027bff').' !important;
+                color: ' . get_contrast_color('#027bff') . ' !important;
                 border-radius: 2px !important;
                 height: 30px !important;
                 display: inline-flex !important;
@@ -134,37 +140,38 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
     /**
      * Register REST API routes
      */
-    public function register_routes() {
-        register_rest_route('wooeasylife/v1', '/statuses', [
+    public function register_routes()
+    {
+        register_rest_route(__API_NAMESPACE, '/statuses', [
             [
                 'methods'             => 'GET',
-                'callback'            => [ $this, 'get_statuses' ],
-                'permission_callback' => [ $this, 'permissions_check' ],
+                'callback'            => [$this, 'get_statuses'],
+                'permission_callback' => [$this, 'permissions_check'],
             ],
             [
                 'methods'             => 'POST',
-                'callback'            => [ $this, 'create_status' ],
-                'permission_callback' => [ $this, 'permissions_check' ],
+                'callback'            => [$this, 'create_status'],
+                'permission_callback' => [$this, 'permissions_check'],
                 'args'                => $this->get_status_schema(false), // No 'id' required for creation
             ]
         ]);
 
-        register_rest_route('wooeasylife/v1', '/statuses/(?P<id>[a-zA-Z0-9\-_]+)', [
+        register_rest_route(__API_NAMESPACE, '/statuses/(?P<id>[a-zA-Z0-9\-_]+)', [
             [
                 'methods'             => 'GET',
-                'callback'            => [ $this, 'get_status' ],
-                'permission_callback' => [ $this, 'permissions_check' ],
+                'callback'            => [$this, 'get_status'],
+                'permission_callback' => [$this, 'permissions_check'],
             ],
             [
                 'methods'             => 'PUT',
-                'callback'            => [ $this, 'update_status' ],
-                'permission_callback' => [ $this, 'permissions_check' ],
+                'callback'            => [$this, 'update_status'],
+                'permission_callback' => [$this, 'permissions_check'],
                 'args'                => $this->get_status_schema(true), // 'id' required for update
             ],
             [
                 'methods'             => 'DELETE',
-                'callback'            => [ $this, 'delete_status' ],
-                'permission_callback' => [ $this, 'permissions_check' ],
+                'callback'            => [$this, 'delete_status'],
+                'permission_callback' => [$this, 'permissions_check'],
             ],
         ]);
     }
@@ -172,14 +179,16 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
     /**
      * Permissions callback for the endpoints.
      */
-    public function permissions_check() {
+    public function permissions_check()
+    {
         return '__return_true'; // Allow all for now (you can restrict later)
     }
 
     /**
      * Get all custom statuses
      */
-    public function get_statuses() {
+    public function get_statuses()
+    {
         $statuses = get_option('woo_easy_life_custom_order_statuses', []);
         $statuses_desc = $statuses; // true to preserve keys
 
@@ -192,12 +201,13 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
     /**
      * Get a single custom status
      */
-    public function get_status(WP_REST_Request $request) {
+    public function get_status(WP_REST_Request $request)
+    {
         $statuses = get_option('woo_easy_life_custom_order_statuses', []);
         $status_id = $request->get_param('id');
 
         if (!isset($statuses[$status_id])) {
-            return new WP_Error('not_found', 'Status not found', [ 'status' => 404 ]);
+            return new WP_Error('not_found', 'Status not found', ['status' => 404]);
         }
 
         return new WP_REST_Response([
@@ -209,28 +219,29 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
     /**
      * Create a new custom status
      */
-    public function create_status(WP_REST_Request $request) {
+    public function create_status(WP_REST_Request $request)
+    {
         $statuses = get_option('woo_easy_life_custom_order_statuses', []);
-    
+
         // Sanitize and validate the title and slug
         $title = sanitize_text_field($request->get_param('title'));
         if (empty($title)) {
             return new WP_Error('missing_title', 'The title field is required.', ['status' => 400]);
         }
-        
+
         $slug = sanitize_title($title);
-    
+
         // Check for duplicate title or slug
         foreach ($statuses as $status) {
             if (strtolower($status['title']) === strtolower($title)) {
                 return new WP_Error('status_exists', 'A status with this title already exists.', ['status' => 400]);
             }
         }
-    
+
         if (isset($statuses[$slug])) {
             return new WP_Error('slug_exists', 'A status with this slug already exists.', ['status' => 400]);
         }
-    
+
         // Create the status data
         $data = [
             'title'       => $title,
@@ -239,11 +250,11 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
             'color'       => sanitize_hex_color($request->get_param('color')),
             'description' => sanitize_textarea_field($request->get_param('description')),
         ];
-    
+
         // Save the new status
         $statuses[$slug] = $data;
         update_option('woo_easy_life_custom_order_statuses', $statuses);
-    
+
         return new WP_REST_Response([
             'status'  => 'success',
             'message' => 'Status created successfully',
@@ -252,17 +263,18 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
             ],
         ], 201);
     }
-    
+
 
     /**
      * Update an existing custom status
      */
-    public function update_status(WP_REST_Request $request) {
+    public function update_status(WP_REST_Request $request)
+    {
         $statuses = get_option('woo_easy_life_custom_order_statuses', []);
         $slug = sanitize_title($request->get_param('id')); // ID acts as slug
 
         if (!isset($statuses[$slug])) {
-            return new WP_Error('not_found', 'Status not found', [ 'status' => 404 ]);
+            return new WP_Error('not_found', 'Status not found', ['status' => 404]);
         }
 
         $new_title = sanitize_text_field($request->get_param('title'));
@@ -271,7 +283,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
         // Validate uniqueness of the title (excluding the current item)
         foreach ($statuses as $key => $status) {
             if ($key !== $slug && strtolower($status['slug']) === strtolower($new_slug)) {
-                return new WP_Error('duplicate_title', 'A status with this title already exists.', [ 'status' => 400 ]);
+                return new WP_Error('duplicate_title', 'A status with this title already exists.', ['status' => 400]);
             }
         }
 
@@ -295,12 +307,13 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
     /**
      * Delete a custom status
      */
-    public function delete_status(WP_REST_Request $request) {
+    public function delete_status(WP_REST_Request $request)
+    {
         $statuses = get_option('woo_easy_life_custom_order_statuses', []);
         $slug = sanitize_title($request->get_param('id'));
 
         if (!isset($statuses[$slug])) {
-            return new WP_Error('not_found', 'Status not found', [ 'status' => 404 ]);
+            return new WP_Error('not_found', 'Status not found', ['status' => 404]);
         }
 
         unset($statuses[$slug]);
@@ -315,7 +328,8 @@ class CustomOrderStatusAPI extends WP_REST_Controller {
     /**
      * Schema for status input validation
      */
-    public function get_status_schema($require_id = true) {
+    public function get_status_schema($require_id = true)
+    {
         $schema = [
             'title' => [
                 'required'    => true,

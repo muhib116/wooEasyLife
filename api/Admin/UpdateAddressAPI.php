@@ -7,19 +7,22 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_Error;
 
-class UpdateAddressAPI extends WP_REST_Controller {
+class UpdateAddressAPI extends WP_REST_Controller
+{
 
-    public function __construct() {
-        add_action('rest_api_init', [ $this, 'register_routes' ]);
+    public function __construct()
+    {
+        add_action('rest_api_init', [$this, 'register_routes']);
     }
 
     /**
      * Register the REST API routes
      */
-    public function register_routes() {
-        register_rest_route('wooeasylife/v1', '/update-address/(?P<id>\d+)', [
+    public function register_routes()
+    {
+        register_rest_route(__API_NAMESPACE, '/update-address/(?P<id>\d+)', [
             'methods'             => 'POST',
-            'callback'            => [ $this, 'update_address' ],
+            'callback'            => [$this, 'update_address'],
             'permission_callback' => '__return_true', // Allow public access for testing
             'args'                => $this->get_endpoint_args_for_item_schema(),
         ]);
@@ -28,17 +31,18 @@ class UpdateAddressAPI extends WP_REST_Controller {
     /**
      * Update billing and shipping address
      */
-    public function update_address(WP_REST_Request $request) {
+    public function update_address(WP_REST_Request $request)
+    {
         $order_id = $request->get_param('id');
 
         if (!$order_id) {
-            return new WP_Error('no_order_id', 'Order ID is required', [ 'status' => 400 ]);
+            return new WP_Error('no_order_id', 'Order ID is required', ['status' => 400]);
         }
 
         $order = wc_get_order($order_id);
 
         if (!$order) {
-            return new WP_Error('invalid_order', 'Invalid order ID', [ 'status' => 404 ]);
+            return new WP_Error('invalid_order', 'Invalid order ID', ['status' => 404]);
         }
 
         // Get the addresses from the request
@@ -89,6 +93,6 @@ class UpdateAddressAPI extends WP_REST_Controller {
         // Save the order
         $order->save();
 
-        return new WP_REST_Response([ 'message' => 'Order address updated successfully' ], 200);
+        return new WP_REST_Response(['message' => 'Order address updated successfully'], 200);
     }
 }

@@ -3,10 +3,10 @@
 <div 
     v-if="title"
     class="flex items-center text-sm p-4 mb-4 border-l-4 border-current gap-3" role="alert"
-    :style="styles[type]"
+    :style="styles[type.toLowerCase()]"
 >
     <Icon
-        :name="icons[type]"
+        :name="icons[type.toLowerCase()]"
         size="24"
     />
     <div>

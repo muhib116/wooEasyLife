@@ -13,6 +13,7 @@ import Image from './image/Image.vue'
 import ColorPicker from './ColorPicker.vue'
 import ThreeDotActionButton from './ThreeDotActionButton.vue'
 import MessageBox from './MessageBox.vue'
+import Switch from './Switch.vue'
 
 export {
     Icon,
@@ -29,5 +30,6 @@ export {
     Image,
     ColorPicker,
     ThreeDotActionButton,
-    MessageBox
+    MessageBox,
+    Switch
 }

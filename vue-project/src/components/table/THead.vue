@@ -1,5 +1,5 @@
 <template>
-    <thead class="text-sm text-gray-900 capitalize bg-gray-200">
+    <thead class="text-sm bg-gray-700 capitalize text-gray-200">
         <tr>
             <slot></slot>
         </tr>

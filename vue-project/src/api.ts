@@ -59,9 +59,47 @@ export const deleteCustomStatus = async (id:string) => {
 }
 
 
-// configuration integration
-export const createOrUpdateConfigIntegration = () => {}
-export const getConfigIntegration = await () => {
-    const { data } = await axios.get(`${localApiBaseURL}/config-integration`)
+// wp_options table CRUD start
+export const createOrUpdateWPOption = async (payload: {
+    option_name: string,
+    data: object
+}) => {
+    const { data } = await axios.post(`${localApiBaseURL}/wp-option`, payload)
     return data
 }
+
+export const createOrUpdateWPOptionItem = async (payload: {
+    option_name: string,
+    key: string,
+    value: string
+}) => {
+    const { data } = await axios.post(`${localApiBaseURL}/wp-option-item`, {
+        params: payload
+    })
+    return data
+}
+
+export const getWPOption = async (payload: {option_name: string}) => {
+    const { data } = await axios.get(`${localApiBaseURL}/wp-option`, {
+        params: payload
+    })
+    return data
+}
+
+export const getWPOptionItem = async (payload: {
+    option_name: string
+    key: string
+}) => {
+    const { data } = await axios.get(`${localApiBaseURL}/wp-option-item`, {
+        params: payload
+    })
+    return data
+}
+
+export const deleteWPOption = async (payload: {option_name: string}) => {
+    const { data } = await axios.delete(`${localApiBaseURL}/wp-option`, {
+        params: payload
+    })
+    return data
+}
+// wp_options table CRUD end

@@ -1,22 +1,26 @@
 <?php
+
 namespace WooEasyLife\API\Admin;
 
-class OrderListAPI {
+class OrderListAPI
+{
 
-    public function __construct() {
-        add_action( 'rest_api_init', [ $this, 'register_routes' ] );
+    public function __construct()
+    {
+        add_action('rest_api_init', [$this, 'register_routes']);
     }
 
     /**
      * Registers the routes for the custom endpoint.
      */
-    public function register_routes() {
+    public function register_routes()
+    {
         register_rest_route(
-            'wooeasylife/v1', // Namespace and version.
+            __API_NAMESPACE, // Namespace and version.
             '/orders',         // Endpoint: /orders
             [
                 'methods'             => 'GET',
-                'callback'            => [ $this, 'get_orders' ],
+                'callback'            => [$this, 'get_orders'],
                 'permission_callback' => '__return_true', // Allow public access (modify as needed).
                 'args'                => [
                     'status' => [
@@ -41,11 +45,11 @@ class OrderListAPI {
             ]
         );
         register_rest_route(
-            'wooeasylife/v1', // Namespace and version.
+            __API_NAMESPACE, // Namespace and version.
             '/status-with-counts',         // Endpoint: /orders
             [
                 'methods'             => 'GET',
-                'callback'            => [ $this, 'get_order_status_with_counts' ],
+                'callback'            => [$this, 'get_order_status_with_counts'],
                 'permission_callback' => '__return_true', // Allow public access (modify as needed).
             ]
         );
@@ -57,10 +61,11 @@ class OrderListAPI {
      * @param WP_REST_Request $request The API request.
      * @return WP_REST_Response The response with order data.
      */
-    public function get_orders( $request ) {
-        $status   = $request->get_param( 'status' );
-        $per_page = $request->get_param( 'per_page' );
-        $page     = $request->get_param( 'page' );
+    public function get_orders($request)
+    {
+        $status   = $request->get_param('status');
+        $per_page = $request->get_param('per_page');
+        $page     = $request->get_param('page');
 
         // Use WooCommerce Order Query to fetch orders.
         $args = [
@@ -71,27 +76,27 @@ class OrderListAPI {
             'return'   => 'objects',
         ];
 
-        $orders = wc_get_orders( $args );
+        $orders = wc_get_orders($args);
 
-        if ( empty( $orders ) ) {
-            return rest_ensure_response( [
+        if (empty($orders)) {
+            return rest_ensure_response([
                 'message' => 'No orders found.',
                 'data'    => [],
-            ] );
+            ]);
         }
 
         // Prepare the order data.
         $data = [];
-        foreach ( $orders as $order ) {
+        foreach ($orders as $order) {
             $product_info = getProductInfo($order);
             $data[] = [
                 'id'            => $order->get_id(),
                 'status'        => $order->get_status(),
                 'total'         => $order->get_total(),
-                'date_created'  => $order->get_date_created() ? $order->get_date_created()->date( 'M j, Y \a\t g:i A' ) : null,
+                'date_created'  => $order->get_date_created() ? $order->get_date_created()->date('M j, Y \a\t g:i A') : null,
                 'customer_id'   => $order->get_customer_id(),
                 'customer_name' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
-                'customer_ip'   => $order->get_meta( '_customer_ip_address', true ),
+                'customer_ip'   => $order->get_meta('_customer_ip_address', true),
                 'payment_method' => $order->get_payment_method(), // e.g., 'paypal'
                 'payment_method_title' => $order->get_payment_method_title(), // e.g., 'PayPal'
                 'transaction_id' => $order->get_transaction_id() ?: '',
@@ -136,7 +141,8 @@ class OrderListAPI {
         ], 200);
     }
 
-    public function get_order_status_with_counts() {
+    public function get_order_status_with_counts()
+    {
         $statuses = wc_get_order_statuses(); // Retrieve all order statuses
         foreach ($statuses as $status_key => $status_label) {
             // Query orders by status
@@ -149,7 +155,7 @@ class OrderListAPI {
             $orders = wc_get_orders($args);
             $order_count = count($orders);
 
-            if($order_count>0) {
+            if ($order_count > 0) {
                 $order_counts[] = [
                     "title" => $status_label,
                     "slug" => str_replace('wc-', '', $status_key),
@@ -157,7 +163,7 @@ class OrderListAPI {
                 ]; // Count orders per status
             }
         }
-    
+
         return new \WP_REST_Response([
             'status' => 'success',
             'data'   => $order_counts
@@ -166,7 +172,8 @@ class OrderListAPI {
 }
 
 
-function getProductInfo($order) {
+function getProductInfo($order)
+{
     $productInfo = [
         'total_price' => 0,
         'product_info' => []
@@ -175,10 +182,10 @@ function getProductInfo($order) {
         foreach ($order->get_items() as $item_id => $item) {
             // Get product details
             $product = $item->get_product(); // Get the product object
-    
+
             if ($product) {
                 $product_total = $item->get_total(); // Total for the line item (quantity * price)
-                $productInfo["total_price"] = (Int)$productInfo["total_price"] += (Int)$product_total;
+                $productInfo["total_price"] = (int)$productInfo["total_price"] += (int)$product_total;
                 $productInfo["product_info"][] = [
                     'product_name' => $product->get_name(),
                     'product_price' => $product->get_price(),
