@@ -5,9 +5,7 @@
                 <Card.Native class="flex-1 !px-0">
                     <OrderList />
                 </Card.Native>
-                <Card.Native class="basis-[250px] px-0 sticky top-12">
-                    <ActionMenu />
-                </Card.Native>
+                <ActionMenu />
             </div>
         </Container>
     </Layout>

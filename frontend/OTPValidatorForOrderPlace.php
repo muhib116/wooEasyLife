@@ -2,8 +2,7 @@
 
 namespace WooEasyLife\Frontend;
 
-use WooEasyLife\API\Admin\WPOptionAPI;
-
+$order_button_text;
 class OTPValidatorForOrderPlace
 {
     public $option_data;
@@ -13,12 +12,19 @@ class OTPValidatorForOrderPlace
         $this->option_data = get_option(__PREFIX.'config');
         add_filter('woocommerce_order_button_html', [$this, 'customize_place_order_button'], 30);
         add_filter('woocommerce_checkout_order_button_text', [$this, 'change_order_button_text'], 15);
+        add_filter('woocommerce_order_button_text', [$this, 'change_order_button_text'], 15);
         add_action('woocommerce_after_checkout_form', [$this, 'pushPopupTemplateToAfterCheckoutForm'], 15);
+    }
+
+    public function change_order_button_text($text) {
+        global $order_button_text;
+        $order_button_text = $text;
+        return $text;
     }
 
     public function customize_place_order_button($btn)
     {
-        // echo '---'.$btn.'----';
+        global $order_button_text;
         global $config_data;
         // Separate the 'place_order_otp_verification' data
         $place_order_otp_verification = $config_data['place_order_otp_verification'] ?? null;
@@ -28,7 +34,7 @@ class OTPValidatorForOrderPlace
         if($place_order_otp_verification){
             // Customize the button text or add extra attributes
             $custom_button = '<button type="button" id="wooEasyLifeOtpModalOpener">';
-            $custom_button .= 'Confirm & Pay'; // Custom text for the button
+            $custom_button .= $order_button_text; // Custom text for the button
             $custom_button .= '</button>';
             return $custom_button;
         }

@@ -23,7 +23,8 @@
                 "
             >
                 An OTP has been sent to 
-                <span style="font-weight: bold;color: #ff4242;">01853S25141.</span>
+
+                <span style="font-weight: bold;color: #ff4242;">{{ billingPhone }}.</span>
             </h4>
 
             <div style="display: grid; justify-content: center; text-align: center;">
@@ -82,7 +83,10 @@
                     name="woocommerce_checkout_place_order" 
                     id="place_order" 
                     value="Place Order Now"
-                >Place Order</button>
+                >
+                    <?php //global $order_button_text; echo $order_button_text; ?>
+                    Confirm your order
+                </button>
             </div>
         </div>
 
@@ -98,14 +102,15 @@
 <script src="<?php echo plugin_dir_url(__DIR__) . 'checkoutPage/popup.js'; ?>"></script>
 
 <script>
-    const { createApp, ref, onMounted, computed } = Vue
+    const { createApp, ref, onMounted, computed, watchEffect } = Vue
     createApp({
         setup() {
-            const resendOtpCountDownTimeInSecond = 12;
-            const remainingTime = ref(resendOtpCountDownTimeInSecond);
+            const resendOtpCountDownTimeInSecond = 12
+            const remainingTime = ref(resendOtpCountDownTimeInSecond)
             const minutes = ref(Math.floor(remainingTime.value / 60))
-            const seconds = ref(remainingTime.value % 60);
-            const displayCount = ref('00:00');
+            const seconds = ref(remainingTime.value % 60)
+            const displayCount = ref('00:00')
+            const billingPhone = ref('')
 
             const woo_easy_life_startCountdown = () => {
                 remainingTime.value = resendOtpCountDownTimeInSecond
@@ -132,6 +137,12 @@
                 return remainingTime.value > 0 ? `in ${displayCount.value}` : 'now'
             })
 
+            
+            setInterval(() => {
+                billingPhone.value = document.querySelector('body.woocommerce-checkout #billing_phone').value
+                console.log(billingPhone.value)
+            }, 500)
+
             return {
                 resendOtpCountDownTimeInSecond,
                 remainingTime,
@@ -140,7 +151,8 @@
                 displayCount,
                 resendOTP,
                 woo_easy_life_startCountdown,
-                getCountDownData
+                getCountDownData,
+                billingPhone
             }
         }
     }).mount('#woo_easy_modal')

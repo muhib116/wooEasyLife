@@ -1,39 +1,64 @@
 <template>
-    <Heading
-        class="px-6 mb-6"
-        title="Quick Actions"
-    />
-    <div class="[&>*]:border-t">
-        <MenuButton
-            title="Check Customer"
-            subtitle="Check delivery success rate for selected items."
-            iconName="PhUserList"
-            :cb="handleFraudCheck"
+    <Card.Native
+        class="basis-[250px] px-0 sticky top-12"
+    >
+        =={{ configData }}++
+    <!-- v-if="shouldShow" -->
+        <Heading
+            class="px-6 mb-6"
+            title="Quick Actions"
         />
-        <MenuButton
-            title="Courier"
-            subtitle="Book courier for selected items."
-            iconName="PhTruck"
-        />
-        <MenuButton
-            title="Block Ip"
-            subtitle="Book courier for selected items."
-            iconName="PhCellTower"
-        />
-        <MenuButton
-            title="Block Phone"
-            subtitle="Block phone number for selected items."
-            iconName="PhSimCard"
-        />
-    </div>
+        <div class="[&>*]:border-t">
+            <MenuButton
+                v-if="configData?.fraud_customer_checker"
+                title="Check Customer"
+                subtitle="Check delivery success rate for selected items."
+                iconName="PhUserList"
+                :cb="handleFraudCheck"
+            />
+            <MenuButton
+                v-if="configData?.courier_automation"
+                title="Courier"
+                subtitle="Book courier for selected items."
+                iconName="PhTruck"
+            />
+            <MenuButton
+                v-if="configData?.ip_block"
+                title="Block Ip"
+                subtitle="Book courier for selected items."
+                iconName="PhCellTower"
+            />
+            <MenuButton
+                v-if="configData?.phone_number_block"
+                title="Block Phone"
+                subtitle="Block phone number for selected items."
+                iconName="PhSimCard"
+            />
+        </div>
+    </Card.Native>
 </template>
 
 <script setup lang="ts">
-    import { Heading } from '@components'
+    import { Heading, Card } from '@components'
     import MenuButton from './fragments/MenuButton.vue'
-    import { inject } from 'vue'
+    import { inject, computed } from 'vue'
+    
+    const shouldShow = computed(() => {
+        // const {
+        //     fraud_customer_checker,
+        //     courier_automation,
+        //     ip_block,
+        //     phone_number_block
+        // } = configData.value
+
+        // return fraud_customer_checker || courier_automation || ip_block || phone_number_block
+    })
+
     
 
+    const {
+        configData
+    } = inject('configData')
     const {
         handleFraudCheck
     } = inject('useOrders')

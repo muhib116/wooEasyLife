@@ -217,7 +217,9 @@ if (!class_exists('WooEasyLife')) :
                 "place_order_sms_for_admin" => false,
                 "place_order_otp_verification" => false,
                 "daily_order_place_limit_per_customer" => 3,
-                "only_bd_ip" => false
+                "only_bangladeshi_ip" => false,
+                "courier_automation" => false,
+                "fraud_customer_checker" => false,
             ];
 
             // Save the updated config
