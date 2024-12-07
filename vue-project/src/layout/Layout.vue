@@ -28,7 +28,7 @@
     const isDevelopmentMode =  import.meta.env.DEV
     const configData = ref()
 
-    provide('configData', configData)
+    provide('configData', {configData})
 
     onBeforeMount(async () => {
         const { data } = await getWPOption({ option_name: 'config' })

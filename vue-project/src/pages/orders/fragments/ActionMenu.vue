@@ -1,9 +1,8 @@
 <template>
     <Card.Native
         class="basis-[250px] px-0 sticky top-12"
+        v-if="shouldShow"
     >
-        =={{ configData }}++
-    <!-- v-if="shouldShow" -->
         <Heading
             class="px-6 mb-6"
             title="Quick Actions"
@@ -44,22 +43,18 @@
     import { inject, computed } from 'vue'
     
     const shouldShow = computed(() => {
-        // const {
-        //     fraud_customer_checker,
-        //     courier_automation,
-        //     ip_block,
-        //     phone_number_block
-        // } = configData.value
+        const {
+            fraud_customer_checker,
+            courier_automation,
+            ip_block,
+            phone_number_block
+        } = configData.value
 
-        // return fraud_customer_checker || courier_automation || ip_block || phone_number_block
+        return fraud_customer_checker || courier_automation || ip_block || phone_number_block
     })
 
     
 
-    const {
-        configData
-    } = inject('configData')
-    const {
-        handleFraudCheck
-    } = inject('useOrders')
+    const {configData} = inject('configData')
+    const { handleFraudCheck } = inject('useOrders')
 </script>

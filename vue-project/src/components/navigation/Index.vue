@@ -4,25 +4,27 @@
             class="w-full flex justify-between"
         >
             <div class="flex -mb-[2px]">
-            <a href="#" class="flex items-center">
-                <img
-                class="w-auto h-10"
-                src="https://cdn.prod.website-files.com/6080d45a6168d45abde5cba9/60c7b570e1f4d7265bd225a7_software-logo.png"
-                alt=""
-                />
-            </a>
+                <a href="#" class="flex items-center">
+                    <img
+                    class="w-auto h-10"
+                    src="https://cdn.prod.website-files.com/6080d45a6168d45abde5cba9/60c7b570e1f4d7265bd225a7_software-logo.png"
+                    alt=""
+                    />
+                </a>
 
-            <ul class="flex sm:ml-6 sm:flex sm:space-x-5 [&>li]:mb-0 [&>li]:flex">
-                <li v-for="(item, index) in menus" :key="index">
-                <RouterLink
-                    :to="item.to"
-                    exact-active-class="border-orange-500/100 text-gray-700"
-                    class="text-base border-b-2 border-orange-500/0 hover:border-orange-500/100 text-gray-500 hover:text-gray-700 inline-flex items-center"
-                >
-                    {{ item.title }}
-                </RouterLink>
-                </li>
-            </ul>
+                <ul class="flex sm:ml-6 sm:flex sm:space-x-5 [&>li]:mb-0 [&>li]:flex">
+                    <template v-for="(item, index) in menus" :key="index">
+                        <li v-if="item.visible">
+                            <RouterLink
+                                :to="item.to"
+                                exact-active-class="border-orange-500/100 text-gray-700"
+                                class="text-base border-b-2 border-orange-500/0 hover:border-orange-500/100 text-gray-500 hover:text-gray-700 inline-flex items-center"
+                            >
+                                {{ item.title }}
+                            </RouterLink>
+                        </li>
+                    </template>
+                </ul>
             </div>
 
             <div class="flex">
@@ -85,25 +87,31 @@
 <script setup lang="ts">
 import { Icon } from "@components"
 import { Container } from '@layout'
+import { inject } from "vue"
+
+const {configData} = inject('configData')
 
 const menus = [
   {
     title: "Dashboard",
     to: {
         name: "home",
-    }
+    },
+    visible: true
   },
   {
     title: "Orders",
     to: {
         name: "orders",
-    }
+    },
+    visible: true
   },
   {
     title: "Fraud Check",
     to: {
         name: "fraudCheck",
-    }
+    },
+    visible: configData.value.fraud_customer_checker
   },
 ];
 </script>
