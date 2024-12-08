@@ -1,5 +1,17 @@
 /* modal start */
-.woo_easy_life_modal_wraper {
+.woo_easy_life_input_error#billing_phone{
+    border-color: red !important;
+    background: #ff1b1b20 !important;
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.woo_easy_life_modal_wrapper {
     background-color: #0005;
     position: fixed;
     top: 0;
@@ -15,12 +27,39 @@
     transition: 0.2s ease-in-out;
 }
 
-.woo_easy_life_modal_wraper.active {
+
+
+.woo_easy_life_modal_wrapper .spin {
+    animation: spin 1s linear infinite;
+}
+.wooEasyOTPValid input{
+    position: relative !important;
+    background: #c1ffc1 !important;
+    pointer-events: none;
+    border-color: #1bbd1b !important;
+}
+.wooEasyOTPError input{
+    position: relative !important;
+    background: rgb(255, 145, 145) !important;
+    pointer-events: auto !important;
+    border-color: #ff0f0f !important;
+}
+.wooEasyOTPValidating svg, .wooEasyOTPValid svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    margin-top: -14px;
+    margin-left: -16px;
+    fill: currentColor;
+}
+
+.woo_easy_life_modal_wrapper.active {
     opacity: 1;
     visibility: visible;
 }
 
-.woo_easy_life_modal_wraper .modal_container {
+.woo_easy_life_modal_wrapper .modal_container {
     background-color: #fff;
     max-width: 450px;
     width: 100%;
@@ -30,7 +69,7 @@
     box-shadow: 0 1px 6px #0001, 0 2px 10px #0002;
 }
 
-.woo_easy_life_modal_wraper.active .modal_container {
+.woo_easy_life_modal_wrapper.active .modal_container {
     display: block;
     animation-name: modal_open_animation;
     animation-duration: 0.2s;
@@ -51,7 +90,7 @@
     }
 }
 
-.woo_easy_life_modal_wraper.woo_easy_life_modal_close_animation .modal_container {
+.woo_easy_life_modal_wrapper.woo_easy_life_modal_close_animation .modal_container {
     animation-name: woo_easy_life_modal_close_animation;
     animation-timing-function: ease-in-out;
     animation-delay: 0s;
@@ -67,15 +106,15 @@
     }
 }
 
-.woo_easy_life_modal_wraper.lg .modal_container {
+.woo_easy_life_modal_wrapper.lg .modal_container {
     max-width: 500px;
 }
 
-.woo_easy_life_modal_wraper.xl .modal_container {
+.woo_easy_life_modal_wrapper.xl .modal_container {
     max-width: 650px;
 }
 
-.woo_easy_life_modal_wraper .modal_container :is(.modal_header, .modal_footer) {
+.woo_easy_life_modal_wrapper .modal_container :is(.modal_header, .modal_footer) {
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
@@ -84,7 +123,7 @@
     font-weight: bold;
 }
 
-.woo_easy_life_modal_wraper .modal_container :is(.modal_header, .modal_footer)>.close {
+.woo_easy_life_modal_wrapper .modal_container :is(.modal_header, .modal_footer)>.close {
     border: none;
     background-color: transparent;
     outline: none;
@@ -93,15 +132,15 @@
     transition: 0.2s ease-in-out;
 }
 
-.woo_easy_life_modal_wraper .modal_container :is(.modal_header, .modal_footer)>.close i {
+.woo_easy_life_modal_wrapper .modal_container :is(.modal_header, .modal_footer)>.close i {
     pointer-events: none;
 }
 
-.woo_easy_life_modal_wraper .modal_container :is(.modal_header, .modal_footer)>.close:hover {
+.woo_easy_life_modal_wrapper .modal_container :is(.modal_header, .modal_footer)>.close:hover {
     color: orangered;
 }
 
-.woo_easy_life_modal_wraper .modal_container .modal_footer>.close.btn {
+.woo_easy_life_modal_wrapper .modal_container .modal_footer>.close.btn {
     background-color: orangered;
     color: #fff;
     padding: 8px 15px;
@@ -109,12 +148,12 @@
     box-shadow: 0 2px 10px #0003;
 }
 
-.woo_easy_life_modal_wraper .modal_container .modal_footer>.close.btn:hover {
+.woo_easy_life_modal_wrapper .modal_container .modal_footer>.close.btn:hover {
     filter: brightness(0.95);
     box-shadow: 0 2px 15px #0006;
 }
 
-.woo_easy_life_modal_wraper .modal_container .modal_body {
+.woo_easy_life_modal_wrapper .modal_container .modal_body {
     border-top: 1px solid #0002;
     border-bottom: 1px solid #0002;
     padding: 20px;

@@ -36,4 +36,16 @@ export const getCourierConfig = async () => {
   const { data } = await axios.post(`${remoteApiBaseURL}/courier/get-configuration`, null, headers)
   return data
 }
+
 // courier end
+
+
+// sms integration start
+export const sendSMS = async (payload: {
+  phone: string,
+  content: string
+}) => {
+  const { data } = await axios.post(`${remoteApiBaseURL}/sms/send`, payload, headers)
+  return data
+}
+// sms integration end
