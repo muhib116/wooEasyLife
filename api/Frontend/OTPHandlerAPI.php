@@ -55,6 +55,7 @@ class OTPHandlerAPI extends WP_REST_Controller
      */
     public function send_otp(WP_REST_Request $request)
     {
+        $site_title = get_bloginfo('name');
         $phone_number = sanitize_text_field($request->get_param('phone_number'));
 
         if (empty($phone_number)) {
@@ -63,9 +64,9 @@ class OTPHandlerAPI extends WP_REST_Controller
 
         // Generate OTP
         $otp = $this->generate_otp($phone_number);
+        $otp_msg = "Your $site_title OTP is $otp";
 
-        // TODO: Integrate with your SMS API
-        $sms_response = $this->send_otp_sms($phone_number, $otp);
+        $sms_response = send_sms($phone_number, $otp_msg);
 
         return new WP_REST_Response([
             'sms_response' => $sms_response,
@@ -80,6 +81,7 @@ class OTPHandlerAPI extends WP_REST_Controller
      */
     public function resend_otp(WP_REST_Request $request)
     {
+        $site_title = get_bloginfo('name');
         $phone_number = sanitize_text_field($request->get_param('phone_number'));
 
         if (empty($phone_number)) {
@@ -95,16 +97,18 @@ class OTPHandlerAPI extends WP_REST_Controller
 
         // Generate OTP
         $otp = $this->generate_otp($phone_number);
+        $otp_msg = "Your $site_title OTP is $otp";
 
         // Store resend cooldown
         set_transient('otp_resend_' . $phone_number, time(), $this->resend_cooldown);
 
         // TODO: Integrate with your SMS API
-        $this->send_otp_sms($phone_number, $otp);
+        $sms_response = send_sms($phone_number, $otp_msg);
 
         return new WP_REST_Response([
             'status'  => 'success',
             'message' => 'OTP resent successfully.',
+            'sms_response' => $sms_response,
             'expiry'  => $this->otp_expiry / 60 . ' minutes',
             'cooldown' => $this->resend_cooldown / 60 . ' minutes',
         ], 200);
@@ -151,56 +155,4 @@ class OTPHandlerAPI extends WP_REST_Controller
         set_transient('otp_' . $phone_number, $otp, $this->otp_expiry);
         return $otp;
     }
-
-    /**
-     * Send OTP via Bulk SMS API using wp_remote_post
-     *
-     * @param string $phone_number The recipient's phone number.
-     * @param string $message The message to send.
-     * @return array The API response or error.
-     */
-    private function send_otp_sms($phone_number, $message)
-    {
-        $site_title = get_bloginfo('name');
-        $url = "http://bulksmsbd.net/api/smsapi";
-        $api_key = "GuN1Tp8ueoRJACAl072B";
-        $senderid = "8809617619992";
-        $number = "$phone_number";
-        $message = "Your $site_title OTP is $message";
-    
-        $data = [
-            "api_key" => $api_key,
-            "senderid" => $senderid,
-            "number" => $number,
-            "message" => $message
-        ];
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $response = curl_exec($ch);
-        curl_close($ch);
-        return $response;
-    }
-
-
-    // private function send_otp_sms($phone_number, $otp)
-    // {
-    //     $sms_api_url = 'https://api.wpsalehub.com/api/sms/send';
-    //     $response = wp_remote_post($sms_api_url, [
-    //         'body' => [
-    //             'phone'   => $phone_number,
-    //             'content' => "Your OTP is: $otp",
-    //         ],
-    //     ]);
-
-    //     if (is_wp_error($response)) {
-    //         error_log('Failed to send OTP SMS: ' . $response->get_error_message());
-    //         return false;
-    //     }
-
-    //     return true;
-    // }
 }

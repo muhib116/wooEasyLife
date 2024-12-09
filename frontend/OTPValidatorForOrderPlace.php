@@ -15,7 +15,7 @@ class OTPValidatorForOrderPlace
         add_filter('woocommerce_order_button_text', [$this, 'change_order_button_text'], 15);
         add_action('woocommerce_after_checkout_form', [$this, 'pushPopupTemplateToAfterCheckoutForm'], 15);
         // add_action('woocommerce_checkout_process', [$this, 'smsHandleForCustomerAndAdminWhenPlaceOrder']);
-        // add_action('woocommerce_checkout_order_processed', [$this, 'smsHandleForCustomerAndAdminWhenPlaceOrder']);
+        add_action('woocommerce_checkout_order_processed', [$this, 'smsHandleForCustomerAndAdminWhenPlaceOrder']);
     }
 
     public function change_order_button_text($text) {
@@ -44,7 +44,7 @@ class OTPValidatorForOrderPlace
             $custom_button .= $order_button_text; // Custom text for the button
             $custom_button .= '</button>';
 
-            $custom_button .= "<div style='opacity: 0.4; pointer-events: none;'>$btn</div>";
+            $custom_button .= "<div style='opacity: 0.4; pointer-events: none;  '>$btn</div>";
             return $custom_button;
         }
 
@@ -61,8 +61,76 @@ class OTPValidatorForOrderPlace
         }
     }
 
-    public function smsHandleForCustomerAndAdminWhenPlaceOrder() {
-        
+    public function smsHandleForCustomerAndAdminWhenPlaceOrder($order_id) {
+        $order = wc_get_order($order_id);
+        if (!$order) {
+            return; // Bail if the order doesn't exist
+        }
+
+        // Extract order details
+        $billing_phone = $order->get_billing_phone(); // Customer's phone number
+        $customer_name = $order->get_billing_first_name(); // Customer's first name
+        $order_total = $order->get_total();          // Order total
+        $product_names = []; // List of product names
+
+        foreach ($order->get_items() as $item) {
+            $product_names[] = $item->get_name();
+        }
+
+        $product_list = implode(', ', $product_names); // Convert product names to a readable string
+        $site_title = get_bloginfo('name');           // Site title
+        $admin_phone = '+1234567890';                 // Replace with your admin phone number
+        $customer_success_rate = '';
+
+        get_customer_fraud_data();
+
+        // $this->customer_sms($customer_name, $product_list, $site_title, $order_total, $billing_phone, $admin_phone);
+        // $this->admin_sms($customer_name, $product_list, $site_title, $order_total, $billing_phone, $admin_phone, $customer_success_rate);
+    }
+
+
+    private function admin_sms($customer_name, $product_list, $site_title, $order_total, $billing_phone, $admin_phone, $customer_success_rate){
+        // Prepare the SMS message with emojis
+        $sms_message = sprintf(
+            "🆕 New order by %s (%s) 📞, for 🛒 \"%s\" at %s.\n\n✅ Success rate: %s\n💰 Total bill: $%s (including delivery charges).",
+            $customer_name,
+            $billing_phone,
+            $product_list,
+            $site_title,
+            $customer_success_rate,
+            $order_total
+        );
+
+        // Send the SMS
+        $response = send_sms($admin_phone, $sms_message);
+
+        // Log the response for debugging
+        if (is_wp_error($response)) {
+            error_log('SMS sending failed: ' . $response->get_error_message());
+        } else {
+            error_log('SMS sent successfully: ' . print_r($response, true));
+        }
+    }
+    private function customer_sms($customer_name, $product_list, $site_title, $order_total, $billing_phone, $admin_phone){
+        // Prepare the SMS message with emojis
+        $sms_message = sprintf(
+            "😊 Hi %s, your order for 🛒 %s has been placed successfully at %s.\n\n💰 Total bill: $%s (including delivery charges).\n📞 For any assistance: %s.\n\nThank you! 🙏",
+            $customer_name,
+            $product_list,
+            $site_title,
+            $order_total,
+            $admin_phone
+        );
+
+        // Send the SMS
+        $response = send_sms($billing_phone, $sms_message);
+
+        // Log the response for debugging
+        if (is_wp_error($response)) {
+            error_log('SMS sending failed: ' . $response);
+        } else {
+            error_log('SMS sent successfully: ' . print_r($response, true));
+        }
     }
     
 }

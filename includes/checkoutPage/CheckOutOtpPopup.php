@@ -13,6 +13,7 @@
                         font-size: 20px;
                         text-align: center;
                         font-weight: bold;
+                        margin-bottom: 0px;
                     "
                 >
                     Verify your phone number
@@ -23,7 +24,7 @@
                     style="
                         font-weight: 500;
                         text-align: center;
-                        margin-bottom: 20px;
+                        margin-bottom: 0px;
                         font-size: 16px;
                     "
                 >

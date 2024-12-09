@@ -7,7 +7,7 @@ class FraudCustomerTable {
     public function __construct()
     {
         global $wpdb;
-        $this->table_name = $wpdb->prefix . 'woo_easy_life_fraud_customers';
+        $this->table_name = $wpdb->prefix . __PREFIX .'fraud_customers';
     }
 
     /**
