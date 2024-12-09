@@ -44,13 +44,33 @@ class AddCustomColumnInOrderList {
     
             // Retrieve the customer ID associated with the order
             $billing_phone = $order->get_billing_phone();
+            $status = $order->get_status();
+
             if (!$billing_phone) {
                 echo __('Guest Order', 'wooeasylife');
                 return;
             }
-    
-            // Log the customer ID
-            error_log('Customer ID: ' . $billing_phone);
+
+
+            $total_order_per_customer_for_current_order_status = $this->get_total_orders_by_billing_phone_and_status($order);
+            if($total_order_per_customer_for_current_order_status>1)
+            {
+                echo "<button 
+                        style='
+                            padding: 1px 5px;
+                            background: red;
+                            border: none;
+                            color: #fff;
+                            border-radius: 2px;
+                            font-size: 12px;
+                        '
+                        title='Multiple order placed'
+                    >
+                        $total_order_per_customer_for_current_order_status
+                    </button>
+                ";
+            }
+
     
             // Fetch fraud data from the custom table
             $table_name = $wpdb->prefix . 'woo_easy_life_fraud_customers';
@@ -63,6 +83,8 @@ class AddCustomColumnInOrderList {
                 // Decode the JSON report
                 $report = json_decode($fraud_data['report'], true);
                 $success_rate = $report[0]['report']['success_rate'];
+                $report = $report[0]['report'];
+                
                 $progress_bar = '
                     <style>
                         .fraud-history-container .progress-bar{
@@ -76,42 +98,28 @@ class AddCustomColumnInOrderList {
                                 background: #22c55d;
                                 position: relative;
                             }
-                            span{
-                                position: absolute;
-                                font-size: 8px;
-                                background: #22c55d;
-                                bottom: 100%;
-                                margin-bottom: 2px;
-                                left: calc(100% - 30px);
-                                border: 1px solid #3334;
-                                padding: 0px 2px;
-                                border-radius: 2px;
-                                color: white;
-                                line-height: 14px;
-                            }
-                            span.cancel {
-                                bottom: unset;
-                                top: 100%;
-                                margin-top: 8px;
-                                left: unset;
-                                right: 10px;
-                                background: #ef4444;
-                                z-index: 9999;
-                            }
+
+                            .
                         }
                     </style>
 
                     <div class="fraud-history-container"><div class="progress-bar">
-                        <div style="width: '.$success_rate.'">
-                            <span>
-                                '.$success_rate.'
-                            </span>
-                        </div>';
-
-                        if(100 - (int)$success_rate){
-                            $progress_bar .= '<span class="cancel">' . 100 - (int)$success_rate.'%</span>';
-                        }
-                    $progress_bar .= '</div></div>';
+                        <div style="width: '.$success_rate.'"></div>
+                        </div>
+                    </div>';
+                $progress_bar .= "
+                    <div
+                        style='
+                            font-size: 12px;
+                            margin-top: -22px;
+                            line-height: 16px;
+                        '
+                    >
+                        Total: ".$report['total_order']." | 
+                        <span style='color: #22c55d;'>Delivered: ".$report['confirmed']."</span> | 
+                        <span style='color: red;'>Canceled: ".$report['cancel']."</span>
+                    </div>
+                ";
 
                 echo $progress_bar;
             } else {
@@ -119,6 +127,29 @@ class AddCustomColumnInOrderList {
             }
         }
     }
+
+
+    private function get_total_orders_by_billing_phone_and_status($order) {
+        
+        // Get billing phone and status from the current $order
+        $billing_phone = $order->get_billing_phone();
+        $order_status = $order->get_status();
+    
+        if (empty($billing_phone) || empty($order_status)) {
+            return []; // Return empty array if inputs are invalid
+        }
+    
+        $args = [
+            'status'    => $order_status, // Specific order status
+            'return'    => 'objects', // Fetch full order objects
+            'type'     => 'shop_order',
+            'billing_phone' => $billing_phone
+        ];
+    
+        $orders = wc_get_orders($args);
+
+        return count($orders); // Total orders matching criteria
+    }  
     
 
     /**
