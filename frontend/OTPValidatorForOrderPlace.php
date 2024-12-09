@@ -2,6 +2,7 @@
 
 namespace WooEasyLife\Frontend;
 
+
 $order_button_text;
 class OTPValidatorForOrderPlace
 {
@@ -44,7 +45,7 @@ class OTPValidatorForOrderPlace
             $custom_button .= $order_button_text; // Custom text for the button
             $custom_button .= '</button>';
 
-            $custom_button .= "<div style='opacity: 0.4; pointer-events: none;  '>$btn</div>";
+            $custom_button .= "<div style='opacity: 0.4; pointer-events: auto;  '>$btn</div>";
             return $custom_button;
         }
 
@@ -64,32 +65,50 @@ class OTPValidatorForOrderPlace
     public function smsHandleForCustomerAndAdminWhenPlaceOrder($order_id) {
         $order = wc_get_order($order_id);
         if (!$order) {
+            error_log("Order not found for ID: $order_id");
             return; // Bail if the order doesn't exist
         }
-
+    
         // Extract order details
-        $billing_phone = $order->get_billing_phone(); // Customer's phone number
-        $customer_name = $order->get_billing_first_name(); // Customer's first name
-        $order_total = $order->get_total();          // Order total
-        $product_names = []; // List of product names
-
+        $billing_phone = $order->get_billing_phone();
+        $customer_name = $order->get_billing_first_name();
+        $customer_id = $order->get_customer_id();
+        $order_total = $order->get_total();
+        $product_names = [];
+    
         foreach ($order->get_items() as $item) {
             $product_names[] = $item->get_name();
         }
-
+    
         $product_list = implode(', ', $product_names); // Convert product names to a readable string
         $site_title = get_bloginfo('name');           // Site title
-        $admin_phone = '+1234567890';                 // Replace with your admin phone number
-        $customer_success_rate = '';
-
-        get_customer_fraud_data();
-
-        // $this->customer_sms($customer_name, $product_list, $site_title, $order_total, $billing_phone, $admin_phone);
-        // $this->admin_sms($customer_name, $product_list, $site_title, $order_total, $billing_phone, $admin_phone, $customer_success_rate);
+        $admin_phone = '01770989591';                 // Admin phone number
+        $customer_success_rate = 'n/a';               // Default success rate
+    
+        // Handle fraud data
+        $fraud_data = $this->getFraudData($billing_phone);
+        if (is_wp_error($fraud_data)) {
+            wc_add_notice(__('We encountered an issue while processing your order. Please try again.', 'your-textdomain'), 'error');
+            return;
+        }
+    
+        try {
+            $this->storeFraudData([
+                "customer_id" => $customer_id,
+                "report" => $fraud_data
+            ]);
+            $customer_success_rate = $fraud_data[0]['report']['success_rate'] ?? 'n/a';
+        } catch (\Exception $e) {
+            error_log('Error in FraudCustomerTable::create: ' . $e->getMessage());
+            return; // Bail if fraud data storage fails
+        }
+    
+        // Send SMS to customer and admin
+        $this->customer_sms($customer_name, $product_list, $site_title, $order_total, $billing_phone, $admin_phone);
+        $this->admin_sms($customer_name, $product_list, $site_title, $order_total, $billing_phone, $admin_phone, $customer_success_rate);
     }
-
-
-    private function admin_sms($customer_name, $product_list, $site_title, $order_total, $billing_phone, $admin_phone, $customer_success_rate){
+    
+    private function admin_sms($customer_name, $product_list, $site_title, $order_total, $billing_phone, $admin_phone, $customer_success_rate) {
         // Prepare the SMS message with emojis
         $sms_message = sprintf(
             "🆕 New order by %s (%s) 📞, for 🛒 \"%s\" at %s.\n\n✅ Success rate: %s\n💰 Total bill: $%s (including delivery charges).",
@@ -100,18 +119,12 @@ class OTPValidatorForOrderPlace
             $customer_success_rate,
             $order_total
         );
-
+    
         // Send the SMS
-        $response = send_sms($admin_phone, $sms_message);
-
-        // Log the response for debugging
-        if (is_wp_error($response)) {
-            error_log('SMS sending failed: ' . $response->get_error_message());
-        } else {
-            error_log('SMS sent successfully: ' . print_r($response, true));
-        }
+        $this->send_sms($admin_phone, $sms_message);
     }
-    private function customer_sms($customer_name, $product_list, $site_title, $order_total, $billing_phone, $admin_phone){
+    
+    private function customer_sms($customer_name, $product_list, $site_title, $order_total, $billing_phone, $admin_phone) {
         // Prepare the SMS message with emojis
         $sms_message = sprintf(
             "😊 Hi %s, your order for 🛒 %s has been placed successfully at %s.\n\n💰 Total bill: $%s (including delivery charges).\n📞 For any assistance: %s.\n\nThank you! 🙏",
@@ -121,16 +134,29 @@ class OTPValidatorForOrderPlace
             $order_total,
             $admin_phone
         );
-
+    
         // Send the SMS
-        $response = send_sms($billing_phone, $sms_message);
-
+        $this->send_sms($billing_phone, $sms_message);
+    }
+    
+    private function send_sms($phone_number, $message) {
+        $response = send_sms($phone_number, $message);
+    
         // Log the response for debugging
         if (is_wp_error($response)) {
-            error_log('SMS sending failed: ' . $response);
+            error_log("SMS sending failed for $phone_number: " . $response->get_error_message());
         } else {
-            error_log('SMS sent successfully: ' . print_r($response, true));
+            error_log("SMS sent successfully to $phone_number: " . print_r($response, true));
         }
     }
     
+    private function getFraudData($billing_phone) {
+        // Simulate fetching fraud data
+        return getCustomerFraudData($billing_phone);
+    }
+    
+    private function storeFraudData($fraud_data) {
+        $instance = new \WooEasyLife\CRUD\FraudCustomerTable();
+        $instance->create($fraud_data);
+    }
 }

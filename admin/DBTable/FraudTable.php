@@ -11,19 +11,24 @@ class FraudTable{
     public function create() {
         global $wpdb;
     
-        $table_name = $wpdb->prefix . 'woo_easy_life_fraud_customers';
+        // Define table name
+        $table_name = $wpdb->prefix . __PREFIX . 'fraud_customers'; // Ensure __PREFIX__ is defined
         $charset_collate = $wpdb->get_charset_collate();
-
+        // SQL to create the table
         $sql = "CREATE TABLE IF NOT EXISTS $table_name (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             customer_id BIGINT UNSIGNED NOT NULL UNIQUE,
-            report JSON NOT NULL,
-            blocked_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            report LONGTEXT NOT NULL,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
         ) $charset_collate;";
-
+    
+        // Include the required file for dbDelta
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    
+        // Execute the query
         dbDelta($sql);
     }
+    
 
     public function delete() {
         // die('die from delete');
@@ -34,14 +39,14 @@ class FraudTable{
          */
         
         global $wpdb;
-        $table_name = $wpdb->prefix . 'woo_easy_life_fraud_customers';
+        $table_name = $wpdb->prefix . __PREFIX . 'fraud_customers';
         $wpdb->query("DROP TABLE IF EXISTS $table_name");
     }
 
     public function showAdminNotice() {
         global $wpdb;
 
-        $table_name = $wpdb->prefix . 'woo_easy_life_fraud_customers';
+        $table_name = $wpdb->prefix . __PREFIX . 'fraud_customers';
 
         // Check if the table exists
         $table_exists = $wpdb->get_var("SHOW TABLES LIKE '$table_name'");

@@ -1,5 +1,5 @@
 <?php
-namespace WooEasyLife\CRUD\FraudCustomerTable;
+namespace WooEasyLife\CRUD;
 
 class FraudCustomerTable {
     private $table_name;
@@ -15,13 +15,13 @@ class FraudCustomerTable {
      */
     public function create($data) {
         global $wpdb;
-
+        
         $inserted = $wpdb->insert(
             $this->table_name,
             [
                 'customer_id' => $data['customer_id'],
                 'report'      => json_encode($data['report']),
-                'blocked_at'  => isset($data['blocked_at']) ? $data['blocked_at'] : current_time('mysql')
+                'created_at'  => current_time('mysql')
             ],
             [
                 '%d',
@@ -29,9 +29,16 @@ class FraudCustomerTable {
                 '%s'
             ]
         );
-
-        return $inserted ? $wpdb->insert_id : false;
+    
+        if ($inserted === false) {
+            echo ("Database Insertion Failed: " . $wpdb->last_error);
+            return false;
+        }
+    
+        echo $wpdb->insert_id;
+        return $wpdb->insert_id;
     }
+    
 
     /**
      * Read a fraud record by customer ID.

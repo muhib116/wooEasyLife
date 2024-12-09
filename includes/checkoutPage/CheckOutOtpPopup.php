@@ -158,7 +158,7 @@
             const otpCode = ref('')
             const isOTPValidating = ref(false)
             const isOTPValidated = ref(false)
-            const modalToggle = ref(true)
+            const modalToggle = ref(false)
             const otpIsNotValid = ref(false)
             const apiBaseUrl = 'http://localhost:8080/wordpress/wp-json/wooeasylife/v1'
 

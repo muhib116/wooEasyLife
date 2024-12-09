@@ -7,64 +7,12 @@ class ShowCustomerFraudDataToOrderDetailsPage {
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'add_custom_heading_after_order_details']);
     }
 
-    public function getCustomerFraudData($phone_number) {
-        if (empty($phone_number) || !is_string($phone_number)) {
-            return new WP_Error('missing_data', 'Phone data is required in the correct format.', ['status' => 400]);
-        }
-    
-        // External API URL and headers
-        $api_url = 'https://api.wpsalehub.com/api/fraud-check';
-        $api_key = 'your-api-key'; // Replace with your actual API key
-    
-        $payload = [
-            'phone' => [
-                [
-                    'id'    => 1,
-                    'phone' => $phone_number,
-                ],
-            ],
-        ];
-    
-        $args = [
-            'body'    => json_encode($payload),
-            'headers' => [
-                'Content-Type'  => 'application/json',
-                'Authorization' => 'Bearer ' . $api_key,
-            ],
-            'timeout' => 45,
-        ];
-    
-        // Make the API request
-        $response = wp_remote_post($api_url, $args);
-    
-        if (is_wp_error($response)) {
-            return [
-                'status'  => 500,
-                'message' => 'Failed to connect to the external API.',
-            ];
-        }
-    
-        $response_body = wp_remote_retrieve_body($response);
-        $response_code = wp_remote_retrieve_response_code($response);
-    
-        if ($response_code !== 200) {
-            return [
-                'status'  => $response_code,
-                'message' => 'The API returned an error.',
-                'details' => json_decode($response_body, true),
-            ];
-        }
-    
-        return json_decode($response_body, true);
-    }
-
-
     function add_custom_heading_after_order_details($order) {
         $billing_phone = $order->get_billing_phone();
         if(empty($billing_phone)) return;
 
         // Output the custom heading
-        $fraud_data = $this->getCustomerFraudData($billing_phone);
+        $fraud_data = getCustomerFraudData($billing_phone);
 
         if (is_wp_error($fraud_data)) {
             echo '<p>Error: ' . esc_html($fraud_data->get_error_message()) . '</p>';
