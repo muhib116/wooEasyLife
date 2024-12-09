@@ -97,7 +97,7 @@ class OTPValidatorForOrderPlace
 
         try {
             $this->storeFraudData([
-                "customer_id" => $customer_id,
+                "customer_id" => $billing_phone,
                 "report" => $fraud_data
             ]);
             $customer_success_rate = $fraud_data[0]['report']['success_rate'] ?? 'n/a';
