@@ -37,6 +37,7 @@
     background: #c1ffc1 !important;
     pointer-events: none;
     border-color: #1bbd1b !important;
+    filter: blur(2px);
 }
 .wooEasyOTPError input{
     position: relative !important;
@@ -51,7 +52,7 @@
     z-index: 1;
     margin-top: -14px;
     margin-left: -16px;
-    fill: currentColor;
+    fill: #fff;
 }
 
 .woo_easy_life_modal_wrapper.active {

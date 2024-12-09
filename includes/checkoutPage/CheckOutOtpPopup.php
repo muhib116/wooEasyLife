@@ -35,7 +35,7 @@
                         margin-bottom: 6px;
                         font-size: 16px;
                     ">
-                        {{ billingPhone }}.'
+                        {{ billingPhone }}.
                     </span>
                 </h4>
     
@@ -65,6 +65,7 @@
                                 font-weight: bold;
                                 letter-spacing: 20px;
                             "
+                            focus
                             placeholder=""
                             v-model="otpCode"
                             @input="validateOTP"
@@ -113,16 +114,17 @@
                         "
                         @click="resendOTP"
                     >Resend OTP</button>
-                    <button
-                        type="submit" 
+                    <!-- v-show="!otpIsNotValid && isOTPValidated" -->
+                    <!-- <button 
                         class="button alt custom-class" 
                         name="woocommerce_checkout_place_order" 
                         id="place_order" 
                         value="Place Order Now"
+                        @click="confirmOrder"
                     >
                         <?php //global $order_button_text; echo $order_button_text; ?>
                         Confirm your order
-                    </button>
+                    </button> -->
                 </div>
             </div>
     
@@ -154,10 +156,10 @@
             const otpSendStatus = ref(false)
             const otpCode = ref('')
             const isOTPValidating = ref(false)
-            const isOTPValidated = ref(true)
-            const modalToggle = ref(false)
+            const isOTPValidated = ref(false)
+            const modalToggle = ref(true)
             const otpIsNotValid = ref(false)
-            const apiBaseUrl = 'http://localhost:8080/test/wp-json/wooeasylife/v1'
+            const apiBaseUrl = 'http://localhost:8080/wordpress/wp-json/wooeasylife/v1'
 
             const woo_easy_life_startCountdown = () => {
                 isOTPValidated.value = false
@@ -226,7 +228,7 @@
 
             const resendOTP = async () => {
                 woo_easy_life_startCountdown()
-
+                otpCode.value = ''
                 await axios.post(`${apiBaseUrl}/otp/resend`, {
                     phone_number: billingPhone.value
                 })
@@ -247,9 +249,9 @@
                             isOTPValidated.value = true
                             isOTPValidating.value = false
 
-                            const place_order = document.getElementById('place_order')
-                            if(place_order){
-                                place_order.click();
+                            const place_order_btn = document.querySelector('form[name="checkout"] #place_order')
+                            if(place_order_btn){
+                                place_order_btn.click()
                             }
                         }else {
                             otpIsNotValid.value = true
@@ -262,12 +264,13 @@
 
             
             setTimeout(() => {
-                const billing_phoneInput = document.querySelector('body.woocommerce-checkout #billing_phone')
+                const billing_phoneInput = document.querySelector('#billing_phone')
                 const wooEasyLifeOtpModalOpener = document.getElementById('wooEasyLifeOtpModalOpener')
-                
                 if(billing_phoneInput){
                     wooEasyLifeOtpModalOpener.onclick = () => {
                         billingPhone.value = billing_phoneInput.value;
+                        otpCode.value = ''
+
                         if(validateBDPhoneNumber(billingPhone.value)){
                             modalToggle.value = true
 

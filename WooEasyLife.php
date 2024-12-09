@@ -34,8 +34,7 @@ if (!class_exists('WooEasyLife')) :
         {
             register_activation_hook(__FILE__, [$this, 'woo_easy_life_activation_hook']);
             register_deactivation_hook(__FILE__, [$this, 'woo_easy_life_deactivation_hook']);
-            add_action('woocommerce_checkout_create_order', [$this, 'set_new_order_as_default'], 10, 2);
-
+        
             new WooEasyLife\Init\InitClass();
             new WooEasyLife\API\API_Register();
             new WooEasyLife\Admin\Admin_Class_Register();
@@ -46,17 +45,16 @@ if (!class_exists('WooEasyLife')) :
 
         private function get_and_set_config_data() {
             global $config_data;
-
             $config_data = get_option(__PREFIX.'config');
-
+            
             // Decode the JSON data into an associative array
             $decoded_config_data = is_string($config_data) ? json_decode($config_data, true) : $config_data;
-
+            
             // Ensure it's an array
             if (!is_array($decoded_config_data)) {
                 $decoded_config_data = [];
             }
-
+            
             $config_data = $decoded_config_data;
         }
 
@@ -229,5 +227,7 @@ if (!class_exists('WooEasyLife')) :
         }
     }
 
-    new WooEasyLife();
+    add_action('init', function(){
+        new WooEasyLife();
+    });
 endif;

@@ -65,9 +65,10 @@ class OTPHandlerAPI extends WP_REST_Controller
         $otp = $this->generate_otp($phone_number);
 
         // TODO: Integrate with your SMS API
-        $this->send_otp_sms($phone_number, $otp);
+        $sms_response = $this->send_otp_sms($phone_number, $otp);
 
         return new WP_REST_Response([
+            'sms_response' => $sms_response,
             'status'  => 'success',
             'message' => 'OTP sent successfully.',
             'expiry'  => $this->otp_expiry / 60 . ' minutes',
@@ -160,54 +161,28 @@ class OTPHandlerAPI extends WP_REST_Controller
      */
     private function send_otp_sms($phone_number, $message)
     {
-        $api_url = 'http://bulksmsbd.net/api/smsapi';
-        $api_key = 'GuN1Tp8ueoRJACAl072B';
-        $sender_id = '8809617619992';
-
-        // API request parameters
-        $params = [
-            'api_key'   => $api_key,
-            'type'      => 'text',
-            'number'    => $phone_number,
-            'senderid'  => $sender_id,
-            'message'   => $message,
+        $site_title = get_bloginfo('name');
+        $url = "http://bulksmsbd.net/api/smsapi";
+        $api_key = "GuN1Tp8ueoRJACAl072B";
+        $senderid = "8809617619992";
+        $number = "$phone_number";
+        $message = "Your $site_title OTP is $message";
+    
+        $data = [
+            "api_key" => $api_key,
+            "senderid" => $senderid,
+            "number" => $number,
+            "message" => $message
         ];
-
-        // HTTP request headers
-        $headers = [
-            'Authorization' => 'Bearer Kod30eDnI1EFG9vaf9gBPsSwaD3IkklCIATZoSYz9cf733bd',
-        ];
-
-        // Make the API request
-        $response = wp_remote_post($api_url, [
-            'headers' => $headers,
-            'body'    => $params,
-            'timeout' => 30,
-        ]);
-
-        // Handle errors in the response
-        if (is_wp_error($response)) {
-            return [
-                'status'  => 'error',
-                'message' => $response->get_error_message(),
-            ];
-        }
-
-        // Decode and return the response body
-        $response_body = wp_remote_retrieve_body($response);
-        $response_data = json_decode($response_body, true);
-
-        if (isset($response_data['error_message'])) {
-            return [
-                'status'  => 'error',
-                'message' => $response_data['error_message'],
-            ];
-        }
-
-        return [
-            'status'  => 'success',
-            'data'    => $response_data,
-        ];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        return $response;
     }
 
 

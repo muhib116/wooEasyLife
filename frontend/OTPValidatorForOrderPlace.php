@@ -14,7 +14,8 @@ class OTPValidatorForOrderPlace
         add_filter('woocommerce_checkout_order_button_text', [$this, 'change_order_button_text'], 15);
         add_filter('woocommerce_order_button_text', [$this, 'change_order_button_text'], 15);
         add_action('woocommerce_after_checkout_form', [$this, 'pushPopupTemplateToAfterCheckoutForm'], 15);
-        // add_action('woocommerce_checkout_process', [$this, 'validate_checkout_otp']);
+        // add_action('woocommerce_checkout_process', [$this, 'smsHandleForCustomerAndAdminWhenPlaceOrder']);
+        // add_action('woocommerce_checkout_order_processed', [$this, 'smsHandleForCustomerAndAdminWhenPlaceOrder']);
     }
 
     public function change_order_button_text($text) {
@@ -30,13 +31,20 @@ class OTPValidatorForOrderPlace
         // Separate the 'place_order_otp_verification' data
         $place_order_otp_verification = $config_data['place_order_otp_verification'] ?? null;
         
-        
-        
         if($place_order_otp_verification){
             // Customize the button text or add extra attributes
-            $custom_button = '<button type="button" id="wooEasyLifeOtpModalOpener">';
+            $custom_button = '<button 
+                                type="button" 
+                                class="button alt fc-place-order-button" 
+                                name="woocommerce_checkout_place_order" 
+                                id="wooEasyLifeOtpModalOpener"
+                                value="Place order" 
+                                data-value="Place order"
+                            >';
             $custom_button .= $order_button_text; // Custom text for the button
             $custom_button .= '</button>';
+
+            $custom_button .= "<div style='opacity: 0.4; pointer-events: none;'>$btn</div>";
             return $custom_button;
         }
 
@@ -44,28 +52,17 @@ class OTPValidatorForOrderPlace
     }
 
     public function pushPopupTemplateToAfterCheckoutForm () {
-        include_once plugin_dir_path(__DIR__) . 'includes/checkoutPage/CheckOutOtpPopup.php';
+        global $config_data;
+        // Separate the 'place_order_otp_verification' data
+        $place_order_otp_verification = $config_data['place_order_otp_verification'] ?? null;
+        
+        if($place_order_otp_verification){
+            include_once plugin_dir_path(__DIR__) . 'includes/checkoutPage/CheckOutOtpPopup.php';
+        }
     }
 
-    public function validate_checkout_otp() {
-        $phone_number = sanitize_text_field($_POST['billing_phone']);
-        $otp_input = sanitize_text_field($_POST['otp_input']);
-    
-        // Check if OTP is provided
-        if (empty($otp_input)) {
-            wc_add_notice('Please enter the OTP.', 'error');
-            return;
-        }
-    
-        // Validate OTP
-        $stored_otp = get_transient('otp_' . $phone_number);
-        if (!$stored_otp || $otp_input != $stored_otp) {
-            wc_add_notice('Invalid OTP. Please try again.', 'error');
-            return;
-        }
-    
-        // Clear the transient after successful validation
-        delete_transient('otp_' . $phone_number);
+    public function smsHandleForCustomerAndAdminWhenPlaceOrder() {
+        
     }
     
 }
