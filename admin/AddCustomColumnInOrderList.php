@@ -11,6 +11,7 @@ class AddCustomColumnInOrderList {
         // Add custom column content order list table. WooCommerce- Latest version
         add_filter('woocommerce_shop_order_list_table_columns', [$this, 'wooeasylife_add_custom_order_column'] );
         add_action( 'woocommerce_shop_order_list_table_custom_column', [$this, 'wooeasylife_populate_custom_order_column'], 10, 2 );
+        add_action('admin_footer', [$this, 'wooeasylife_add_preview_popup_html']);
     }
 
     /**
@@ -149,7 +150,25 @@ class AddCustomColumnInOrderList {
         $orders = wc_get_orders($args);
 
         return count($orders); // Total orders matching criteria
-    }  
+    }
+
+
+
+
+    public function wooeasylife_add_preview_popup_html() {
+        include_once plugin_dir_path(__DIR__) . 'includes/orderList/OrderDetails.php';
+    }
+    
+
+
+
+
+
+
+
+
+
+
     
 
     /**
