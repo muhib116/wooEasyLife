@@ -57,15 +57,19 @@ class AddCustomColumnInOrderList {
             if($total_order_per_customer_for_current_order_status>1)
             {
                 echo "<button 
+                        class='woo_easy_multi_order_btn'
                         style='
                             padding: 1px 5px;
                             background: red;
                             border: none;
                             color: #fff;
                             border-radius: 2px;
-                            font-size: 12px;
+                            font-size: 13px;
+                            cursor: pointer;
                         '
                         title='Multiple order placed'
+                        data-billing_phone='".$billing_phone."'
+                        data-order_status='".$status."'
                     >
                         $total_order_per_customer_for_current_order_status
                     </button>
@@ -156,7 +160,10 @@ class AddCustomColumnInOrderList {
 
 
     public function wooeasylife_add_preview_popup_html() {
-        include_once plugin_dir_path(__DIR__) . 'includes/orderList/OrderDetails.php';
+        $current_screen = get_current_screen();
+        if ($current_screen && $current_screen->id === 'woocommerce_page_wc-orders') {
+            include_once plugin_dir_path(__DIR__) . 'includes/orderList/OrderDetails.php';
+        }
     }
     
 

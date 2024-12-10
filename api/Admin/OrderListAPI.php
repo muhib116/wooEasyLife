@@ -66,14 +66,16 @@ class OrderListAPI
         $status   = $request->get_param('status');
         $per_page = $request->get_param('per_page');
         $page     = $request->get_param('page');
+        $billing_phone     = $request->get_param('billing_phone');
 
         // Use WooCommerce Order Query to fetch orders.
         $args = [
-            'status'   => $status,
-            'limit'    => $per_page,
-            'page'     => $page,
-            'type'     => 'shop_order',
-            'return'   => 'objects',
+            'status'        => $status,
+            'limit'         => $per_page,
+            'page'          => $page,
+            'billing_phone' => $billing_phone,
+            'type'          => 'shop_order',
+            'return'        => 'objects',
         ];
 
         $orders = wc_get_orders($args);

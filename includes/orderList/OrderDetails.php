@@ -13,9 +13,10 @@
         justify-content: center;
 
         .woo_easy_popup_content{
-            max-width: 900px;
+            max-width: 1000px;
             width: 100%;
             height: 80vh;
+            overflow: auto;
             background-color: #fff;
             position: relative;
 
@@ -61,10 +62,11 @@
                     }
                     .woo_easy_customer_info{
                         display: grid;
-                        grid-template-columns: 172px 1fr;
+                        grid-template-columns: auto 1fr;
                         gap: 4px;
                     }
                     .woo_easy_order_list{
+                        overflow: auto;
                         table{
                             width: 100%;
                             border-collapse: collapse;
@@ -76,63 +78,152 @@
                 }
             }
         }
+
+        .woo_easy_loader{
+            position: absolute;
+            z-index: 4;
+            animation: spin 1s linear infinite;
+        }
+    }
+
+    .woo_easy_multi_order_btn{
+        transition: 0.3 ease-in-out;
+    }
+    .woo_easy_multi_order_btn:hover{
+        transform: scale(1.4);
+    }
+    @keyframes spin {
+        from {
+            transform: rotate(0deg); /* Start at 0 degrees */
+        }
+        to {
+            transform: rotate(360deg); /* Complete a full rotation */
+        }
     }
 </style>
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-<div id="woo_easy_life_order_preview_popup_wrapper">
-    <div class="woo_easy_popup_content">
-        <button class="woo_easy_close-popup">×</button>
-        <div class="woo_easy_header">
-            <h3>Duplicate Order History</h3>
-        </div>
-        <div id="woo_easy_life_order_details">
-            <div class="woo_easy_customer_details">
-                <h3 class="title">Customer Details</h3>
-                <div class="woo_easy_customer_info">
-                    <h4><span style="font-weight: bold;">Name:</span> Customer Name</h4>
-                    <h4><span style="font-weight: bold;">Phone:</span> +880988476478</h4>
-                    <h4><span style="font-weight: bold;">Email:</span> +880988476478</h4>
-                    <h4><span style="font-weight: bold;">Address:</span> +880988476478</h4>
-                </div>
+<div id="woo_easy_app" >
+    <div v-if="toggleModal" id="woo_easy_life_order_preview_popup_wrapper">
+        <svg v-if="isLoading" class="woo_easy_loader" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" viewBox="0 0 256 256"><path d="M136,32V64a8,8,0,0,1-16,0V32a8,8,0,0,1,16,0Zm88,88H192a8,8,0,0,0,0,16h32a8,8,0,0,0,0-16Zm-45.09,47.6a8,8,0,0,0-11.31,11.31l22.62,22.63a8,8,0,0,0,11.32-11.32ZM128,184a8,8,0,0,0-8,8v32a8,8,0,0,0,16,0V192A8,8,0,0,0,128,184ZM77.09,167.6,54.46,190.22a8,8,0,0,0,11.32,11.32L88.4,178.91A8,8,0,0,0,77.09,167.6ZM72,128a8,8,0,0,0-8-8H32a8,8,0,0,0,0,16H64A8,8,0,0,0,72,128ZM65.78,54.46A8,8,0,0,0,54.46,65.78L77.09,88.4A8,8,0,0,0,88.4,77.09Z"></path></svg>
+        <div class="woo_easy_popup_content">
+            <button 
+                class="woo_easy_close-popup"
+                @click="toggleModal = false"
+            >×</button>
+            <div class="woo_easy_header">
+                <h3>Duplicate Order History</h3>
+            </div>
+            <div id="woo_easy_life_order_details">
+                <div class="woo_easy_customer_details">
+                    <h3 class="title">Customer Details</h3>
+                    <div v-if="orderInfo?.length" class="woo_easy_customer_info">
+                        <h4>
+                            <span style="font-weight: bold;">
+                                Name:
+                            </span> 
+                            {{ orderInfo[0]?.billing_address?.first_name }}
+                            {{ orderInfo[0]?.billing_address?.last_name }}
+                        </h4>
+                        <h4>
+                            <span style="font-weight: bold;">
+                                Phone:
+                            </span> 
+                            {{ orderInfo[0]?.billing_address?.phone }}
+                        </h4>
+                        <h4>
+                            <span style="font-weight: bold;">
+                                Email:
+                            </span> 
+                            {{ orderInfo[0]?.billing_address?.email }}
+                        </h4>
+                        <h4>
+                            <span style="font-weight: bold;">
+                                Address:
+                            </span> 
+                            {{ orderInfo[0]?.billing_address?.address_1 }} 
+                            {{ orderInfo[0]?.billing_address?.address_2 }}
+                        </h4>
+                    </div>
 
-                <div class="woo_easy_order_list">
-                    <table class="wp-list-table widefat fixed striped table-view-list orders wc-orders-list-table wc-orders-list-table-shop_order">
-                        <thead>
-                            <tr>
-                                <th>Order</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Total</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>#4545 Muhib</td>
-                                <td>Des 10, 2024</td>
-                                <td>Processing</td>
-                                <td>1200Taka</td>
-                                <td><button>View</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="woo_easy_order_list">
+                        <table class="wp-list-table widefat fixed striped table-view-list orders wc-orders-list-table wc-orders-list-table-shop_order">
+                            <thead>
+                                <tr>
+                                    <th>Order</th>
+                                    <th>Date</th>
+                                    <th>Payment Method</th>
+                                    <th>Status</th>
+                                    <th style="width: 60px;">Total</th>
+                                    <th style="width: 30px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody v-if="orderInfo?.length">
+                                <tr 
+                                    v-for="item in orderInfo"
+                                    :key="item.id"
+                                >
+                                    <td style="white-space: nowrap;">#{{ item.id }} {{ item.customer_name }}</td>
+                                    <td>{{ item.date_created }}</td>
+                                    <td>{{ item.payment_method_title }}</td>
+                                    <td>{{ item.status == 'processing' ? 'New order' : item.status }}</td>
+                                    <td>{{ item.product_info.total_price }}</td>
+                                    <td><button>View</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
 <script>
   const { createApp, ref } = Vue
 
   createApp({
     setup() {
-      const message = ref('Hello vue!')
-      return {
-        message
-      }
+        const toggleModal = ref(false)
+        const customerInfo = ref()
+        const orderInfo = ref([])
+        const isLoading = ref(false)
+
+        const getOrderList = async (payload) => {
+            const { data } = await axios.get(`${location.origin}/wordpress/wp-json/wooeasylife/v1/orders`, {
+                params: payload
+            })
+            return data
+        }
+
+        setTimeout(() => {
+            window.onclick = async function (e) {
+                e.preventDefault();
+                const dataSet = e.target.dataset
+                if(dataSet.billing_phone && dataSet.order_status)
+                {
+                    toggleModal.value = true
+                    try {
+                        isLoading.value = true
+                        const { data } = await getOrderList({
+                            status: dataSet.order_status,
+                            billing_phone: dataSet.billing_phone
+                        })
+                        orderInfo.value = data
+                    } finally {
+                        isLoading.value = false
+                    }
+                }
+            }
+        })
+
+        return {
+            toggleModal,
+            getOrderList,
+            isLoading,
+            orderInfo
+        }
     }
-  }).mount('#woo_easy_life_order_preview_popup_wrapper')
+  }).mount('#woo_easy_app')
 </script>
