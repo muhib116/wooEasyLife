@@ -110,6 +110,8 @@ class CustomOrderStatusAPI extends WP_REST_Controller
                 .order-status.status-' . $_key . ' {
                     background-color:' . $_status["color"] . ' !important;
                     color: ' . get_contrast_color($_status["color"]) . ' !important;
+                }
+                .button.order-status.status-' . $_key . ' {
                     border-radius: 2px !important;
                     height: 30px !important;
                     display: inline-flex !important;
@@ -124,6 +126,8 @@ class CustomOrderStatusAPI extends WP_REST_Controller
             .order-status.status-processing {
                 background-color:#027bff !important;
                 color: ' . get_contrast_color('#027bff') . ' !important;
+            }
+            .button.order-status.status-processing {
                 border-radius: 2px !important;
                 height: 30px !important;
                 display: inline-flex !important;

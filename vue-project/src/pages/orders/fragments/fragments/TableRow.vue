@@ -92,8 +92,11 @@
         v-if="order?.customer_report"
         class="group relative !bg-white !hover:bg-white"
     >
-        <span class="absolute size-4 border-r border-b border-green-400 bg-green-50 rotate-45 -mt-2 left-1/2"></span>
-        <Table.Td colspan="8" class="text-center text-lg ">
+        <span 
+            class="absolute size-3 border-r border-b rotate-45 -mt-[6px] left-1/2"
+            :class="selectedOrders.has(order) ? 'border-green-400 bg-green-50' : 'bg-white'"
+        ></span>
+        <Table.Td colspan="8" class="text-center">
             <div class="flex gap-6">
                 <div class="text-green-500">
                     🎉 Total confirm order: 

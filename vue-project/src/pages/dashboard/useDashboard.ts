@@ -1,6 +1,6 @@
 import { onMounted, ref } from "vue"
 import { startOfDay, endOfDay, subDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, format } from 'date-fns'
-import { getOrderStatistics } from "@/api"
+import { getOrderStatistics, getOrderStatuses } from "@/api"
 
 
 export const useDashboard = () => {
@@ -32,12 +32,13 @@ export const useDashboard = () => {
     ]
 
     const selectedFilterOption = ref<string>('today')
-    const orderStatistics = ref()
-    const isLoading = ref()
+    const orderStatistics = ref({})
+    const isLoading = ref(false)
     const customDates = ref({
         start_date: '',
         end_date: ''
     })
+    const orderStatuses = ref([])
 
     const loadOrderStatistics = async (start_date: string, end_date: string) => {
         try {
@@ -47,6 +48,16 @@ export const useDashboard = () => {
         } finally {
             isLoading.value = false
         }
+    }
+
+    const loadOrderStatuses = async () => {
+        const { data } = await getOrderStatuses()
+        orderStatuses.value = data.map(item => {
+            return {
+                title: item.title,
+                slug: item.slug
+            }
+        })
     }
 
 
@@ -105,15 +116,22 @@ export const useDashboard = () => {
     }
 
     onMounted(async () => {
-        await getData()
+        try {
+            isLoading.value = true
+            await getData()
+            await loadOrderStatuses()
+        } finally {
+            isLoading.value = false
+        }
     })
 
     return {
-        filterOptions,
         selectedFilterOption,
         orderStatistics,
+        orderStatuses,
+        filterOptions,
+        customDates,
         getDataByCustomFilter,
         getData,
-        customDates
     }
 }

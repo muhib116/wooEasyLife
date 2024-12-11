@@ -78,7 +78,7 @@ class AddCustomColumnInOrderList {
 
     
             // Fetch fraud data from the custom table
-            $table_name = $wpdb->prefix . 'woo_easy_life_fraud_customers';
+            $table_name = $wpdb->prefix . __PREFIX.'fraud_customers';
             $fraud_data = $wpdb->get_row(
                 $wpdb->prepare("SELECT report FROM $table_name WHERE customer_id = %d", $billing_phone),
                 ARRAY_A

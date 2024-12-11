@@ -46,7 +46,7 @@ class OrderListAPI
         );
         register_rest_route(
             __API_NAMESPACE, // Namespace and version.
-            '/status-with-counts',         // Endpoint: /orders
+            '/status-with-counts',         // Endpoint: /status-with-counts
             [
                 'methods'             => 'GET',
                 'callback'            => [$this, 'get_order_status_with_counts'],
@@ -89,8 +89,18 @@ class OrderListAPI
 
         // Prepare the order data.
         $data = [];
+        global $wpdb;
         foreach ($orders as $order) {
             $product_info = getProductInfo($order);
+
+            // Fetch fraud data from the custom table
+            $table_name = $wpdb->prefix . __PREFIX.'fraud_customers';
+            $_billing_phone = $order->get_billing_phone();
+            $fraud_data = $wpdb->get_row(
+                $wpdb->prepare("SELECT report FROM $table_name WHERE customer_id = %d", $_billing_phone),
+                ARRAY_A
+            );
+
             $data[] = [
                 'id'            => $order->get_id(),
                 'status'        => $order->get_status(),
@@ -117,7 +127,7 @@ class OrderListAPI
                     'postcode'   => $order->get_billing_postcode(),
                     'country'    => $order->get_billing_country(),
                     'email'      => $order->get_billing_email(),
-                    'phone'      => $order->get_billing_phone(),
+                    'phone'      => $_billing_phone,
                     'transaction_id' => $order->get_transaction_id() ?: '',
                 ],
                 'shipping_address' => [
@@ -133,7 +143,8 @@ class OrderListAPI
                     'postcode'   => $order->get_shipping_postcode(),
                     'country'    => $order->get_shipping_country(),
                     'customer_note' => $order->get_customer_note()
-                ]
+                ],
+                'customer_report' => json_decode($fraud_data['report'], true)[0]['report']
             ];
         }
 

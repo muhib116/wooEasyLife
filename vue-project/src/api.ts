@@ -34,6 +34,10 @@ export const getOrderStatistics = async (payload: {
     const { data } = await axios.get(`${localApiBaseURL}/order-stats`, { params:payload })
     return data
 }
+export const getOrderStatuses = async () => {
+    const { data } = await axios.get(`${localApiBaseURL}/status-with-counts`)
+    return data
+}
 // functions for order list
 
 
