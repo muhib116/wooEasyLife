@@ -184,6 +184,7 @@ function getProductInfo($order)
         foreach ($order->get_items() as $item_id => $item) {
             // Get product details
             $product = $item->get_product(); // Get the product object
+            $product_image_url = wp_get_attachment_url($product->get_image_id()); // Get the featured image URL
 
             if ($product) {
                 $product_total = $item->get_total(); // Total for the line item (quantity * price)
@@ -192,7 +193,8 @@ function getProductInfo($order)
                     'product_name' => $product->get_name(),
                     'product_price' => $product->get_price(),
                     'product_total' => $product_total,
-                    'product_quantity' => $item->get_quantity()
+                    'product_quantity' => $item->get_quantity(),
+                    'product_image' => $product_image_url
                 ];
             }
         }

@@ -217,6 +217,7 @@
                         >
                             <thead>
                                 <tr>
+                                    <th style="width: 30px;">Image</th>
                                     <th>Product Name</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
@@ -229,6 +230,18 @@
                                     v-for="item in selectedOrder?.product_info || []"
                                     :key="item.id"
                                 >
+                                    <td>
+                                        <img 
+                                            :src="item.product_image" 
+                                            alt="product image"
+                                            style="
+                                                width: 60px;
+                                                height: 60px;
+                                                object-fit: cover;
+                                                object-position: center;
+                                            "
+                                        />
+                                    </td>
                                     <td>{{ item.product_name }}</td>
                                     <td>{{ item.product_price }}</td>
                                     <td>{{ item.product_quantity }}</td>
@@ -263,17 +276,16 @@
         }
 
         const getSelectedProduct = (order_id) => {
-            console.log(order_id)
             seeMore.value = true
             selectedOrder.value = orderInfo.value.find(item => item.id == order_id)?.product_info
         }
 
         setTimeout(() => {
             window.onclick = async function (e) {
-                e.preventDefault();
                 const dataSet = e.target.dataset
                 if(dataSet.billing_phone && dataSet.order_status)
                 {
+                    e.preventDefault();
                     toggleModal.value = true
                     try {
                         orderInfo.value = []

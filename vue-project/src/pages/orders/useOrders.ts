@@ -6,7 +6,7 @@ import { checkCustomer } from '@/remoteApi'
 export const useOrders = () => {
     const orders = ref([])
     const orderStatusWithCounts = ref([])
-    const activeOrder = ref([])
+    const activeOrder = ref()
     const selectedOrders = ref(new Set([]))
     const selectAll = ref(false)
     const isLoading = ref(false)
@@ -17,6 +17,9 @@ export const useOrders = () => {
     })
 
     const setActiveOrder = (item) => {
+        activeOrder.value = item
+    }
+    const setSelectedOrder = (item) => {
         if (!selectedOrders.value.has(item)) {
             selectedOrders.value.add(item)
         } else {
@@ -33,7 +36,7 @@ export const useOrders = () => {
     }
 
     const handleFraudCheck = async (button) => {
-        if(![...selectedOrders.value].length){
+        if (![...selectedOrders.value].length) {
             alert('Please select at least on item.')
             return
         }
@@ -51,10 +54,10 @@ export const useOrders = () => {
             }
 
             const data = await checkCustomer(payload)
-            if(data.length){
+            if (data.length) {
                 data.forEach(item => {
                     _selectedOrders.forEach(_item => {
-                        if(item.id == _item.id){
+                        if (item.id == _item.id) {
                             _item.customer_report = item.report
                         }
                     })
@@ -100,6 +103,7 @@ export const useOrders = () => {
         getOrders,
         orderFilter,
         setActiveOrder,
+        setSelectedOrder,
         toggleSelectAll,
         handleFraudCheck,
         loadOrderStatusList,

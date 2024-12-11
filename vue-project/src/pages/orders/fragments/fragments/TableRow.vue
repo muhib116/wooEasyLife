@@ -2,18 +2,20 @@
     <Table.Tr
         class="group"
         :class="`status-${order.status}`"
-        :active="selectedOrders.has(order) || activeOrder.id == order.id"
-        @click="setActiveOrder(order)"  
+        :active="selectedOrders.has(order)"
     >
-        <Table.Td>
+        <Table.Td
+            @click="setSelectedOrder(order)"  
+        >
             <input
                 type="checkbox"
                 :value="order.id"
-                @change="() => setActiveOrder(order)"
                 :checked="selectedOrders.has(order)"
             />
         </Table.Td>
-        <Table.Td>
+        <Table.Td
+            @click="setSelectedOrder(order)"  
+        >
             <div
                 class="flex gap-1"
             >
@@ -32,18 +34,28 @@
                 </a>                
             </div>
         </Table.Td>
-        <Table.Td>
+        <Table.Td
+            @click="setSelectedOrder(order)"
+        >
             <div class="w-[100px] text-center">
                 {{ order.date_created }}
             </div>
         </Table.Td>
-        <Table.Td>
+        <Table.Td
+            @click="setSelectedOrder(order)"  
+        >
             <button class="order-status capitalize px-3" :class="`status-${order.status}`">
-                {{ order.status.replaceAll('-', ' ') }}
+                {{ order.status=='processing' ? 'New Order' : order.status.replaceAll('-', ' ') }}
             </button>
         </Table.Td>
-        <Table.Td>{{ order.payment_method_title || 'n/a' }}</Table.Td>
-        <Table.Td>
+        <Table.Td
+            @click="setSelectedOrder(order)"  
+        >
+            {{ order.payment_method_title || 'n/a' }}
+        </Table.Td>
+        <Table.Td
+            @click="setSelectedOrder(order)"
+        >
             <div v-html="order.product_price"></div>
         </Table.Td>
         <Table.Td>
@@ -58,10 +70,14 @@
                 Address
             </button>
         </Table.Td>
-        <Table.Td>
+        <Table.Td class="pointer-events-none">
             <button
-                class="relative flex flex-col whitespace-nowrap justify-center items-center text-blue-500"
+                class="relative flex flex-col whitespace-nowrap justify-center items-center text-blue-500 pointer-events-auto"
                 title="Order details"
+                @click="(e) => {
+                    e.preventDefault();
+                    setActiveOrder(order)
+                }"
             >
                 <Icon
                     name="PhFileText"
@@ -136,8 +152,8 @@
     }>()
 
     const {
-        activeOrder,
         setActiveOrder,
+        setSelectedOrder,
         selectedOrders
     } = inject('useOrders')
 

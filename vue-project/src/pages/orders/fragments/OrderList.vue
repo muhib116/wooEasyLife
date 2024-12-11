@@ -1,25 +1,28 @@
 <template>
     <div class="relative">
-        <Heading
-            title="Recent Orders"
-            class="mb-4 px-6"
-        />
         <Loader
             class="absolute left-1/2 -translate-x-1/2 z-30"
             :active="isLoading"
         />
 
-        <TableFilter />
-        <Table.Table v-if="orders.length">
-            <TableHeader />
-            <Table.TBody>
-                <TableRow 
-                    v-for="(order, index) in orders"
-                    :key="index"
-                    :order="order"
-                />
-            </Table.TBody>
-        </Table.Table>
+        <OrderDetails v-if="activeOrder" />
+        <div v-else>
+            <Heading
+                title="Recent Orders"
+                class="mb-4 px-6"
+            />
+            <TableFilter />
+            <Table.Table v-if="orders.length">
+                <TableHeader />
+                <Table.TBody>
+                    <TableRow 
+                        v-for="(order, index) in orders"
+                        :key="index"
+                        :order="order"
+                    />
+                </Table.TBody>
+            </Table.Table>
+        </div>
     </div>
 </template>
 
@@ -29,8 +32,10 @@
     import TableHeader from './fragments/TableHeader.vue'
     import TableRow from './fragments/TableRow.vue'
     import TableFilter from './fragments/TableFilter.vue'
+    import OrderDetails from './OrderDetails.vue'
 
     const {
+        activeOrder,
         orders,
         isLoading
     } = inject('useOrders')
