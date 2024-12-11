@@ -1,7 +1,7 @@
 <template>
     <div
         v-if="configData"
-        class="bg-gray-100 min-h-screen pb-10"
+        class="bg-gray-100 min-h-screen pb-10 text-gray-600"
     >
         <Navigation 
             class="sticky z-50"

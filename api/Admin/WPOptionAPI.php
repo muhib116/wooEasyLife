@@ -81,11 +81,11 @@ class WPOptionAPI extends WP_REST_Controller
         }
 
         $data = get_option($option_name, []);
-        $decoded_data = is_string($data) ? json_decode($data, true) : $data;
+        $decoded_data = decode_json_if_string($data);
 
         return new WP_REST_Response([
             'status' => 'success',
-            'data'   => $decoded_data ?: [],
+            'data'   => $decoded_data,
         ], 200);
     }
 
@@ -139,7 +139,7 @@ class WPOptionAPI extends WP_REST_Controller
         }
 
         // Save the data in wp_options
-        update_option($option_name, json_encode($data));
+        update_option($option_name, safe_json_encode($data));
 
         // Return success response
         return new WP_REST_Response([

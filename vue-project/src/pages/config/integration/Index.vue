@@ -1,5 +1,5 @@
 <template>
-    <div class="relative min-h-[200px]">
+    <Card.Native class="relative min-h-[200px]">
         <Loader
             :active="isLoading"
             class="absolute inset-x-1/2 top-24 -translate-x-1/2 z-20"
@@ -27,12 +27,12 @@
                 </template>
             </Table.TBody>
         </Table.Table>
-    </div>
+    </Card.Native>
 </template>
 
 
 <script setup>
-    import { Table, MessageBox, Loader, Input } from '@components'
+    import { Table, MessageBox, Loader, Card } from '@components'
     import { useIntegration } from './useIntegration'
     import { provide } from 'vue'
     import TableTrow from './fragment/TableRow.vue'

@@ -1,7 +1,41 @@
 <?php
 
-function hello() {
-    return "hi from hello";
+function decode_json_if_string($data) {
+    // Check if the data is a string and in JSON format
+    if (is_string($data)) {
+        $decoded = json_decode($data, true);
+
+        // Verify if decoding was successful
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return $decoded;
+        }
+    }
+
+    // Return the original data if not a valid JSON string
+    return $data;
+}
+
+function safe_json_encode($data) {
+    // Check if the input is already a JSON string and valid
+    if (is_string($data)) {
+        $decoded = json_decode($data, true);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return json_encode($decoded);
+        }
+    }
+
+    // Check if the input is an array or object for encoding
+    if (is_array($data) || is_object($data)) {
+        $encoded = json_encode($data);
+
+        // Ensure the encoding was successful
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return $encoded;
+        }
+    }
+
+    // If the data cannot be JSON encoded, return null
+    return $data;
 }
 
 function HPOSp() {
