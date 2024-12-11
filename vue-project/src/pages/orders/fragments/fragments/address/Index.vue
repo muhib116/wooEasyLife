@@ -1,13 +1,12 @@
 <template>
     <div class="grid grid-cols-2 gap-10">
         <AddressEditor
-            :address="order.billing_address"
             title="Billing Info"
+            :address="order.billing_address"
         />
         <AddressEditor
             title="Shipping Info"
             :address="order.shipping_address"
-            :billingAddress="order.billing_address"
         />
     </div>
 </template>

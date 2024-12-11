@@ -20,7 +20,8 @@
                 class="flex gap-1"
             >
                 #{{ order.id }}
-                {{ order.customer_name }}
+                {{ order.billing_address.first_name }}
+                {{ order.billing_address.last_name }}
                 <a 
                     class="text-orange-500 hover:scale-150 duration-200 opacity-0 group-hover:opacity-100"
                     :href="`${baseUrl}/wp-admin/post.php?post=${order.id}&action=edit`"

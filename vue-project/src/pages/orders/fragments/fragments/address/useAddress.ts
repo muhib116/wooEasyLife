@@ -2,8 +2,6 @@ import { ref } from "vue"
 import { updateAddress } from '@/api'
 
 export const useAddress = () => {
-    const shippingAddressClone = ref()
-
     const updateBillingAddress = async (address) => {
         const {
             order_id,
@@ -76,19 +74,16 @@ export const useAddress = () => {
     }
 
     const handleAddressEdit = async (address) => {
-        if (address.type == 'billing') {
-            return await updateBillingAddress(address)
+        if(address.type=='shipping'){
+            updateShippingAddress(address)
+            return
         }
-
-        if (address.type == 'shipping') {
-            return await updateShippingAddress(shippingAddressClone.value)
-        }
+        return await updateBillingAddress(address)
     }
 
     return {
         updateBillingAddress,
         updateShippingAddress,
-        shippingAddressClone,
         handleAddressEdit,
     }
 }

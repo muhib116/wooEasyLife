@@ -20,7 +20,6 @@
                 </Button.Native>
                 <Button.Primary
                     v-if="isEditable"
-                    :class="isEditable ? 'animate-pulse' : 'opacity-60'"
                     @onClick="handleUpdate"
                     icon="PhCheck"
                     title="Click to save"
@@ -44,7 +43,6 @@
         <AddressForm
             v-if="isEditable"
             :address="address"
-            :billingAddress="billingAddress"
         />
         <AddressPreview
             v-else
@@ -62,16 +60,12 @@
     const props = defineProps<{
         title?: string
         address: object
-        billingAddress: object
     }>()
 
     const {
         handleAddressEdit
         
     } = inject('useAddress')
-    const {
-        getOrders
-    } = inject('useOrders')
 
     const isEditable = ref(false)
     const handleUpdate = async (btn) => {
@@ -79,10 +73,6 @@
             try {
                 btn.isLoading = true
                 await handleAddressEdit(props.address)
-
-                if(props.address.type='shipping'){
-                    getOrders()
-                }
             } finally {
                 btn.isLoading = false
             }
