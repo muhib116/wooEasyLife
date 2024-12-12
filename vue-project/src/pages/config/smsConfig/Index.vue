@@ -1,8 +1,10 @@
 <template>
     <Card.Native class="py-10">
-        <h3 class="text-xl font-semibold text-gray-900 mb-3">
-            Configure your order place Message
-        </h3>
+        <Heading
+            class="mb-3"
+            title="Configure your order place Message"
+            subtitle="To add new line in message add \n. <span class='text-blue-500'>Ex: Name \n Address</span>"
+        />
 
         <div class="grid gap-4">
             <Input.Primary
@@ -26,12 +28,14 @@
                 position="up"
             />
         </div>
-        Sms config
+        <Button.Primary class="mt-4 ml-auto">
+            Save Changes
+        </Button.Primary>
     </Card.Native>
 </template>
 
 <script setup lang="ts">
-    import { Card, Input, Textarea } from '@components'
+    import { Card, Input, Button, Heading } from '@components'
     import { useSmsConfig } from './useSmsConfig'
     import { provide, ref } from 'vue'
     import TextInputArea from './fragments/TextInputArea.vue'

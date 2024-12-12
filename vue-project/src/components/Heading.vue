@@ -3,9 +3,10 @@
         <h3 class="text-xl font-semibold text-gray-900">
             {{ title }}
         </h3>
-        <p v-if="subtitle" class="text-lg text-gray-600">
-            {{ subtitle }}
-        </p>
+        <div
+            v-if="subtitle" class="text-lg text-gray-500"
+            v-html="subtitle"
+        ></div>
     </div>
 </template>
 
