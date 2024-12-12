@@ -61,7 +61,7 @@ if (!class_exists('WooEasyLife')) :
 
         public function woo_easy_life_activation_hook()
         {
-            if (empty(get_option('woo_easy_life_license_key'))) update_option('woo_easy_life_license_key', '');
+            if (empty(get_option('woo_easy_life_license'))) update_option('woo_easy_life_license', ['key'=> ""]);
             if (empty(get_option('woo_easy_life_balance'))) update_option('woo_easy_life_balance', '200');
 
             // Save a flag to indicate the table was created
@@ -73,7 +73,7 @@ if (!class_exists('WooEasyLife')) :
 
         public function woo_easy_life_deactivation_hook()
         {
-            if (get_option('woo_easy_life_license_key') !== false) delete_option('woo_easy_life_license_key');
+            if (get_option('woo_easy_life_license') !== false) delete_option('woo_easy_life_license');
             if (get_option('woo_easy_life_balance') !== false) delete_option('woo_easy_life_balance');
             if (get_option('woo_easy_life_config') !== false) delete_option('woo_easy_life_config');
 

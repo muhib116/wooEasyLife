@@ -77,10 +77,10 @@ export const createOrUpdateWPOptionItem = async (payload: {
     key: string,
     value: string
 }) => {
-    const { data } = await axios.post(`${localApiBaseURL}/wp-option-item`, {
+    const { data } = await axios.post(`${localApiBaseURL}/wp-option-item`, null, {
         params: payload
     })
-    return data
+        return data
 }
 
 export const getWPOption = async (payload: {option_name: string}) => {

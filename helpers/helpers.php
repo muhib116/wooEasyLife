@@ -4,7 +4,6 @@ function decode_json_if_string($data) {
     // Check if the data is a string and in JSON format
     if (is_string($data)) {
         $decoded = json_decode($data, true);
-
         // Verify if decoding was successful
         if (json_last_error() === JSON_ERROR_NONE) {
             return $decoded;
