@@ -1,7 +1,10 @@
 <template>
+    <MessageBox
+        :title="alertMessage.message"
+        :type="alertMessage.type"
+    />
     <h3 class="text-xl font-semibold text-gray-900 mb-3">
         Configure your license
-        {{ !!licenseKey }}
     </h3>
     <Card.Native class="relative min-h-[200px] !py-10">
         <Loader
@@ -54,13 +57,14 @@
 </template>
 
 <script setup lang="ts">
-    import { Card, Input, Icon, Loader, Button } from '@components'
+    import { Card, Input, Icon, Loader, Button, MessageBox } from '@components'
     import { useLicense } from './UseLicense'
 
     const {
         isLoading,
         licenseKey,
         deactivateLicense,
-        ActivateLicense
+        ActivateLicense,
+        alertMessage
     } = useLicense()
 </script>

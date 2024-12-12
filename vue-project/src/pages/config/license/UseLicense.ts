@@ -4,6 +4,10 @@ import { onMounted, ref } from "vue"
 export const useLicense = () => {
     const licenseKey = ref('')
     const isLoading = ref(false)
+    const alertMessage = ref({
+        message: '',
+        type: ''
+    })
 
     const loadLicenseKey = async () => {
         const { data } = await getWPOptionItem({option_name: 'license', key: 'key'})
@@ -19,10 +23,21 @@ export const useLicense = () => {
                 key: 'key',
                 value: licenseKey.value
             })
+            alertMessage.value = {
+                message: 'Your license successfully activated!',
+                type: 'success'
+            }
         } finally {
             isLoading.value = false
             btn.isLoading = false
         }
+
+        setTimeout(() => {
+            alertMessage.value = {
+                message: '',
+                type: ''
+            }
+        }, 4000)
     }
 
     const deactivateLicense = async (btn) => {
@@ -36,10 +51,20 @@ export const useLicense = () => {
                 value: ''
             })
             licenseKey.value = ''
+            alertMessage.value = {
+                message: 'Your license deactivated!',
+                type: 'success'
+            }
         } finally {
             isLoading.value = false
             btn.isLoading = false
         }
+        setTimeout(() => {
+            alertMessage.value = {
+                message: '',
+                type: ''
+            }
+        }, 4000)
     }
 
     onMounted(async () => {
@@ -55,6 +80,7 @@ export const useLicense = () => {
         licenseKey,
         loadLicenseKey,
         deactivateLicense,
-        ActivateLicense
+        ActivateLicense,
+        alertMessage
     }
 }
