@@ -1,4 +1,5 @@
 <template>
+    {{ cursorPosition }}
     <div 
         class="relative" 
     >
@@ -46,64 +47,187 @@
             </Card.Native>
         </div>
 
+        <div
+            v-if="showTooltip"
+            class="absolute top-0 right-0"
+        >
+            <!-- :style="tooltipStyle" -->
+            ((Muhibbullah))
+        </div>
+
         <Textarea.Native
-            label="Customer Message"
-            placeholder="Write customer message"
+            class="leading-[25px]"
+            :label="label"
+            :placeholder="placeholder"
             v-model="modelValue"
-            @input="e => handleCharacterRemove(e, modelValue)"
+            rows="5"
+            @input="e => {
+                handleInput(e)
+                handleCharacterRemove(e, modelValue)
+            }"
+            @click="init"
         />
     </div>
 </template>
 
 <script setup lang="ts">
     import { Textarea, Icon, Card } from '@components'
-    import { ref } from 'vue'
+    import { ref, reactive } from 'vue'
 
     const toggleDropdown = ref(false)
+    const cursorPosition = ref(0)
+    const textarea = ref()
 
     withDefaults(
         defineProps<{
             position?: 'up' | 'down',
-            dropdownData: {title: string, slug: string}[]
+            dropdownData: {title: string, slug: string}[],
+            label?: string,
+            placeholder: string
         }>(), {
             position: 'down'
         }
     )
 
+    const showTooltip = ref<boolean>(false)
+    const tooltipStyle = reactive({ top: '0px', left: '0px' })
+
+    const handleInput = (event) => {
+        const value = event.target.value
+        const cursorPos = event.target.selectionStart
+        const lastChar = value.slice(cursorPos - 1, cursorPos)
+
+        // Detect `[$]` pattern
+        if (lastChar === '$') {
+            showTooltip.value = true
+            positionTooltip(cursorPos)
+        } else {
+            showTooltip.value = false
+        }
+    }
+
+    const positionTooltip = (cursorPos) => {
+        const textareaEl = textarea.value
+        const { offsetTop, offsetLeft, scrollTop } = textareaEl
+        const rect = textareaEl.getBoundingClientRect()
+
+        // Calculate approximate cursor position in pixels
+        const lineHeight = 24 // Adjust based on your textarea's line height
+        const charWidth = 8 // Adjust based on your textarea's font size
+
+        const row = Math.floor(cursorPos / textareaEl.cols)
+        const col = cursorPos % textareaEl.cols
+
+        tooltipStyle.top = `${rect.top + window.scrollY + row * lineHeight}px`
+        tooltipStyle.left = `${rect.left + window.scrollX + col * charWidth}px`
+    }
+
+    const selectTooltipItem = (item) => {
+        if (!textarea.value) return
+
+        const cursorPos = textarea.value.selectionStart
+        const newValue =
+        modelValue.value.slice(0, cursorPos - 1) + // Remove `$`
+        `$${item.slug}` +
+        modelValue.value.slice(cursorPos)
+
+        modelValue.value = newValue
+        showTooltip.value = false
+
+        // Update cursor position
+        textarea.value.focus()
+        textarea.value.setSelectionRange(cursorPos + item.slug.length, cursorPos + item.slug.length)
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     const handleDropDownData = (item) => {
-        modelValue.value += `$${item.slug}`
+        // Ensure the textarea reference exists
+        if (!textarea.value) return;
+
+        // Get the current cursor position or selection range
+        const start = textarea.value.selectionStart;
+        const end = textarea.value.selectionEnd;
+
+        // Insert the selected suggestion into the textarea
+        const newValue =
+            textarea.value.value.slice(0, start) +
+            `$${item.slug}` +
+            textarea.value.value.slice(end);
+
+        // Update the modelValue
+        textarea.value.value = newValue;
+
+        // Set the cursor position after the inserted text
+        const cursorAfterInsertion = start + `$${item.slug}`.length;
+
+        // Focus and set cursor position
+        textarea.value.focus();
+        console.log(cursorAfterInsertion)
+        textarea.value.setSelectionRange(cursorAfterInsertion, cursorAfterInsertion);
+    };
+
+    const init = (event) => {
+        textarea.value = event.target
+        cursorPosition.value = textarea.value.selectionStart; // Get cursor position
     }
 
     const handleCharacterRemove = (event, text) => {
-        const textarea = event.target
-        const cursorPosition = textarea.selectionStart; // Get cursor position
+        const textarea = event.target;
+        const cursorPos = textarea.selectionStart; // Get current cursor position
+        cursorPosition.value = cursorPos;
+
         // Find the token pattern starting with $ and connected with underscores
         const regex = /\$\w+/g;
         let match;
         let shouldDelete = false;
         let deleteStart, deleteEnd;
+
         while ((match = regex.exec(text)) !== null) {
             const start = match.index;
             const end = start + match[0].length;
-      
-            // Check if the cursor is in the range of the match
-            if (cursorPosition <= end && cursorPosition > start) {
-              shouldDelete = true;
-              deleteStart = start;
-              deleteEnd = end;
-              break;
+
+            // Check if the cursor is in or at the exact start of the match
+            if (cursorPos <= end && cursorPos >= start) {
+                shouldDelete = true;
+                deleteStart = start;
+                deleteEnd = end;
+                break;
             }
         }
 
         if (shouldDelete) {
             // Delete the matched token
             const newText = text.slice(0, deleteStart) + text.slice(deleteEnd);
-            textarea.value = newText;
-      
-            // Adjust cursor position
-            textarea.setSelectionRange(deleteStart, deleteStart);
+            modelValue.value = newText;
+
+            // Adjust the cursor position relative to the deleted text
+            const newCursorPos = deleteStart; // Cursor stays at the start of the deleted token
+            textarea.value = newText; // Update the textarea value directly
+            textarea.setSelectionRange(newCursorPos, newCursorPos); // Set cursor position
         }
-    }
+    };
+
 
     const modelValue = defineModel()
 </script>

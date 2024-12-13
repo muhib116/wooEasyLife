@@ -1,5 +1,8 @@
 <template>
-    <Card.Native class="py-10">
+    <Card.Native class="py-10 relative">
+        <Loader
+            class="absolute inset-1/2 "
+        />
         <Heading
             class="mb-3"
             title="Configure your order place Message"
@@ -28,22 +31,26 @@
                 position="up"
             />
         </div>
-        <Button.Primary class="mt-4 ml-auto">
+        <Button.Primary
+            class="mt-4 ml-auto"
+            @onClick="btn => saveSMSConfig(btn, form)"
+        >
             Save Changes
         </Button.Primary>
     </Card.Native>
 </template>
 
 <script setup lang="ts">
-    import { Card, Input, Button, Heading } from '@components'
+    import { Card, Input, Button, Heading, Loader } from '@components'
     import { useSmsConfig } from './useSmsConfig'
-    import { provide, ref } from 'vue'
+    import { provide } from 'vue'
     import TextInputArea from './fragments/TextInputArea.vue'
 
     const _useSmsConfig = useSmsConfig()
     const {
         form,
-        personalizations
+        personalizations,
+        saveSMSConfig
     } = _useSmsConfig
 
     provide('useSmsConfig', _useSmsConfig)

@@ -1,10 +1,16 @@
-import { ref } from "vue"
+import { createOrUpdateWPOption, getWPOption } from "@/api"
+import { onMounted, ref } from "vue"
 
 export const useSmsConfig = () => {
     const form = ref({
         admin_phone: '',
         admin_message: '',
         customer_message: ''
+    })
+    const isLoading = ref(false)
+    const alertMessage = ref({
+        title: '',
+        type: ''
     })
 
     const personalizations = [
@@ -62,8 +68,44 @@ export const useSmsConfig = () => {
         },
     ]
 
+    const saveSMSConfig = async (btn, data) => {
+        const payload = {
+            option_name: 'sms_config',
+            data
+        }
+        try {
+            btn.isLoading = true
+            isLoading.value = true
+            createOrUpdateWPOption(payload)
+        } finally {
+            isLoading.value = false
+            btn.isLoading = false
+        }
+    }
+
+    const loadSMSConfig = async () => {
+        const { data } = await getWPOption({
+            option_name: 'sms_config'
+        })
+
+        if(data){
+            form.value = data
+        }
+    }
+
+    onMounted(async () => {
+        try {
+            isLoading.value = true
+            await loadSMSConfig()
+        } finally {
+            isLoading.value = true
+        }
+    })
+
     return {
         personalizations,
-        form
+        form,
+        saveSMSConfig,
+        loadSMSConfig,
     }
 }

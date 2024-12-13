@@ -80,7 +80,7 @@ class WPOptionAPI extends WP_REST_Controller
             return new WP_Error('missing_option_name', 'The option_name parameter is required.', ['status' => 400]);
         }
 
-        $data = get_option($option_name, []);
+        $data = get_option($option_name, false);
         $decoded_data = decode_json_if_string($data);
 
         return new WP_REST_Response([
