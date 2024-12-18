@@ -53,5 +53,6 @@ class API_Register {
         new \WooEasyLife\API\Admin\CustomOrderStatusAPI();
         new \WooEasyLife\API\Admin\WPOptionAPI();
         new \WooEasyLife\API\Frontend\OTPHandlerAPI();
+        new \WooEasyLife\API\Admin\SMSConfigAPI();
     }
 }

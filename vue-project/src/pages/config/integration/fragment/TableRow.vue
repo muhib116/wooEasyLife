@@ -1,5 +1,8 @@
 <template>
 <Table.Tr>
+    <Table.Td class="capitalize">
+        {{ index + 1 }}
+    </Table.Td>
     <Table.Td class="capitalize">{{ objKey.replaceAll('_', ' ') }}</Table.Td>
     <Table.Td>
         <Switch
@@ -28,6 +31,7 @@
     } = inject('useIntegration')
 
     defineProps<{
-        objKey: string
+        index: number,
+        objKey: string,
     }>()
 </script>

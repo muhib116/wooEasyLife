@@ -1,56 +1,39 @@
 <template>
-    <Card.Native class="py-10 relative">
+    <div class="relative">
         <Loader
-            class="absolute inset-1/2 "
+            class="absolute inset-1/2 top-20 -translate-x-1/2 -translate-y-1/2"
+            :active="isLoading"
         />
-        <Heading
-            class="mb-3"
-            title="Configure your order place Message"
-            subtitle="To add new line in message add \n. <span class='text-blue-500'>Ex: Name \n Address</span>"
+        <TabHeader
+            :activeTab="activeTab"
+            :data="tabs"
+            :hasUnsavedData="hasUnsavedData"
+            @onTabChange="tabChange"
         />
-
-        <div class="grid gap-4">
-            <Input.Primary
-                label="Admin Phone"
-                placeholder="Enter admin phone number"
-                v-model="form.admin_phone"
-            />
-            
-            <TextInputArea
-                label="Customer Message"
-                placeholder="Write customer message"
-                :dropdownData="personalizations"
-                v-model="form.customer_message"
-            />
-            
-            <TextInputArea
-                label="Admin Message"
-                placeholder="Write admin message"
-                :dropdownData="personalizations"
-                v-model="form.admin_message"
-                position="up"
-            />
-        </div>
-        <Button.Primary
-            class="mt-4 ml-auto"
-            @onClick="btn => saveSMSConfig(btn, form)"
+        <Card.Native
+            class="min-h-[200px] h-full w-full p-4 rounded-t-none py-10"
         >
-            Save Changes
-        </Button.Primary>
-    </Card.Native>
+            <component
+                :is="components[activeTab]"
+            />
+        </Card.Native>
+    </div>
 </template>
 
 <script setup lang="ts">
-    import { Card, Input, Button, Heading, Loader } from '@components'
+    import { Card, Loader } from '@components'
     import { useSmsConfig } from './useSmsConfig'
     import { provide } from 'vue'
-    import TextInputArea from './fragments/TextInputArea.vue'
+    import TabHeader from '@/pages/config/fragments/TabHeader.vue'
 
     const _useSmsConfig = useSmsConfig()
     const {
-        form,
-        personalizations,
-        saveSMSConfig
+        isLoading,
+        components,
+        activeTab,
+        tabs,
+        hasUnsavedData,
+        tabChange
     } = _useSmsConfig
 
     provide('useSmsConfig', _useSmsConfig)

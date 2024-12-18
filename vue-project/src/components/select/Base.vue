@@ -39,8 +39,8 @@
 </template>
 
 <script setup>
-    import { Label, Select } from '@/plugins/form/v2'
-    import { Icon } from '@quantum'
+    import { Icon, Select } from '@components'
+    import Label from './Label.vue'
 
     defineOptions({
         name: 'Base Select',

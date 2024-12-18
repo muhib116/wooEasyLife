@@ -107,3 +107,12 @@ export const deleteWPOption = async (payload: {option_name: string}) => {
     return data
 }
 // wp_options table CRUD end
+
+
+// sms config CRUD start
+
+export const getWoocommerceStatuses = async () => {
+    const { data } = await axios.get(`${localApiBaseURL}/woo-statuses`)
+    return data
+}
+// sms config CRUD end

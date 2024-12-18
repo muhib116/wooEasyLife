@@ -1,19 +1,64 @@
-import { createOrUpdateWPOption, getWPOption } from "@/api"
+import { createOrUpdateWPOption, getWoocommerceStatuses, getWPOption } from "@/api"
 import { onMounted, ref } from "vue"
+import List from './List.vue'
+import Create from './Create.vue'
 
 export const useSmsConfig = () => {
-    const form = ref({
-        admin_phone: '',
-        admin_message: '',
-        customer_message: ''
-    })
     const isLoading = ref(false)
-    const alertMessage = ref({
-        title: '',
-        type: ''
+    const wooStatuses = ref([])
+    const alertMessage = ref<{
+        message: string
+        type: "success" | "danger" | "warning" | "info"
+    }>({
+        message: '',
+        type: 'danger'
+    })
+    const hasUnsavedData = ref(false)
+    const activeTab = ref('create')
+
+    const tabs = ref([
+        {
+            title: 'List',
+            slug: 'list'
+        },
+        {
+            title: 'Create',
+            slug: 'create'
+        },
+    ])
+    const components = ref({
+        list: List,
+        create: Create
     })
 
+    const defaultFormData = {
+        status: '',
+        message: '',
+        message_for: '',
+        is_active: false
+    }
+    const messageFor = [
+        {
+            title: 'Admin',
+            slug: 'admin'
+        },
+        {
+            title: 'Customer',
+            slug: 'customer'
+        }
+    ]
+    const tabChange = (slug: string) => {
+        activeTab.value = slug
+        form.value = {...defaultFormData}
+    }
+
+    const form = ref({...defaultFormData})
+
     const personalizations = [
+        {
+            title: 'Site name',
+            slug: 'site_name'
+        },
         {
             title: 'Customer name',
             slug: 'customer_name'
@@ -67,45 +112,52 @@ export const useSmsConfig = () => {
             slug: 'admin_phone'
         },
     ]
+    
+    const createSMS = (btn) => {
 
-    const saveSMSConfig = async (btn, data) => {
-        const payload = {
-            option_name: 'sms_config',
-            data
-        }
+    }
+    
+    const deleteSMS = (btn) => {
+
+    }
+    
+    const loadSMS = () => {
+
+    }
+    
+    const loadWooStatuses = async () => {
         try {
-            btn.isLoading = true
             isLoading.value = true
-            createOrUpdateWPOption(payload)
+            const { data } = await getWoocommerceStatuses()
+            wooStatuses.value = data
         } finally {
             isLoading.value = false
-            btn.isLoading = false
-        }
-    }
-
-    const loadSMSConfig = async () => {
-        const { data } = await getWPOption({
-            option_name: 'sms_config'
-        })
-
-        if(data){
-            form.value = data
         }
     }
 
     onMounted(async () => {
         try {
             isLoading.value = true
-            await loadSMSConfig()
+            await loadSMS()
         } finally {
-            isLoading.value = true
+            isLoading.value = false
         }
     })
 
     return {
+        tabs,
+        components,
+        tabChange,
         personalizations,
         form,
-        saveSMSConfig,
-        loadSMSConfig,
+        messageFor,
+        alertMessage,
+        isLoading,
+        activeTab,
+        hasUnsavedData,
+        createSMS,
+        deleteSMS,
+        wooStatuses,
+        loadWooStatuses
     }
 }

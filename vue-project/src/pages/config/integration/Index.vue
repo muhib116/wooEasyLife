@@ -13,16 +13,18 @@
         </div>
         <Table.Table>
             <Table.THead>
+                <Table.Th>#sl</Table.Th>
                 <Table.Th>Config Name</Table.Th>
                 <Table.Th>on/off</Table.Th>
             </Table.THead>
             <Table.TBody>
                 <template
-                    v-for="(item, key) in configData"
+                    v-for="(item, key, index) in configData"
                     :key="key"
                 >
                     <TableTrow
                         :objKey="key"
+                        :index="index"
                     />
                 </template>
             </Table.TBody>

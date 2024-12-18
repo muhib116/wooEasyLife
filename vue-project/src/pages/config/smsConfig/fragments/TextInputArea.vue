@@ -1,5 +1,4 @@
 <template>
-    {{ cursorPosition }}
     <div 
         class="relative" 
     >
@@ -19,7 +18,7 @@
             
             <Card.Native
                 v-if="toggleDropdown"
-                class="absolute right-0 z-30 px-0 h-[250px] border"
+                class="absolute right-0 z-30 px-0 py-0 h-[250px] border"
                 :class="position == 'up' ? 'bottom-full' : 'top-4'"
             >
                 <button
@@ -31,7 +30,7 @@
                         size="20"
                     />
                 </button>
-                <div class="h-full overflow-y-auto pt-4 [&>*+*]:border-t">
+                <div class="h-full overflow-y-auto [&>*+*]:border-t">
                     <div
                         v-for="(item, index) in dropdownData"
                         :key="index"
@@ -47,16 +46,8 @@
             </Card.Native>
         </div>
 
-        <div
-            v-if="showTooltip"
-            class="absolute top-0 right-0"
-        >
-            <!-- :style="tooltipStyle" -->
-            ((Muhibbullah))
-        </div>
-
         <Textarea.Native
-            class="leading-[25px]"
+            class="leading-[25px] !rounded"
             :label="label"
             :placeholder="placeholder"
             v-model="modelValue"
@@ -72,7 +63,7 @@
 
 <script setup lang="ts">
     import { Textarea, Icon, Card } from '@components'
-    import { ref, reactive } from 'vue'
+    import { ref } from 'vue'
 
     const toggleDropdown = ref(false)
     const cursorPosition = ref(0)
@@ -89,9 +80,6 @@
         }
     )
 
-    const showTooltip = ref<boolean>(false)
-    const tooltipStyle = reactive({ top: '0px', left: '0px' })
-
     const handleInput = (event) => {
         const value = event.target.value
         const cursorPos = event.target.selectionStart
@@ -99,66 +87,11 @@
 
         // Detect `[$]` pattern
         if (lastChar === '$') {
-            showTooltip.value = true
-            positionTooltip(cursorPos)
+            toggleDropdown.value = true
         } else {
-            showTooltip.value = false
+            toggleDropdown.value = false
         }
     }
-
-    const positionTooltip = (cursorPos) => {
-        const textareaEl = textarea.value
-        const { offsetTop, offsetLeft, scrollTop } = textareaEl
-        const rect = textareaEl.getBoundingClientRect()
-
-        // Calculate approximate cursor position in pixels
-        const lineHeight = 24 // Adjust based on your textarea's line height
-        const charWidth = 8 // Adjust based on your textarea's font size
-
-        const row = Math.floor(cursorPos / textareaEl.cols)
-        const col = cursorPos % textareaEl.cols
-
-        tooltipStyle.top = `${rect.top + window.scrollY + row * lineHeight}px`
-        tooltipStyle.left = `${rect.left + window.scrollX + col * charWidth}px`
-    }
-
-    const selectTooltipItem = (item) => {
-        if (!textarea.value) return
-
-        const cursorPos = textarea.value.selectionStart
-        const newValue =
-        modelValue.value.slice(0, cursorPos - 1) + // Remove `$`
-        `$${item.slug}` +
-        modelValue.value.slice(cursorPos)
-
-        modelValue.value = newValue
-        showTooltip.value = false
-
-        // Update cursor position
-        textarea.value.focus()
-        textarea.value.setSelectionRange(cursorPos + item.slug.length, cursorPos + item.slug.length)
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     const handleDropDownData = (item) => {
@@ -170,20 +103,20 @@
         const end = textarea.value.selectionEnd;
 
         // Insert the selected suggestion into the textarea
-        const newValue =
-            textarea.value.value.slice(0, start) +
-            `$${item.slug}` +
-            textarea.value.value.slice(end);
+        const cursorPrevContent = textarea.value.value.slice(0, start)
+        const cursorNextContent = textarea.value.value.slice(end)
+        const cursorImmediatePrevChar = cursorPrevContent[cursorPrevContent.length - 1]
+        const variableSlug = cursorImmediatePrevChar == '$' ? item.slug : `$${item.slug}`
+        const newValue = cursorPrevContent + variableSlug + cursorNextContent;
 
         // Update the modelValue
-        textarea.value.value = newValue;
+        modelValue.value = newValue;
 
         // Set the cursor position after the inserted text
-        const cursorAfterInsertion = start + `$${item.slug}`.length;
+        const cursorAfterInsertion = cursorImmediatePrevChar == '$' ? start + item.slug.length : start + `$${item.slug}`.length;
 
         // Focus and set cursor position
         textarea.value.focus();
-        console.log(cursorAfterInsertion)
         textarea.value.setSelectionRange(cursorAfterInsertion, cursorAfterInsertion);
     };
 

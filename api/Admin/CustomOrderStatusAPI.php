@@ -30,7 +30,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller
      */
     public function wooeasylife_register_custom_order_statuses()
     {
-        $custom_statuses = get_option('woo_easy_life_custom_order_statuses', []);
+        $custom_statuses = get_option(__PREFIX . 'custom_order_statuses', []);
 
         foreach ($custom_statuses as $slug => $details) {
             register_post_status('wc-' . $slug, [
@@ -55,7 +55,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller
 
     public function wooeasylife_add_custom_order_statuses($statuses)
     {
-        $custom_statuses = get_option('woo_easy_life_custom_order_statuses', []);
+        $custom_statuses = get_option(__PREFIX.'custom_order_statuses', []);
         $new_order_statuses = [];
         foreach ($statuses as $key => $status) {
             if ('wc-processing' === $key) {
@@ -78,7 +78,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller
     public function wooeasylife_add_custom_bulk_actions($bulk_actions)
     {
         // Retrieve custom statuses from options
-        $custom_statuses = get_option('woo_easy_life_custom_order_statuses', []);
+        $custom_statuses = get_option(__PREFIX.'custom_order_statuses', []);
         $new_order_statuses = [];
 
         foreach ($bulk_actions as $key => $status) {
@@ -100,7 +100,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller
      */
     public function wooeasylife_highlight_custom_statuses()
     {
-        $custom_statuses = get_option('woo_easy_life_custom_order_statuses', []);
+        $custom_statuses = get_option(__PREFIX . 'custom_order_statuses', []);
         echo '<style>';
         foreach ($custom_statuses as $_key => $_status) {
             echo '
@@ -193,7 +193,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller
      */
     public function get_statuses()
     {
-        $statuses = get_option('woo_easy_life_custom_order_statuses', []);
+        $statuses = get_option(__PREFIX . 'custom_order_statuses', []);
         $statuses_desc = $statuses; // true to preserve keys
 
         return new WP_REST_Response([
@@ -207,7 +207,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller
      */
     public function get_status(WP_REST_Request $request)
     {
-        $statuses = get_option('woo_easy_life_custom_order_statuses', []);
+        $statuses = get_option(__PREFIX . 'custom_order_statuses', []);
         $status_id = $request->get_param('id');
 
         if (!isset($statuses[$status_id])) {
@@ -225,7 +225,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller
      */
     public function create_status(WP_REST_Request $request)
     {
-        $statuses = get_option('woo_easy_life_custom_order_statuses', []);
+        $statuses = get_option(__PREFIX . 'custom_order_statuses', []);
 
         // Sanitize and validate the title and slug
         $title = sanitize_text_field($request->get_param('title'));
@@ -257,7 +257,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller
 
         // Save the new status
         $statuses[$slug] = $data;
-        update_option('woo_easy_life_custom_order_statuses', $statuses);
+        update_option(__PREFIX . 'custom_order_statuses', $statuses);
 
         return new WP_REST_Response([
             'status'  => 'success',
@@ -274,7 +274,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller
      */
     public function update_status(WP_REST_Request $request)
     {
-        $statuses = get_option('woo_easy_life_custom_order_statuses', []);
+        $statuses = get_option(__PREFIX . 'custom_order_statuses', []);
         $slug = sanitize_title($request->get_param('id')); // ID acts as slug
 
         if (!isset($statuses[$slug])) {
@@ -299,7 +299,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller
             'description' => sanitize_textarea_field($request->get_param('description')),
         ];
 
-        update_option('woo_easy_life_custom_order_statuses', $statuses);
+        update_option(__PREFIX . 'custom_order_statuses', $statuses);
 
         return new WP_REST_Response([
             'status'  => 'success',
@@ -313,7 +313,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller
      */
     public function delete_status(WP_REST_Request $request)
     {
-        $statuses = get_option('woo_easy_life_custom_order_statuses', []);
+        $statuses = get_option(__PREFIX . 'custom_order_statuses', []);
         $slug = sanitize_title($request->get_param('id'));
 
         if (!isset($statuses[$slug])) {
@@ -321,7 +321,7 @@ class CustomOrderStatusAPI extends WP_REST_Controller
         }
 
         unset($statuses[$slug]);
-        update_option('woo_easy_life_custom_order_statuses', $statuses);
+        update_option(__PREFIX . 'custom_order_statuses', $statuses);
 
         return new WP_REST_Response([
             'status'  => 'success',

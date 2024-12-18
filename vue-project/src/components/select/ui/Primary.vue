@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-    import Base from '@/plugins/form/v2/select/Base.vue'
+    import Base from '../Base.vue'
 
     defineOptions({
         name: 'PrimarySelect',
