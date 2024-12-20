@@ -8,12 +8,12 @@
         :active="isLoading"
     />
     <Heading
+        v-if="!hideTitle"
         class="mb-3"
         title="Create message"
     />
 
     <div class="grid gap-4">
-        {{ form }}
         <Select.Primary
             label="Select Status"
             :options="wooStatuses"
@@ -45,17 +45,26 @@
             <Switch v-model="form.is_active"/>
         </div>
     </div>
-    <Button.Primary
-        class="mt-4 ml-auto"
-        @onClick="btn => handleCreateSMS(btn, form)"
-    >
-        Save Changes
-    </Button.Primary>
+
+    <slot name="btn">
+        <Button.Primary
+            class="mt-4 ml-auto"
+            @onClick="btn => handleCreateSMS(btn, form)"
+        >
+            Save Changes
+        </Button.Primary>
+    </slot>
 </template>
 <script setup lang="ts">
     import { Select, Button, Heading, Loader, MessageBox, Switch, Input } from '@components'
     import { inject, onMounted } from 'vue'
     import TextInputArea from './fragments/TextInputArea.vue'
+
+    withDefaults(
+        defineProps<{hideTitle: boolean}>()
+    , {
+        hideTitle: false
+    })
 
     const {
         form,

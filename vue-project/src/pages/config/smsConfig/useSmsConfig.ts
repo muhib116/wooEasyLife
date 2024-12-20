@@ -1,4 +1,4 @@
-import { createOrUpdateWPOption, createSMS, getWoocommerceStatuses, getWPOption } from "@/api"
+import { createOrUpdateWPOption, createSMS, deleteSMS, getSMS, getWoocommerceStatuses, getWPOption, updateSMS } from "@/api"
 import { onMounted, ref } from "vue"
 import List from './List.vue'
 import Create from './Create.vue'
@@ -14,7 +14,7 @@ export const useSmsConfig = () => {
         type: 'danger'
     })
     const hasUnsavedData = ref(false)
-    const activeTab = ref('create')
+    const activeTab = ref('list')
 
     const tabs = ref([
         {
@@ -52,6 +52,7 @@ export const useSmsConfig = () => {
         activeTab.value = slug
         form.value = {...defaultFormData}
     }
+    const messages = ref([])
 
     const form = ref({...defaultFormData})
 
@@ -122,6 +123,7 @@ export const useSmsConfig = () => {
             if(res.status == "success"){
                 alertMessage.value.message = res.message
                 alertMessage.value.type = 'success'
+                form.value = { ...defaultFormData }
             }
 
             setTimeout(() => {
@@ -130,23 +132,67 @@ export const useSmsConfig = () => {
                     type: ''
                 }
             }, 4000)
-
-        } finally {
+        } 
+        catch (error) {
+            console.log(error)
+        }
+        finally {
             isLoading.value = false
             btn.isLoading = false
         }
     }
 
-    const updateSMS = (btn) => {
+    const handleUpdateSMS = async(btn, payload) => {
+        try {
+            btn.isLoading = true
+            isLoading.value = true
+            const res = await updateSMS(payload)
+            if(res.status == "success"){
+                alertMessage.value.message = res.message
+                alertMessage.value.type = 'success'
+                form.value = { ...defaultFormData }
+            }
 
+            setTimeout(() => {
+                alertMessage.value = {
+                    message: '',
+                    type: ''
+                }
+            }, 4000)
+        } finally {
+            btn.isLoading = false
+            isLoading.value = false
+        }
     }
     
-    const deleteSMS = (btn) => {
+    const handleDeleteSMS = async (id: number, btn: any) => {
+        if(!confirm('Are you sure to delete this message?')) return
+        try {
+            btn.isLoading = true
+            const res = await deleteSMS(id)
+            
+            if(res.status == "success"){
+                alertMessage.value.message = res.message
+                alertMessage.value.type = 'success'
+                loadSMS()
+            }
 
+            setTimeout(() => {
+                alertMessage.value = {
+                    message: '',
+                    type: ''
+                }
+            }, 4000)
+        } finally {
+            btn.isLoading = false
+        }
     }
     
-    const loadSMS = () => {
-
+    const loadSMS = async () => {
+        isLoading.value = true
+        const { data } = await getSMS()
+        messages.value = data
+        isLoading.value = false
     }
     
     const loadWooStatuses = async () => {
@@ -159,15 +205,6 @@ export const useSmsConfig = () => {
         }
     }
 
-    onMounted(async () => {
-        try {
-            isLoading.value = true
-            await loadSMS()
-        } finally {
-            isLoading.value = false
-        }
-    })
-
     return {
         tabs,
         components,
@@ -176,12 +213,14 @@ export const useSmsConfig = () => {
         form,
         messageFor,
         alertMessage,
+        loadSMS,
+        messages,
         isLoading,
         activeTab,
         hasUnsavedData,
         handleCreateSMS,
-        deleteSMS,
-        updateSMS,
+        handleDeleteSMS,
+        handleUpdateSMS,
         wooStatuses,
         loadWooStatuses
     }

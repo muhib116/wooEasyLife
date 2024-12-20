@@ -255,6 +255,39 @@ class SMSConfigAPI extends WP_REST_Controller {
     }
 
     /**
+     * Delete an SMS configuration by ID.
+     *
+     * @param WP_REST_Request $request The API request containing the ID.
+     * @return WP_REST_Response The response indicating the result of the deletion.
+     */
+    public function delete_sms_config(WP_REST_Request $request) {
+        global $wpdb;
+
+        // Retrieve the ID from the request
+        $id = (int) $request->get_param('id');
+
+        // Perform the deletion
+        $deleted = $wpdb->delete(
+            $this->table_name,
+            ['id' => $id],
+            ['%d']
+        );
+
+        if ($deleted === false) {
+            return new WP_REST_Response([
+                'status'  => 'error',
+                'message' => 'Failed to delete SMS configuration.',
+            ], 500);
+        }
+
+        return new WP_REST_Response([
+            'status'  => 'success',
+            'message' => 'SMS configuration deleted successfully.',
+        ], 200);
+    }
+
+
+    /**
      * Schema for SMS configuration input validation
      */
     private function get_sms_config_schema($require_id = false) {

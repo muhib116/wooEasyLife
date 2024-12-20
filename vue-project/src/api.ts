@@ -120,15 +120,31 @@ export const createSMS = async (payload: {
     status: string
     message: string
     message_for: string
+    phone_number: string
     settings?: object
     is_active: boolean
 }) => {
     const { data } = await axios.post(`${localApiBaseURL}/sms-config`, payload)
     return data
 }
+export const updateSMS = async (payload: {
+    status: string
+    message: string
+    message_for: string
+    phone_number: string
+    settings?: object
+    is_active: boolean
+}) => {
+    const { data } = await axios.put(`${localApiBaseURL}/sms-config/${payload.id}`, payload)
+    return data
+}
 
 export const getSMS = async () => {
     const { data } = await axios.get(`${localApiBaseURL}/sms-config`)
+    return data
+}
+export const deleteSMS = async (id: number) => {
+    const { data } = await axios.delete(`${localApiBaseURL}/sms-config/${id}`)
     return data
 }
 // sms config CRUD end
