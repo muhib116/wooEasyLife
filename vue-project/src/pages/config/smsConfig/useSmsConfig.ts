@@ -1,4 +1,4 @@
-import { createOrUpdateWPOption, getWoocommerceStatuses, getWPOption } from "@/api"
+import { createOrUpdateWPOption, createSMS, getWoocommerceStatuses, getWPOption } from "@/api"
 import { onMounted, ref } from "vue"
 import List from './List.vue'
 import Create from './Create.vue'
@@ -8,7 +8,7 @@ export const useSmsConfig = () => {
     const wooStatuses = ref([])
     const alertMessage = ref<{
         message: string
-        type: "success" | "danger" | "warning" | "info"
+        type: "success" | "danger" | "warning" | "info" | ''
     }>({
         message: '',
         type: 'danger'
@@ -34,8 +34,9 @@ export const useSmsConfig = () => {
     const defaultFormData = {
         status: '',
         message: '',
+        phone_number: '',
         message_for: '',
-        is_active: false
+        is_active: true
     }
     const messageFor = [
         {
@@ -113,7 +114,30 @@ export const useSmsConfig = () => {
         },
     ]
     
-    const createSMS = (btn) => {
+    const handleCreateSMS = async (btn, payload) => {
+        try {
+            isLoading.value = true
+            btn.isLoading = true
+            const res = await createSMS(payload)
+            if(res.status == "success"){
+                alertMessage.value.message = res.message
+                alertMessage.value.type = 'success'
+            }
+
+            setTimeout(() => {
+                alertMessage.value = {
+                    message: '',
+                    type: ''
+                }
+            }, 4000)
+
+        } finally {
+            isLoading.value = false
+            btn.isLoading = false
+        }
+    }
+
+    const updateSMS = (btn) => {
 
     }
     
@@ -155,8 +179,9 @@ export const useSmsConfig = () => {
         isLoading,
         activeTab,
         hasUnsavedData,
-        createSMS,
+        handleCreateSMS,
         deleteSMS,
+        updateSMS,
         wooStatuses,
         loadWooStatuses
     }

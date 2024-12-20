@@ -15,7 +15,7 @@ class SMSConfigTable {
 
         // Ensure the __PREFIX constant is defined
         if (!defined('__PREFIX')) {
-            define('__PREFIX', 'wooeasylife_');
+            define('__PREFIX', 'woo_easy_life_');
         }
 
         // Define table name
@@ -26,6 +26,7 @@ class SMSConfigTable {
         $sql = "CREATE TABLE IF NOT EXISTS $table_name (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             status VARCHAR(255) NOT NULL,
+            phone_number VARCHAR(255) NULL,
             message LONGTEXT NOT NULL,
             message_for ENUM('admin', 'customer') NOT NULL,
             settings LONGTEXT NULL,

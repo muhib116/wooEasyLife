@@ -115,4 +115,20 @@ export const getWoocommerceStatuses = async () => {
     const { data } = await axios.get(`${localApiBaseURL}/woo-statuses`)
     return data
 }
+
+export const createSMS = async (payload: {
+    status: string
+    message: string
+    message_for: string
+    settings?: object
+    is_active: boolean
+}) => {
+    const { data } = await axios.post(`${localApiBaseURL}/sms-config`, payload)
+    return data
+}
+
+export const getSMS = async () => {
+    const { data } = await axios.get(`${localApiBaseURL}/sms-config`)
+    return data
+}
 // sms config CRUD end

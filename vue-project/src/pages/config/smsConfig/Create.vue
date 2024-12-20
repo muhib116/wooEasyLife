@@ -1,6 +1,6 @@
 <template>
     <MessageBox
-        :title="alertMessage.title"
+        :title="alertMessage.message"
         :type="alertMessage.type"
     />
     <Loader
@@ -26,6 +26,12 @@
             itemKey="slug"
             v-model="form.message_for"
         />
+        <Input.Primary
+            v-if="form.message_for == 'admin'"
+            label="Admin Phone Number"
+            placeholder="Enter admin phone number"
+            v-model="form.phone_number"
+        />
         <TextInputArea
             label="Message"
             placeholder="Write message"
@@ -33,24 +39,29 @@
             v-model="form.message"
             position="up"
         />
+
+        <div class="flex gap-4 items-center">
+            Active
+            <Switch v-model="form.is_active"/>
+        </div>
     </div>
     <Button.Primary
         class="mt-4 ml-auto"
-        @onClick="btn => createSMS(btn, form)"
+        @onClick="btn => handleCreateSMS(btn, form)"
     >
         Save Changes
     </Button.Primary>
 </template>
 <script setup lang="ts">
-    import { Select, Button, Heading, Loader, MessageBox } from '@components'
-    import { inject, onMounted, provide } from 'vue'
+    import { Select, Button, Heading, Loader, MessageBox, Switch, Input } from '@components'
+    import { inject, onMounted } from 'vue'
     import TextInputArea from './fragments/TextInputArea.vue'
 
     const {
         form,
         wooStatuses,
         personalizations,
-        createSMS,
+        handleCreateSMS,
         isLoading,
         alertMessage,
         loadWooStatuses,
