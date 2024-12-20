@@ -2,6 +2,7 @@ import { createOrUpdateWPOption, createSMS, deleteSMS, getSMS, getWoocommerceSta
 import { onMounted, ref } from "vue"
 import List from './List.vue'
 import Create from './Create.vue'
+import { validateBDPhoneNumber } from "@/helper"
 
 export const useSmsConfig = () => {
     const isLoading = ref(false)
@@ -119,9 +120,27 @@ export const useSmsConfig = () => {
         if(payload.status == '' || payload.message_for == '' || (payload.message_for == 'admin' && payload.phone_number == '') || payload.message == '') {
             alertMessage.value.message = `The fields marked with an asterisk (*) are mandatory.`
             alertMessage.value.type = 'warning'
-
+            setTimeout(() => {
+                alertMessage.value = {
+                    message: '',
+                    type: ''
+                }
+            }, 6000)
             return
         }
+
+        if(payload.message_for == 'admin' && !validateBDPhoneNumber(payload.phone_number)){
+            alertMessage.value.message = `Phone number is not valid.`
+            alertMessage.value.type = 'warning'
+            setTimeout(() => {
+                alertMessage.value = {
+                    message: '',
+                    type: ''
+                }
+            }, 6000)
+            return
+        }
+
         try {
             isLoading.value = true
             btn.isLoading = true
@@ -156,6 +175,25 @@ export const useSmsConfig = () => {
             alertMessage.value.message = `The fields marked with an asterisk (*) are mandatory.`
             alertMessage.value.type = 'warning'
 
+            setTimeout(() => {
+                alertMessage.value = {
+                    message: '',
+                    type: ''
+                }
+            }, 6000)
+            return
+        }
+
+        if(payload.message_for == 'admin' && !validateBDPhoneNumber(payload.phone_number)){
+            alertMessage.value.message = `Phone number is not valid.`
+            alertMessage.value.type = 'warning'
+
+            setTimeout(() => {
+                alertMessage.value = {
+                    message: '',
+                    type: ''
+                }
+            }, 6000)
             return
         }
 
@@ -171,7 +209,6 @@ export const useSmsConfig = () => {
             }
         } 
         catch ({response}) {
-            console.log(`output->response`,response)
             if(response.data.status == "error"){
                 alertMessage.value.message = response.data.message
                 alertMessage.value.type = 'danger'

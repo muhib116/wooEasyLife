@@ -32,3 +32,25 @@ export const generateSlug = (title: string) => {
         .replace(/-+/g, '-') // Collapse multiple hyphens into one
         .replace(/^-+|-+$/g, ''); // Remove leading and trailing hyphens
 }
+
+export const validateBDPhoneNumber = (phoneNumber: string) => {
+    // Remove spaces and non-numeric characters except for "+"
+    phoneNumber = phoneNumber.replace(/[^\d+]/g, '');
+
+    // Define valid patterns
+    const patterns = [
+        /^\+8801[3-9]\d{8}$/,  // +880 format
+        /^8801[3-9]\d{8}$/,    // 880 format
+        /^01[3-9]\d{8}$/       // 01 format
+    ];
+
+    // Check if the phone number matches any of the valid patterns
+    for (const pattern of patterns) {
+        if (pattern.test(phoneNumber)) {
+            return true;
+        }
+    }
+
+    // Return an error message for invalid phone numbers
+    return false;
+}
