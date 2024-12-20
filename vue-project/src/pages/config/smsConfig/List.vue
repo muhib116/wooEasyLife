@@ -3,11 +3,15 @@
         v-if="messages?.length"
         class="relative"
     >
+        <MessageBox
+            :title="alertMessage.message"
+            :type="alertMessage.type"
+        />
         <div class="mb-2">
             <h3 class="text-xl font-semibold text-gray-900">Message list</h3>
         </div>
         <Table.Table>
-            <Table.THead>
+            <Table.THead class="whitespace-nowrap">
                 <Table.Th>#SL</Table.Th>
                 <Table.Th>Is active</Table.Th>
                 <Table.Th>Status</Table.Th>
@@ -41,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-    import { Table, Loader, Button } from '@components'
+    import { Table, MessageBox, Button } from '@components'
     import { inject, onMounted } from 'vue'
     import TableRow from './fragments/TableRow.vue'
 
@@ -49,7 +53,8 @@
         isLoading,
         messages,
         tabChange,
-        loadSMS
+        loadSMS,
+        alertMessage
     } = inject('useSmsConfig')
 
 

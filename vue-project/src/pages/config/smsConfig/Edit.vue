@@ -6,7 +6,7 @@
             <template #btn>
                 <Button.Primary
                     @onClick="async (btn) => {
-                        await handleUpdateSMS(btn, item)
+                        await handleUpdateSMS(btn, form)
                         $emit('onUpdate')
                     }"
                     class="ml-auto"
@@ -35,6 +35,6 @@
 
 
     onMounted(() => {
-        form.value = props.item
+        form.value = {...props.item}
     })
 </script>

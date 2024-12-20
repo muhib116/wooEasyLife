@@ -116,6 +116,12 @@ export const useSmsConfig = () => {
     ]
     
     const handleCreateSMS = async (btn, payload) => {
+        if(payload.status == '' || payload.message_for == '' || (payload.message_for == 'admin' && payload.phone_number == '') || payload.message == '') {
+            alertMessage.value.message = `The fields marked with an asterisk (*) are mandatory.`
+            alertMessage.value.type = 'warning'
+
+            return
+        }
         try {
             isLoading.value = true
             btn.isLoading = true
@@ -125,6 +131,16 @@ export const useSmsConfig = () => {
                 alertMessage.value.type = 'success'
                 form.value = { ...defaultFormData }
             }
+        } 
+        catch ({response}) {
+            if(response.data.status == "error"){
+                alertMessage.value.message = response.data.message
+                alertMessage.value.type = 'danger'
+            }
+        }
+        finally {
+            isLoading.value = false
+            btn.isLoading = false
 
             setTimeout(() => {
                 alertMessage.value = {
@@ -132,17 +148,17 @@ export const useSmsConfig = () => {
                     type: ''
                 }
             }, 4000)
-        } 
-        catch (error) {
-            console.log(error)
-        }
-        finally {
-            isLoading.value = false
-            btn.isLoading = false
         }
     }
 
     const handleUpdateSMS = async(btn, payload) => {
+        if(payload.status == '' || payload.message_for == '' || (payload.message_for == 'admin' && payload.phone_number == '') || payload.message == '') {
+            alertMessage.value.message = `The fields marked with an asterisk (*) are mandatory.`
+            alertMessage.value.type = 'warning'
+
+            return
+        }
+
         try {
             btn.isLoading = true
             isLoading.value = true
@@ -151,7 +167,19 @@ export const useSmsConfig = () => {
                 alertMessage.value.message = res.message
                 alertMessage.value.type = 'success'
                 form.value = { ...defaultFormData }
+                loadSMS()
             }
+        } 
+        catch ({response}) {
+            console.log(`output->response`,response)
+            if(response.data.status == "error"){
+                alertMessage.value.message = response.data.message
+                alertMessage.value.type = 'danger'
+            }
+        }
+        finally {
+            btn.isLoading = false
+            isLoading.value = false
 
             setTimeout(() => {
                 alertMessage.value = {
@@ -159,9 +187,6 @@ export const useSmsConfig = () => {
                     type: ''
                 }
             }, 4000)
-        } finally {
-            btn.isLoading = false
-            isLoading.value = false
         }
     }
     

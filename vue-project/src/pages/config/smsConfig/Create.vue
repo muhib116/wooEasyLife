@@ -15,25 +15,26 @@
 
     <div class="grid gap-4">
         <Select.Primary
-            label="Select Status"
+            label="Select Status *"
             :options="wooStatuses"
             itemKey="slug"
             v-model="form.status"
         />
         <Select.Primary
-            label="Select Receiver"
+            label="Select Receiver *"
             :options="messageFor"
             itemKey="slug"
             v-model="form.message_for"
         />
         <Input.Primary
             v-if="form.message_for == 'admin'"
-            label="Admin Phone Number"
+            label="Admin Phone Number *"
             placeholder="Enter admin phone number"
             v-model="form.phone_number"
+            @onInput="validate"
         />
         <TextInputArea
-            label="Message"
+            label="Message *"
             placeholder="Write message"
             :dropdownData="personalizations"
             v-model="form.message"

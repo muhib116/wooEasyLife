@@ -92,23 +92,42 @@ class SMSConfigAPI extends WP_REST_Controller {
      */
     public function create_sms_config(WP_REST_Request $request) {
         global $wpdb;
-
+    
         $status = sanitize_text_field($request->get_param('status'));
         $message = sanitize_text_field($request->get_param('message') ?? '');
         $message_for = sanitize_text_field($request->get_param('message_for') ?? 'customer');
-        $phone_number = sanitize_text_field($request->get_param('phone_number') ?? 'customer');
+        $phone_number = sanitize_text_field($request->get_param('phone_number') ?? '');
         $settings = $request->get_param('settings') ?? [];
         $is_active = (int)($request->get_param('is_active') ?? 1);
         $created_at = current_time('mysql');
         $updated_at = current_time('mysql');
-
+    
+        // Validate message_for value
         if (!in_array($message_for, ['admin', 'customer'])) {
             return new WP_REST_Response([
                 'status'  => 'error',
                 'message' => 'Invalid value for message_for. Allowed values are admin or customer.',
             ], 400);
         }
-
+    
+        // Check for uniqueness of status and message_for
+        $existing_record = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM {$this->table_name} WHERE status = %s AND message_for = %s",
+                $status,
+                $message_for
+            ),
+            ARRAY_A
+        );
+    
+        if ($existing_record) {
+            return new WP_REST_Response([
+                'status'  => 'error',
+                'message' => 'A configuration with this status and receiver already exists.',
+            ], 400);
+        }
+    
+        // Insert the new SMS configuration
         $inserted = $wpdb->insert(
             $this->table_name,
             [
@@ -132,14 +151,14 @@ class SMSConfigAPI extends WP_REST_Controller {
                 '%s',
             ]
         );
-
+    
         if ($inserted === false) {
             return new WP_REST_Response([
                 'status'  => 'error',
                 'message' => 'Failed to create SMS configuration.',
             ], 500);
         }
-
+    
         return new WP_REST_Response([
             'status'  => 'success',
             'message' => 'SMS configuration created successfully.',
@@ -156,6 +175,7 @@ class SMSConfigAPI extends WP_REST_Controller {
             ],
         ], 201);
     }
+    
 
     /**
      * Update an SMS configuration by ID
@@ -176,6 +196,24 @@ class SMSConfigAPI extends WP_REST_Controller {
             return new WP_REST_Response([
                 'status'  => 'error',
                 'message' => 'Invalid value for message_for. Allowed values are admin or customer.',
+            ], 400);
+        }
+
+
+        // Check for unique combination of status and message_for
+        $existing_entry = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT id FROM {$this->table_name} WHERE status = %s AND message_for = %s AND id != %d",
+                $status,
+                $message_for,
+                $id
+            )
+        );
+
+        if ($existing_entry) {
+            return new WP_REST_Response([
+                'status'  => 'error',
+                'message' => 'An entry with the same status and receiver already exists.',
             ], 400);
         }
 
@@ -298,7 +336,7 @@ class SMSConfigAPI extends WP_REST_Controller {
                 'description' => 'Status of the SMS configuration.',
             ],
             'message' => [
-                'required'    => false,
+                'required'    => true,
                 'type'        => 'string',
                 'description' => 'Message content for the SMS configuration.',
             ],
@@ -308,8 +346,9 @@ class SMSConfigAPI extends WP_REST_Controller {
                 'description' => 'Phone number of the admin',
             ],
             'message_for' => [
-                'required'    => true,
+                'required'    => false,
                 'type'        => 'string',
+                'default'     => 'customer',
                 'enum'        => ['admin', 'customer'],
                 'description' => 'Target audience for the message (admin or customer).',
             ],
@@ -319,7 +358,7 @@ class SMSConfigAPI extends WP_REST_Controller {
                 'description' => 'JSON data for SMS settings.',
             ],
             'is_active' => [
-                'required'    => false,
+                'required'    => true,
                 'type'        => 'boolean',
                 'default'     => true,
                 'description' => 'Active status of the SMS configuration.',

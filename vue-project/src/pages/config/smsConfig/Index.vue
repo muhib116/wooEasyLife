@@ -33,8 +33,7 @@
         activeTab,
         tabs,
         hasUnsavedData,
-        tabChange,
-        loadSMS
+        tabChange
     } = _useSmsConfig
 
     provide('useSmsConfig', _useSmsConfig)
