@@ -12,6 +12,14 @@
             v-model="configData[objKey]"
             @input="UpdateConfig"
         />
+        <Input.Primary
+            v-else-if="objKey == 'admin_phone'"
+            wrapperClass="w-[220px]"
+            type="text"
+            v-model="configData[objKey]"
+            @input="UpdateConfig"
+            placeholder="Enter a valid phone number."
+        />
         <Switch
             v-else
             v-model="configData[objKey]"

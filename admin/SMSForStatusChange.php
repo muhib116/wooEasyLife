@@ -21,7 +21,14 @@ class SMSForStatusChange {
         $this->send_sms($order, $sms_records);
     }
 
-    public function send_sms($order, $sms_records) {
+    public function send_sms($order, $sms_records) 
+    {
+        $config_data = get_option(__PREFIX.'config');
+
+        if (!empty($config_data)) {
+            $config_data = decode_json_if_string($config_data);
+        }
+
         $variables = [
             'site_name' => get_bloginfo('name'), 
             'customer_name' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
@@ -35,16 +42,19 @@ class SMSForStatusChange {
             'delivery_charge' => $order->get_shipping_total(),
             'payment_method' => $order->get_payment_method_title(),
             'product_price' => wc_price($order->get_subtotal()),
-            'admin_phone' => get_option('admin_phone_number', ''),
+            'admin_phone' => $config_data["admin_phone"],
         ];
 
+        $recipient = $variables["customer_phone"];
         foreach($sms_records as $key => $value){
-            if($value["message_for"] == 'admin' && !empty($value["phone_number"])){
-                $variables["admin_phone"] = $value["phone_number"];
-                send_sms($variables["admin_phone"], $this->replace_placeholder_variables_in_message($value["message"], $variables));
-            }else {
-                send_sms($variables["customer_phone"], $this->replace_placeholder_variables_in_message($value["message"], $variables));
+            if($value["message_for"] == 'admin')
+            {
+                if(!empty($value["phone_number"])){
+                    $variables["admin_phone"] = $value["phone_number"];
+                }
+                $recipient = $variables["admin_phone"];
             }
+            send_sms($recipient, $this->replace_placeholder_variables_in_message($value["message"], $variables));
         }
     }
 

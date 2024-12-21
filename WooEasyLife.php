@@ -61,11 +61,11 @@ if (!class_exists('WooEasyLife')) :
 
         public function woo_easy_life_activation_hook()
         {
-            if (empty(get_option('woo_easy_life_license'))) update_option('woo_easy_life_license', ['key'=> ""]);
-            if (empty(get_option('woo_easy_life_balance'))) update_option('woo_easy_life_balance', '200');
+            if (empty(get_option(__PREFIX.'license'))) update_option(__PREFIX.'license', ['key'=> ""]);
+            if (empty(get_option(__PREFIX.'balance'))) update_option(__PREFIX.'balance', '200');
 
             // Save a flag to indicate the table was created
-            if (empty(get_option('woo_easy_life_plugin_installed'))) update_option('woo_easy_life_plugin_installed', true);
+            if (empty(get_option(__PREFIX.'plugin_installed'))) update_option(__PREFIX.'plugin_installed', true);
             $this->handleDBTable->create();
             $this->create_static_statuses();
             $this->save_default_config();
@@ -73,13 +73,13 @@ if (!class_exists('WooEasyLife')) :
 
         public function woo_easy_life_deactivation_hook()
         {
-            if (get_option('woo_easy_life_license') !== false) delete_option('woo_easy_life_license');
-            if (get_option('woo_easy_life_balance') !== false) delete_option('woo_easy_life_balance');
-            if (get_option('woo_easy_life_config') !== false) delete_option('woo_easy_life_config');
+            if (get_option(__PREFIX.'license') !== false) delete_option(__PREFIX.'license');
+            if (get_option(__PREFIX.'balance') !== false) delete_option(__PREFIX.'balance');
+            if (get_option(__PREFIX.'config') !== false) delete_option(__PREFIX.'config');
 
             // Remove plugin-specific options
-            if (get_option('woo_easy_life_plugin_installed') !== false) delete_option('woo_easy_life_plugin_installed');
-            if (get_option('woo_easy_life_custom_order_statuses') !== false) delete_option('woo_easy_life_custom_order_statuses');
+            if (get_option(__PREFIX.'plugin_installed') !== false) delete_option(__PREFIX.'plugin_installed');
+            if (get_option(__PREFIX.'custom_order_statuses') !== false) delete_option(__PREFIX.'custom_order_statuses');
             $this->handleDBTable->delete();
         }
 
@@ -202,14 +202,15 @@ if (!class_exists('WooEasyLife')) :
             ];
 
             // Save the updated statuses
-            if (empty(get_option('woo_easy_life_custom_order_statuses'))) {
-                update_option('woo_easy_life_custom_order_statuses', $static_statuses);
+            if (empty(get_option(__PREFIX.'custom_order_statuses'))) {
+                update_option(__PREFIX.'custom_order_statuses', $static_statuses);
             }
         }
 
         public function save_default_config()
         {
             $config = [
+                "admin_phone" => '',
                 "ip_block" => true,
                 "phone_number_block" => true,
                 "place_order_sms_for_customer" => false,
@@ -223,8 +224,8 @@ if (!class_exists('WooEasyLife')) :
             ];
 
             // Save the updated config
-            if (empty(get_option('woo_easy_life_config'))) {
-                update_option('woo_easy_life_config', $config);
+            if (empty(get_option(__PREFIX.'config'))) {
+                update_option(__PREFIX.'config', $config);
             }
         }
     }
