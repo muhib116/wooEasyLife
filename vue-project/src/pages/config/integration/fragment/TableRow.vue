@@ -5,17 +5,17 @@
     </Table.Td>
     <Table.Td class="capitalize">{{ objKey.replaceAll('_', ' ') }}</Table.Td>
     <Table.Td>
-        <Switch
-            v-if="typeof configData[objKey] == 'boolean'"
-            v-model="configData[objKey]"
-            @onInput="UpdateConfig"
-        />
         <Input.Primary
+            v-if="objKey == 'daily_order_place_limit_per_customer'"
             wrapperClass="w-20"
             type="number"
-            v-else
             v-model="configData[objKey]"
             @input="UpdateConfig"
+        />
+        <Switch
+            v-else
+            v-model="configData[objKey]"
+            @onInput="UpdateConfig"
         />
     </Table.Td>
 </Table.Tr>

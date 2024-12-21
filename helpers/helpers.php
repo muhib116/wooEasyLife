@@ -141,3 +141,23 @@ function getCustomerFraudData($phone_number) {
 
     return json_decode($response_body, true);
 }
+
+function getCustomerSuccessRate($billing_phone) {
+    global $wpdb;
+
+    // Fetch fraud data from the custom table
+    $table_name = $wpdb->prefix . __PREFIX.'fraud_customers';
+    $fraud_data = $wpdb->get_row(
+        $wpdb->prepare("SELECT report FROM $table_name WHERE customer_id = %d", $billing_phone),
+        ARRAY_A
+    );
+    if ($fraud_data && isset($fraud_data['report'])) {
+        // Decode the JSON report
+        $report = json_decode($fraud_data['report'], true);
+        $success_rate = $report[0]['report']['success_rate'];
+
+        return $success_rate;
+    }
+
+    return 'No data found.';
+}

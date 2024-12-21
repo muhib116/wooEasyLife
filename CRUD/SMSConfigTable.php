@@ -110,11 +110,45 @@ class SMSConfigTable {
     /**
      * Get all SMS configuration records.
      */
-    public function get_all() {
+    /**
+     * Get all SMS configurations filtered by is_active value.
+     *
+     * @param int|null $is_active (Optional) The active status to filter by. Pass 1 for active, 0 for inactive, or null for all.
+     * @return array The filtered results.
+     */
+    public function get_all($status = null, $is_active = null) {
         global $wpdb;
-
-        return $wpdb->get_results("SELECT * FROM $this->table_name", ARRAY_A);
+    
+        $query = "SELECT * FROM $this->table_name";
+        $conditions = [];
+        $prepared_values = [];
+    
+        // Add condition for is_active
+        if ($is_active !== null) {
+            $conditions[] = "is_active = %d";
+            $prepared_values[] = $is_active;
+        }
+    
+        // Add condition for status
+        if ($status !== null) {
+            $conditions[] = "status = %s";
+            $prepared_values[] = $status;
+        }
+    
+        // Combine conditions if any
+        if (!empty($conditions)) {
+            $query .= " WHERE " . implode(" AND ", $conditions);
+        }
+    
+        // Prepare and execute the query
+        if (!empty($prepared_values)) {
+            $query = $wpdb->prepare($query, ...$prepared_values);
+        }
+    
+        return $wpdb->get_results($query, ARRAY_A);
     }
+    
+
 
     /**
      * Check if an SMS configuration record exists by ID.
