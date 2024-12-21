@@ -75,7 +75,8 @@ class OTPValidatorForOrderPlace
         $billing_phone = $order->get_billing_phone();
 
         // Handle fraud data
-        $fraud_data = $this->getFraudData($billing_phone);
+        $fraud_data = getCustomerFraudData($billing_phone);
+
         if (is_wp_error($fraud_data)) {
             wc_add_notice(__('We encountered an issue while processing your order. Please try again.', 'your-textdomain'), 'error');
             return;
@@ -93,15 +94,9 @@ class OTPValidatorForOrderPlace
         }
     }
 
-    private function getFraudData($billing_phone)
-    {
-        // Simulate fetching fraud data
-        return getCustomerFraudData($billing_phone);
-    }
-
     private function storeFraudData($fraud_data)
     {
         $instance = new \WooEasyLife\CRUD\FraudCustomerTable();
-        $instance->create($fraud_data);
+        $instance->create_or_update($fraud_data);
     }
 }

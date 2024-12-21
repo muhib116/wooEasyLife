@@ -40,18 +40,16 @@ class SMSForStatusChange {
             'product_price' => wc_price($order->get_subtotal()),
             'admin_phone' => $config_data["admin_phone"],
         ];
-
-        $recipient = $variables["customer_phone"];
+        
         foreach($sms_records as $key => $value){
             if($value["message_for"] == 'admin')
             {
                 if(!empty($value["phone_number"])){
                     $variables["admin_phone"] = $value["phone_number"];
                 }
-                $recipient = $variables["admin_phone"];
-            }
-            if(!empty($recipient)){
-                send_sms($recipient, $this->replace_placeholder_variables_in_message($value["message"], $variables));
+                send_sms($variables["admin_phone"], $this->replace_placeholder_variables_in_message($value["message"], $variables));
+            }else {
+                send_sms($variables["customer_phone"], $this->replace_placeholder_variables_in_message($value["message"], $variables));
             }
         }
     }

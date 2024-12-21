@@ -97,7 +97,6 @@ class SMSConfigAPI extends WP_REST_Controller {
         $message = sanitize_text_field($request->get_param('message') ?? '');
         $message_for = sanitize_text_field($request->get_param('message_for') ?? 'customer');
         $phone_number = sanitize_text_field($request->get_param('phone_number') ?? '');
-        $settings = $request->get_param('settings') ?? [];
         $is_active = (int)($request->get_param('is_active') ?? 1);
         $created_at = current_time('mysql');
         $updated_at = current_time('mysql');
@@ -135,13 +134,11 @@ class SMSConfigAPI extends WP_REST_Controller {
                 'message'     => $message,
                 'message_for' => $message_for,
                 'phone_number' => $phone_number,
-                'settings'    => json_encode($settings),
                 'is_active'   => $is_active,
                 'created_at'  => $created_at,
                 'updated_at'  => $updated_at,
             ],
             [
-                '%s',
                 '%s',
                 '%s',
                 '%s',
@@ -168,7 +165,6 @@ class SMSConfigAPI extends WP_REST_Controller {
                 'message'     => $message,
                 'message_for' => $message_for,
                 'phone_number' => $phone_number,
-                'settings'    => $settings,
                 'is_active'   => $is_active,
                 'created_at'  => $created_at,
                 'updated_at'  => $updated_at,
@@ -188,7 +184,6 @@ class SMSConfigAPI extends WP_REST_Controller {
         $message = sanitize_text_field($request->get_param('message') ?? '');
         $message_for = sanitize_text_field($request->get_param('message_for') ?? 'customer');
         $phone_number = sanitize_text_field($request->get_param('phone_number') ?? 'customer');
-        $settings = $request->get_param('settings') ?? [];
         $is_active = (int)($request->get_param('is_active') ?? 1);
         $updated_at = current_time('mysql');
 
@@ -224,13 +219,11 @@ class SMSConfigAPI extends WP_REST_Controller {
                 'message'     => $message,
                 'message_for' => $message_for,
                 'phone_number' => $phone_number,
-                'settings'    => json_encode($settings),
                 'is_active'   => $is_active,
                 'updated_at'  => $updated_at,
             ],
             ['id' => $id],
             [
-                '%s',
                 '%s',
                 '%s',
                 '%s',
@@ -257,7 +250,6 @@ class SMSConfigAPI extends WP_REST_Controller {
                 'message'     => $message,
                 'message_for' => $message_for,
                 'phone_number' => $phone_number,
-                'settings'    => $settings,
                 'is_active'   => $is_active,
                 'updated_at'  => $updated_at,
             ],
@@ -351,11 +343,6 @@ class SMSConfigAPI extends WP_REST_Controller {
                 'default'     => 'customer',
                 'enum'        => ['admin', 'customer'],
                 'description' => 'Target audience for the message (admin or customer).',
-            ],
-            'settings' => [
-                'required'    => false,
-                'type'        => 'array',
-                'description' => 'JSON data for SMS settings.',
             ],
             'is_active' => [
                 'required'    => true,

@@ -115,17 +115,6 @@
                         "
                         @click="resendOTP"
                     >Resend OTP</button>
-                    <!-- v-show="!otpIsNotValid && isOTPValidated" -->
-                    <!-- <button 
-                        class="button alt custom-class" 
-                        name="woocommerce_checkout_place_order" 
-                        id="place_order" 
-                        value="Place Order Now"
-                        @click="confirmOrder"
-                    >
-                        <?php //global $order_button_text; echo $order_button_text; ?>
-                        Confirm your order
-                    </button> -->
                 </div>
             </div>
     
@@ -148,7 +137,7 @@
     const { createApp, ref, onMounted, computed, watchEffect } = Vue
     createApp({
         setup() {
-            const resendOtpCountDownTimeInSecond = 10
+            const resendOtpCountDownTimeInSecond = 25
             const remainingTime = ref(resendOtpCountDownTimeInSecond)
             const minutes = ref(Math.floor(remainingTime.value / 60))
             const seconds = ref(remainingTime.value % 60)

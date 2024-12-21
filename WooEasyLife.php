@@ -20,6 +20,7 @@ if (! defined('ABSPATH')) {
 
 define('__PREFIX', 'woo_easy_life_');
 define('__API_NAMESPACE', 'wooeasylife/v1');
+define('__wpsalehub_api_key__', '');
 $config_data;
 
 
@@ -213,8 +214,6 @@ if (!class_exists('WooEasyLife')) :
                 "admin_phone" => '',
                 "ip_block" => true,
                 "phone_number_block" => true,
-                "place_order_sms_for_customer" => false,
-                "place_order_sms_for_admin" => false,
                 "place_order_otp_verification" => false,
                 "place_order_otp_intelligence" => false,
                 "daily_order_place_limit_per_customer" => 3,

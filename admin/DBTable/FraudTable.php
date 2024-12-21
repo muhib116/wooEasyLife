@@ -17,9 +17,10 @@ class FraudTable{
         // SQL to create the table
         $sql = "CREATE TABLE IF NOT EXISTS $table_name (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            customer_id BIGINT UNSIGNED NOT NULL UNIQUE,
+            customer_id VARCHAR(16) NOT NULL UNIQUE,
             report LONGTEXT NOT NULL,
-            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         ) $charset_collate;";
     
         // Include the required file for dbDelta

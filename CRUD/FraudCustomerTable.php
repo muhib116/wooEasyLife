@@ -24,7 +24,7 @@ class FraudCustomerTable {
                 'created_at'  => current_time('mysql')
             ],
             [
-                '%d',
+                '%s',
                 '%s',
                 '%s'
             ]
@@ -38,6 +38,65 @@ class FraudCustomerTable {
         echo $wpdb->insert_id;
         return $wpdb->insert_id;
     }
+
+    public function create_or_update($data) {
+        global $wpdb;
+    
+        // Check if the record already exists
+        $existing_record = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT id FROM $this->table_name WHERE customer_id = %s",
+                $data['customer_id']
+            )
+        );
+
+        if ($existing_record) {
+            // Update the existing record
+            $updated = $wpdb->update(
+                $this->table_name,
+                [
+                    'report'      => json_encode($data['report']),
+                    'updated_at'  => current_time('mysql'), // Ensure the table has an `updated_at` column
+                ],
+                ['customer_id' => $data['customer_id']],
+                [
+                    '%s',
+                    '%s',
+                ],
+                ['%s']
+            );
+            
+            if ($updated === false) {
+                echo ("Database Update Failed: " . $wpdb->last_error);
+                return false;
+            }
+    
+            return $existing_record; // Return the ID of the updated record
+        } else {
+            // Insert a new record
+            $inserted = $wpdb->insert(
+                $this->table_name,
+                [
+                    'customer_id' => $data['customer_id'],
+                    'report'      => json_encode($data['report']),
+                    'created_at'  => current_time('mysql')
+                ],
+                [
+                    '%s',
+                    '%s',
+                    '%s'
+                ]
+            );
+    
+            if ($inserted === false) {
+                echo ("Database Insertion Failed: " . $wpdb->last_error);
+                return false;
+            }
+    
+            return $wpdb->insert_id; // Return the ID of the newly inserted record
+        }
+    }
+    
     
 
     /**
@@ -48,7 +107,7 @@ class FraudCustomerTable {
 
         return $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT * FROM $this->table_name WHERE customer_id = %d",
+                "SELECT * FROM $this->table_name WHERE customer_id = %s",
                 $customer_id
             ),
             ARRAY_A
@@ -72,7 +131,7 @@ class FraudCustomerTable {
                 '%s',
                 '%s'
             ],
-            ['%d']
+            ['%s']
         );
     }
 
@@ -85,7 +144,7 @@ class FraudCustomerTable {
         return $wpdb->delete(
             $this->table_name,
             ['customer_id' => $customer_id],
-            ['%d']
+            ['%s']
         );
     }
 
@@ -106,7 +165,7 @@ class FraudCustomerTable {
 
         $count = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT COUNT(*) FROM $this->table_name WHERE customer_id = %d",
+                "SELECT COUNT(*) FROM $this->table_name WHERE customer_id = %s",
                 $customer_id
             )
         );

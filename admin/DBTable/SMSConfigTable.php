@@ -29,7 +29,6 @@ class SMSConfigTable {
             phone_number VARCHAR(255) NULL,
             message LONGTEXT NOT NULL,
             message_for ENUM('admin', 'customer') NOT NULL,
-            settings LONGTEXT NULL,
             is_active TINYINT(1) NOT NULL DEFAULT 1,
             created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -56,14 +55,14 @@ class SMSConfigTable {
                 'status'      => 'wc-processing',
                 'message_for' => 'admin',
                 'phone_number' => '',
-                'message'     => 'New order by $customer_name ($customer_phone), for \"$product_name\" at $site_name.\n\nSuccess rate: $customer_success_rate\nTotal bill: $total_amount.',
+                'message'     => 'New order by $customer_name ($customer_phone), for "$product_name" at $site_name.\n\nSuccess rate: $customer_success_rate\nTotal bill: $total_amount.',
                 'is_active'   => 0
             ],
             [
                 'status'      => 'wc-processing',
                 'message_for' => 'customer',
                 'phone_number' => '',
-                'message'     => 'Hi $customer_name, your order for \"$product_name\" has been placed at $site_name.\n\nTotal bill: $total_amount.\n\nFor any assistance: $admin_phone.\nThank you!',
+                'message'     => 'Hi $customer_name, your order for "$product_name" has been placed at $site_name.\n\nTotal bill: $total_amount.\n\nFor any assistance: $admin_phone.\nThank you!',
                 'is_active'   => 0
             ]
         ];

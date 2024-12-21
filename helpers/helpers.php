@@ -95,10 +95,9 @@ function getCustomerFraudData($phone_number) {
     if (empty($phone_number) || !is_string($phone_number)) {
         return new WP_Error('missing_data', 'Phone data is required in the correct format.', ['status' => 400]);
     }
-
     // External API URL and headers
     $api_url = 'https://api.wpsalehub.com/api/fraud-check';
-    $api_key = 'your-api-key'; // Replace with your actual API key
+    $api_key = __wpsalehub_api_key__; // Replace with your actual API key
 
     $payload = [
         'phone' => [
