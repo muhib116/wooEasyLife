@@ -16,7 +16,7 @@
             {{ item.message_for }}
         </Table.Td>
         <Table.Td>
-            {{ item.phone_number || 'Customer Phone Number' }}
+            {{ item.phone_number || 'n/a' }}
         </Table.Td>
         <Table.Td>
             {{ item.message }}

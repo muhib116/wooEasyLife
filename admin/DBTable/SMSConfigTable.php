@@ -41,6 +41,47 @@ class SMSConfigTable {
 
         // Execute the query
         dbDelta($sql);
+        $this->insertDefaultData();
+    }
+
+    private function insertDefaultData() {
+        global $wpdb;
+
+        // Define table name
+        $table_name = $wpdb->prefix . __PREFIX . 'sms_config';
+
+        // Insert default data
+        $default_data = [
+            [
+                'status'      => 'wc-processing',
+                'message_for' => 'admin',
+                'phone_number' => '',
+                'message'     => 'New order by $customer_name ($customer_phone), for \"$product_name\" at $site_name.\n\nSuccess rate: $customer_success_rate\nTotal bill: $total_amount.',
+                'is_active'   => 0
+            ],
+            [
+                'status'      => 'wc-processing',
+                'message_for' => 'customer',
+                'phone_number' => '',
+                'message'     => 'Hi $customer_name, your order for \"$product_name\" has been placed at $site_name.\n\nTotal bill: $total_amount.\n\nFor any assistance: $admin_phone.\nThank you!',
+                'is_active'   => 0
+            ]
+        ];
+
+        foreach ($default_data as $data) {
+            // Insert each default row
+            $wpdb->insert(
+                $table_name,
+                $data,
+                [
+                    '%s', // status
+                    '%s', // message_for
+                    '%s', // phone_number
+                    '%s', // message
+                    '%d', // is_active
+                ]
+            );
+        }
     }
 
     /**

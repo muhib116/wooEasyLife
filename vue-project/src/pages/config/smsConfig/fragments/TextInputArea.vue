@@ -51,7 +51,7 @@
             :label="label"
             :placeholder="placeholder"
             v-model="modelValue"
-            rows="5"
+            rows="3"
             @input="e => {
                 handleInput(e)
                 handleCharacterRemove(e, modelValue)

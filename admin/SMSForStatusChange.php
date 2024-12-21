@@ -23,11 +23,7 @@ class SMSForStatusChange {
 
     public function send_sms($order, $sms_records) 
     {
-        $config_data = get_option(__PREFIX.'config');
-
-        if (!empty($config_data)) {
-            $config_data = decode_json_if_string($config_data);
-        }
+        global $config_data;
 
         $variables = [
             'site_name' => get_bloginfo('name'), 
@@ -54,7 +50,9 @@ class SMSForStatusChange {
                 }
                 $recipient = $variables["admin_phone"];
             }
-            send_sms($recipient, $this->replace_placeholder_variables_in_message($value["message"], $variables));
+            if(!empty($recipient)){
+                send_sms($recipient, $this->replace_placeholder_variables_in_message($value["message"], $variables));
+            }
         }
     }
 

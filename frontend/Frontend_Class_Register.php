@@ -5,5 +5,6 @@ class Frontend_Class_Register{
     public function __construct()
     {
         new \WooEasyLife\Frontend\OTPValidatorForOrderPlace();
+        new \WooEasyLife\Frontend\IP_block();
     }
 }
