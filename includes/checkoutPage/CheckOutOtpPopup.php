@@ -145,7 +145,7 @@
             const billingPhone = ref('')
             const otpSendStatus = ref(false)
             const otpCode = ref('')
-            const isOTPValidating = ref(false)
+            const isOTPValidating = ref(true)
             const isOTPValidated = ref(false)
             const modalToggle = ref(false)
             const otpIsNotValid = ref(false)

@@ -45,7 +45,7 @@ class OTPValidatorForOrderPlace
             $custom_button .= $order_button_text; // Custom text for the button
             $custom_button .= '</button>';
 
-            $custom_button .= "<div style='opacity: 0.4; pointer-events: auto;  '>$btn</div>";
+            $custom_button .= "<div style='opacity: 0; pointer-events: auto;'>$btn</div>";
             return $custom_button;
         }
 
