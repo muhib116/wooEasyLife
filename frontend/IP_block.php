@@ -5,6 +5,7 @@ class IP_block {
     public function __construct()
     {
         add_action('init', [$this, 'block_non_bangladeshi_users']);
+        add_action('woocommerce_checkout_order_processed', [$this, 'phone_number_block']);
     }
 
     public function block_non_bangladeshi_users() {
@@ -40,5 +41,11 @@ class IP_block {
             }
         }
     
+    }
+
+    public function phone_number_block() {
+        $billing_phone = isset($_POST['billing_phone']) ? sanitize_text_field($_POST['billing_phone']) : '';
+
+        wp_die($billing_phone);
     }
 }

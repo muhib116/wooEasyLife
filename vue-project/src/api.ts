@@ -110,7 +110,6 @@ export const deleteWPOption = async (payload: {option_name: string}) => {
 
 
 // sms config CRUD start
-
 export const getWoocommerceStatuses = async () => {
     const { data } = await axios.get(`${localApiBaseURL}/woo-statuses`)
     return data
@@ -148,3 +147,14 @@ export const deleteSMS = async (id: number) => {
     return data
 }
 // sms config CRUD end
+
+
+// block list CRUD start
+export const ip_or_phone_block_bulk_entry = async (payload: {
+    type: 'ip' | 'phone_number',
+    ip_or_phone: string
+}[]) => {
+    const { data } = await axios.post(`${localApiBaseURL}/bulk-entry`, payload)
+    return data
+}
+// block list CRUD end

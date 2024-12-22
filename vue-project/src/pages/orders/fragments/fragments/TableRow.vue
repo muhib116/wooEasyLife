@@ -32,7 +32,29 @@
                         size="20"
                         weight="bold"
                     />
-                </a>                
+                </a>
+            </div>
+            <div class="flex gap-2">
+                <span
+                    v-if="order.ip_block_listed"
+                    class="!py-0 !text-[10px] flex items-center text-red-500"
+                >
+                    <Icon
+                        name="PhCellTower"
+                        size="12"
+                    />
+                    Ip blocked
+                </span>
+                <span
+                    v-if="order.phone_block_listed"
+                    class="!py-0 !text-[10px] flex items-center text-red-500"
+                >
+                    <Icon
+                        name="PhSimCard"
+                        size="12"
+                    />
+                    Phone Number blocked
+                </span>
             </div>
         </Table.Td>
         <Table.Td

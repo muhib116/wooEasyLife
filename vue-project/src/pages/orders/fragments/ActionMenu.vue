@@ -32,6 +32,7 @@
                 title="Block Phone"
                 subtitle="Block phone number for selected items."
                 iconName="PhSimCard"
+                :cb="handlePhoneNumberBlock"
             />
         </div>
     </Card.Native>
@@ -56,5 +57,5 @@
     
 
     const {configData} = inject('configData')
-    const { handleFraudCheck } = inject('useOrders')
+    const { handleFraudCheck, handlePhoneNumberBlock } = inject('useOrders')
 </script>

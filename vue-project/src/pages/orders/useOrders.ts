@@ -1,6 +1,6 @@
 import axios from "axios"
 import { onMounted, ref, watch } from "vue"
-import { getOrderList, getOrderStatusListWithCounts } from '@/api'
+import { getOrderList, getOrderStatusListWithCounts, ip_or_phone_block_bulk_entry } from '@/api'
 import { checkCustomer } from '@/remoteApi'
 
 export const useOrders = () => {
@@ -82,6 +82,28 @@ export const useOrders = () => {
         isLoading.value = false
     }
 
+    const handlePhoneNumberBlock = async (btn) => {
+        if (![...selectedOrders.value].length) {
+            alert('Please select at least on item.')
+            return
+        }
+
+        const payload: {
+            type: 'ip' | 'phone_number',
+            ip_or_phone: string
+        }[] = [...selectedOrders.value].map(item => ({
+            type: 'phone_number',
+            ip_or_phone: item?.billing_address?.phone
+        }))
+
+        try {
+            btn.isLoading = true
+            await ip_or_phone_block_bulk_entry(payload);
+        } finally {
+            btn.isLoading = false
+        }
+    }
+
 
     watch(() => selectedOrders, (newVal) => {
         selectAll.value = selectedOrders.value.size === orders.value.length
@@ -107,5 +129,6 @@ export const useOrders = () => {
         toggleSelectAll,
         handleFraudCheck,
         loadOrderStatusList,
+        handlePhoneNumberBlock,
     }
 }

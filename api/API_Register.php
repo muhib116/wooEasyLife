@@ -54,5 +54,7 @@ class API_Register {
         new \WooEasyLife\API\Admin\WPOptionAPI();
         new \WooEasyLife\API\Frontend\OTPHandlerAPI();
         new \WooEasyLife\API\Admin\SMSConfigAPI();
+        new \WooEasyLife\API\Admin\BlockListAPI();
+
     }
 }

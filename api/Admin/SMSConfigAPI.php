@@ -5,7 +5,6 @@ namespace WooEasyLife\API\Admin;
 use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
-use WP_Error;
 
 class SMSConfigAPI extends WP_REST_Controller {
     private $table_name;

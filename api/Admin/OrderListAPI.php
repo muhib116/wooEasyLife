@@ -66,7 +66,7 @@ class OrderListAPI
         $status   = $request->get_param('status');
         $per_page = $request->get_param('per_page');
         $page     = $request->get_param('page');
-        $billing_phone     = $request->get_param('billing_phone');
+        $billing_phone = $request->get_param('billing_phone');
 
         // Use WooCommerce Order Query to fetch orders.
         $args = [
@@ -92,7 +92,8 @@ class OrderListAPI
         global $wpdb;
         foreach ($orders as $order) {
             $product_info = getProductInfo($order);
-
+            $customer_ip = $order->get_meta('_customer_ip_address', true);
+            
             // Fetch fraud data from the custom table
             $table_name = $wpdb->prefix . __PREFIX.'fraud_customers';
             $_billing_phone = $order->get_billing_phone();
@@ -101,6 +102,9 @@ class OrderListAPI
                 ARRAY_A
             );
 
+            $ip_block_listed = $this->get_block_data_by_type($customer_ip, 'ip');
+            $phone_block_listed = $this->get_block_data_by_type($_billing_phone, 'phone_number');
+
             $data[] = [
                 'id'            => $order->get_id(),
                 'status'        => $order->get_status(),
@@ -108,7 +112,9 @@ class OrderListAPI
                 'date_created'  => $order->get_date_created() ? $order->get_date_created()->date('M j, Y \a\t g:i A') : null,
                 'customer_id'   => $order->get_customer_id(),
                 'customer_name' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
-                'customer_ip'   => $order->get_meta('_customer_ip_address', true),
+                'customer_ip'   => $customer_ip,
+                'phone_block_listed' => $phone_block_listed,
+                'ip_block_listed' => $ip_block_listed,
                 'payment_method' => $order->get_payment_method(), // e.g., 'paypal'
                 'payment_method_title' => $order->get_payment_method_title(), // e.g., 'PayPal'
                 'transaction_id' => $order->get_transaction_id() ?: '',
@@ -182,6 +188,28 @@ class OrderListAPI
             'data'   => $order_counts
         ], 200);
     }
+
+    private function get_block_data_by_type($value, $type = 'phone_number') {
+        global $wpdb;
+        $table_name = $wpdb->prefix . __PREFIX . 'block_list';
+
+        // Validate the type to prevent SQL injection
+        $allowed_types = ['phone_number', 'ip'];
+        if (!in_array($type, $allowed_types, true)) {
+            return false; // Invalid type
+        }
+    
+        $query = $wpdb->prepare(
+            "SELECT * FROM {$table_name} WHERE type = %s AND ip_or_phone = %s",
+            $type,
+            $value
+        );
+    
+        $result = $wpdb->get_row($query, ARRAY_A);
+    
+        return $result ? true : false;
+    }
+    
 }
 
 
