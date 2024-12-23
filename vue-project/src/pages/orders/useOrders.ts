@@ -89,11 +89,33 @@ export const useOrders = () => {
         }
 
         const payload: {
-            type: 'ip' | 'phone_number',
+            type: 'phone_number',
             ip_or_phone: string
         }[] = [...selectedOrders.value].map(item => ({
             type: 'phone_number',
             ip_or_phone: item?.billing_address?.phone
+        }))
+
+        try {
+            btn.isLoading = true
+            await ip_or_phone_block_bulk_entry(payload);
+        } finally {
+            btn.isLoading = false
+        }
+    }
+
+    const handleIPBlock = async (btn) => {
+        if (![...selectedOrders.value].length) {
+            alert('Please select at least on item.')
+            return
+        }
+
+        const payload: {
+            type: 'ip',
+            ip_or_phone: string
+        }[] = [...selectedOrders.value].map(item => ({
+            type: 'ip',
+            ip_or_phone: item?.customer_ip
         }))
 
         try {
@@ -124,6 +146,7 @@ export const useOrders = () => {
         orderStatusWithCounts,
         getOrders,
         orderFilter,
+        handleIPBlock,
         setActiveOrder,
         setSelectedOrder,
         toggleSelectAll,

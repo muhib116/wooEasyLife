@@ -26,6 +26,7 @@
                 title="Block Ip"
                 subtitle="Book courier for selected items."
                 iconName="PhCellTower"
+                :cb="handleIPBlock"
             />
             <MenuButton
                 v-if="configData?.phone_number_block"
@@ -57,5 +58,5 @@
     
 
     const {configData} = inject('configData')
-    const { handleFraudCheck, handlePhoneNumberBlock } = inject('useOrders')
+    const { handleFraudCheck, handlePhoneNumberBlock, handleIPBlock } = inject('useOrders')
 </script>

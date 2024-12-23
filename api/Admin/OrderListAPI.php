@@ -102,8 +102,8 @@ class OrderListAPI
                 ARRAY_A
             );
 
-            $ip_block_listed = $this->get_block_data_by_type($customer_ip, 'ip');
-            $phone_block_listed = $this->get_block_data_by_type($_billing_phone, 'phone_number');
+            $ip_block_listed = get_block_data_by_type($customer_ip, 'ip');
+            $phone_block_listed = get_block_data_by_type($_billing_phone, 'phone_number');
 
             $data[] = [
                 'id'            => $order->get_id(),
@@ -188,28 +188,6 @@ class OrderListAPI
             'data'   => $order_counts
         ], 200);
     }
-
-    private function get_block_data_by_type($value, $type = 'phone_number') {
-        global $wpdb;
-        $table_name = $wpdb->prefix . __PREFIX . 'block_list';
-
-        // Validate the type to prevent SQL injection
-        $allowed_types = ['phone_number', 'ip'];
-        if (!in_array($type, $allowed_types, true)) {
-            return false; // Invalid type
-        }
-    
-        $query = $wpdb->prepare(
-            "SELECT * FROM {$table_name} WHERE type = %s AND ip_or_phone = %s",
-            $type,
-            $value
-        );
-    
-        $result = $wpdb->get_row($query, ARRAY_A);
-    
-        return $result ? true : false;
-    }
-    
 }
 
 

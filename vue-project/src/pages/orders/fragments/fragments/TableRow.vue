@@ -53,7 +53,7 @@
                         name="PhSimCard"
                         size="12"
                     />
-                    Phone Number blocked
+                    Phone blocked
                 </span>
             </div>
         </Table.Td>
