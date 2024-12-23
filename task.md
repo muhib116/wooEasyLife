@@ -10,8 +10,9 @@ order list table a search, pagination etc niye kaj korte hobe
 
 on plugin deactive table and wp_options data can delete or not
 
+order status manage from plugin order list
 
-
+alertBox position fixed kore dekhate hobe
 
 
 

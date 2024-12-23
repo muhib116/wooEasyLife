@@ -215,7 +215,6 @@ if (!class_exists('WooEasyLife')) :
                 "ip_block" => true,
                 "phone_number_block" => true,
                 "place_order_otp_verification" => false,
-                "place_order_otp_intelligence" => false,
                 "daily_order_place_limit_per_customer" => 3,
                 "only_bangladeshi_ip" => false,
                 "courier_automation" => false,

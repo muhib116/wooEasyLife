@@ -10,25 +10,24 @@
         />
         <div class="mb-2">
             <h3 class="text-xl font-semibold text-gray-900">
-                Configure your preference
+                Blacklisted Customers
             </h3>
         </div>
         <Table.Table>
             <Table.THead>
                 <Table.Th>#sl</Table.Th>
-                <Table.Th>Config Name</Table.Th>
-                <Table.Th>Action</Table.Th>
+                <Table.Th>Phone/Ip</Table.Th>
+                <Table.Th>Type</Table.Th>
+                <Table.Th>Blocked At</Table.Th>
+                <Table.Th class="text-right">Action</Table.Th>
             </Table.THead>
             <Table.TBody>
-                <template
-                    v-for="(item, key, index) in configData"
-                    :key="key"
-                >
-                    <TableTrow
-                        :objKey="key"
-                        :index="index"
-                    />
-                </template>
+                <TableTrow
+                    v-for="(item, index) in blackListData"
+                    :key="index"
+                    :index="index"
+                    :item="item"
+                />
             </Table.TBody>
         </Table.Table>
     </Card.Native>
@@ -37,16 +36,16 @@
 
 <script setup>
     import { Table, MessageBox, Loader, Card } from '@components'
-    import { useIntegration } from './useIntegration'
+    import { useBlackList } from './useBlackList'
     import { provide } from 'vue'
     import TableTrow from './fragment/TableRow.vue'
 
-    const _useIntegration = useIntegration()
+    const _useBlackList = useBlackList()
     const {
         isLoading,
-        configData,
+        blackListData,
         alertMessage,
-    } = _useIntegration
+    } = _useBlackList
 
-    provide('useIntegration', _useIntegration)
+    provide('useBlackList', _useBlackList)
 </script>

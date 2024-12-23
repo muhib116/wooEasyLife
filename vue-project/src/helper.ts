@@ -1,3 +1,5 @@
+import { format, parseISO } from 'date-fns'
+
 export const getContrastColor = (hexColor: string) => {
     // Remove the hash symbol if present
     hexColor = hexColor.replace('#', '')
@@ -53,4 +55,10 @@ export const validateBDPhoneNumber = (phoneNumber: string) => {
 
     // Return an error message for invalid phone numbers
     return false;
+}
+
+export const printDate = (dateString:string) => {
+    const date = parseISO(dateString.replace(' ', 'T'))
+    const formattedDate = format(date, 'MMMM dd, yyyy hh:mm:ss a')
+    return formattedDate
 }

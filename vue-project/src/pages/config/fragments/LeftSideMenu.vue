@@ -64,6 +64,13 @@
         },
         {
             to: {
+                name: "customBlackList"
+            },
+            title: 'Custom Black List',
+            iconName: 'PhUsersThree'
+        },
+        {
+            to: {
                 name: "recharge"
             },
             title: 'Recharge',

@@ -157,4 +157,14 @@ export const ip_or_phone_block_bulk_entry = async (payload: {
     const { data } = await axios.post(`${localApiBaseURL}/bulk-entry`, payload)
     return data
 }
+
+export const getBlockListData = async () => {
+    const { data } = await axios.get(`${localApiBaseURL}/block-list`)
+    return data
+}
+
+export const deleteBlockListData = async (id:string | number) => {
+    const { data } = await axios.delete(`${localApiBaseURL}/block-list/${id}`)
+    return data
+}
 // block list CRUD end

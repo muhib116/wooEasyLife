@@ -1,6 +1,6 @@
 <template>
     <Button.Native
-        :class="twMerge('px-3 py-2 !bg-sky-500 text-white rounded', wrapperClass)"
+        :class="twMerge('px-3 py-2 !bg-sky-500 text-white rounded-sm', wrapperClass)"
         :loaderTheme="loaderTheme || 'light'"
     >
         <slot></slot>

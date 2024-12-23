@@ -4,7 +4,7 @@ import { onMounted, ref } from 'vue'
 export const useIntegration = () => {
     const optionName = 'config'
     const isLoading = ref(false)
-    const configData = ref()
+    const configData = ref([])
     const alertMessage = ref({
         message: '',
         type: ''

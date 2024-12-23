@@ -10,6 +10,7 @@ import RechargeView from '@/pages/config/recharge/Index.vue'
 import IntegrationView from '@/pages/config/integration/Index.vue'
 import CourierView from '@/pages/config/courier/Index.vue'
 import CustomStatusView from '@/pages/config/customStatus/Index.vue'
+import CustomBlackList from '@/pages/config/customBlackList/Index.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -68,6 +69,11 @@ const router = createRouter({
           path: '/custom-status',
           name: 'customStatus',
           component: CustomStatusView
+        },
+        {
+          path: '/custom-black-list',
+          name: 'customBlackList',
+          component: CustomBlackList
         },
       ]
     },
