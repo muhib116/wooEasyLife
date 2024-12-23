@@ -45,43 +45,51 @@ class IP_block {
     }
 
     public function phone_number_block() {
-        $billing_phone = isset($_POST['billing_phone']) ? sanitize_text_field($_POST['billing_phone']) : '';
 
-        $phone_block_listed = get_block_data_by_type($billing_phone, 'phone_number');
-
-        if($phone_block_listed){
-            // Add an error notice for WooCommerce
-            // wc_add_notice(__('This phone number is restricted and cannot be used to place an order. Please contact our support team for assistance.', 'your-text-domain'), 'error');
-            
-            // Stop the order processing
-            throw new \Exception(__('This phone number is restricted and cannot be used to place an order. Please contact our support team for assistance.', 'your-text-domain'));
+        global $config_data;
+        if($config_data["phone_number_block"]){
+            $billing_phone = isset($_POST['billing_phone']) ? sanitize_text_field($_POST['billing_phone']) : '';
+    
+            $phone_block_listed = get_block_data_by_type($billing_phone, 'phone_number');
+    
+            if($phone_block_listed){
+                // Add an error notice for WooCommerce
+                // wc_add_notice(__('This phone number is restricted and cannot be used to place an order. Please contact our support team for assistance.', 'your-text-domain'), 'error');
+                
+                // Stop the order processing
+                throw new \Exception(__('This phone number is restricted and cannot be used to place an order. Please contact our support team for assistance.', 'your-text-domain'));
+            }
         }
     }
 
     public function ip_block() {
-        // Get the customer's IP address
-        $customer_ip = sanitize_text_field($_SERVER['REMOTE_ADDR']);
-    
-        // Check if the IP is block-listed
-        $ip_block_listed = get_block_data_by_type($customer_ip, 'ip');
-    
-        if ($ip_block_listed) {
-            // Add an error notice for WooCommerce checkout
-            // wc_add_notice(
-            //     sprintf(
-            //         __('Your IP address <strong>%s</strong> is restricted and cannot be used to place an order. Please contact our support team for assistance.', 'your-text-domain'),
-            //         esc_html($customer_ip)
-            //     ),
-            //     'error'
-            // );
-    
-            // Stop the order processing by throwing an exception
-            throw new \Exception(
-                sprintf(
-                    __('Your IP address <strong style="font-weight:bold;color: #508ef5;">%s</strong> is restricted and cannot be used to place an order. Please contact our support team for assistance.', 'your-text-domain'),
-                    esc_html($customer_ip)
-                )
-            );
+        global $config_data;
+
+        if($config_data["ip_block"]){
+            // Get the customer's IP address
+            $customer_ip = sanitize_text_field($_SERVER['REMOTE_ADDR']);
+        
+            // Check if the IP is block-listed
+            $ip_block_listed = get_block_data_by_type($customer_ip, 'ip');
+        
+            if ($ip_block_listed) {
+                // Add an error notice for WooCommerce checkout
+                // wc_add_notice(
+                //     sprintf(
+                //         __('Your IP address <strong>%s</strong> is restricted and cannot be used to place an order. Please contact our support team for assistance.', 'your-text-domain'),
+                //         esc_html($customer_ip)
+                //     ),
+                //     'error'
+                // );
+        
+                // Stop the order processing by throwing an exception
+                throw new \Exception(
+                    sprintf(
+                        __('Your IP address <strong style="font-weight:bold;color: #508ef5;">%s</strong> is restricted and cannot be used to place an order. Please contact our support team for assistance.', 'your-text-domain'),
+                        esc_html($customer_ip)
+                    )
+                );
+            }
         }
     }    
 }
