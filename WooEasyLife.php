@@ -36,12 +36,12 @@ if (!class_exists('WooEasyLife')) :
             register_activation_hook(__FILE__, [$this, 'woo_easy_life_activation_hook']);
             register_deactivation_hook(__FILE__, [$this, 'woo_easy_life_deactivation_hook']);
 
+            $this->handleDBTable = new WooEasyLife\Admin\DBTable\HandleDBTable();
             $this->get_and_set_config_data();
             new WooEasyLife\Init\InitClass();
             new WooEasyLife\API\API_Register();
             new WooEasyLife\Admin\Admin_Class_Register();
             new WooEasyLife\Frontend\Frontend_Class_Register();
-            $this->handleDBTable = new WooEasyLife\Admin\DBTable\HandleDBTable();
         }
 
         private function get_and_set_config_data()

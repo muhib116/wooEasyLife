@@ -1,22 +1,14 @@
-👉🏻 user address edit a problem ache
-👉🏻 akjon order koto gulu order dise ta count kore user name er pashe dekhate hobe
 👉🏻 kun kun user otp dise ar kun kun user otp dey nai tar akta list dekhate hobe phone number soho
 👉🏻 Invoice printing er bebosta rakhte hobe
 
-order place korar somoy koro nio:
 
-otp verification enable kora thakle, otp validate kore tar por order place korte hobe
-ip block kina dekhte hobe
-phone number block kina dekh te hobe
+blocked data table dekhate hobe and block list theke remove er bebosta korte hobe
 
-order place korar por froud check kore froud data soho admin ke akta sms dite hobe arekta sms dite hobe customer ke and db te save korte hobe
+kuno data already blocked thakle ta niye abar add korte gele alert dekhate hobe.
 
+order list table a search, pagination etc niye kaj korte hobe
 
-
-
-
-
-
+on plugin deactive table and wp_options data can delete or not
 
 
 
