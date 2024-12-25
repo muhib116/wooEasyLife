@@ -72,6 +72,7 @@ export const useOrders = () => {
         isLoading.value = true
         const { data } = await getOrderList(orderFilter.value)
         orders.value = data
+        selectedOrders.value.clear()
         isLoading.value = false
     }
 
@@ -98,7 +99,8 @@ export const useOrders = () => {
 
         try {
             btn.isLoading = true
-            await ip_or_phone_block_bulk_entry(payload);
+            await ip_or_phone_block_bulk_entry(payload)
+            await getOrders()
         } finally {
             btn.isLoading = false
         }
@@ -120,7 +122,8 @@ export const useOrders = () => {
 
         try {
             btn.isLoading = true
-            await ip_or_phone_block_bulk_entry(payload);
+            await ip_or_phone_block_bulk_entry(payload)
+            await getOrders()
         } finally {
             btn.isLoading = false
         }

@@ -53,7 +53,7 @@ class AddCustomColumnInOrderList {
             }
 
 
-            $total_order_per_customer_for_current_order_status = $this->get_total_orders_by_billing_phone_and_status($order);
+            $total_order_per_customer_for_current_order_status = get_total_orders_by_billing_phone_and_status($order);
             if($total_order_per_customer_for_current_order_status>1)
             {
                 echo "<button 
@@ -131,29 +131,6 @@ class AddCustomColumnInOrderList {
                 echo __('No fraud data found', 'wooeasylife');
             }
         }
-    }
-
-
-    private function get_total_orders_by_billing_phone_and_status($order) {
-        
-        // Get billing phone and status from the current $order
-        $billing_phone = $order->get_billing_phone();
-        $order_status = $order->get_status();
-    
-        if (empty($billing_phone) || empty($order_status)) {
-            return []; // Return empty array if inputs are invalid
-        }
-    
-        $args = [
-            'status'    => $order_status, // Specific order status
-            'return'    => 'objects', // Fetch full order objects
-            'type'     => 'shop_order',
-            'billing_phone' => $billing_phone
-        ];
-    
-        $orders = wc_get_orders($args);
-
-        return count($orders); // Total orders matching criteria
     }
 
 

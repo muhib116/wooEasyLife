@@ -2,8 +2,6 @@
 👉🏻 Invoice printing er bebosta rakhte hobe
 
 
-blocked data table dekhate hobe and block list theke remove er bebosta korte hobe
-
 kuno data already blocked thakle ta niye abar add korte gele alert dekhate hobe.
 
 order list table a search, pagination etc niye kaj korte hobe

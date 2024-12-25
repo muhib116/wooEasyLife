@@ -106,6 +106,7 @@ class BlockListAPI extends WP_REST_Controller {
         );
 
         if ($existing_record) {
+
             return new WP_REST_Response([
                 'status'  => 'error',
                 'message' => 'This entry already exists in the block list.',

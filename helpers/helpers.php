@@ -181,3 +181,26 @@ function get_block_data_by_type($value, $type = 'phone_number') {
 
     return $result ? true : false;
 }
+
+
+function get_total_orders_by_billing_phone_and_status($order) {
+        
+    // Get billing phone and status from the current $order
+    $billing_phone = $order->get_billing_phone();
+    $order_status = $order->get_status();
+
+    if (empty($billing_phone) || empty($order_status)) {
+        return []; // Return empty array if inputs are invalid
+    }
+
+    $args = [
+        'status'    => $order_status, // Specific order status
+        'return'    => 'objects', // Fetch full order objects
+        'type'     => 'shop_order',
+        'billing_phone' => $billing_phone
+    ];
+
+    $orders = wc_get_orders($args);
+
+    return count($orders); // Total orders matching criteria
+}

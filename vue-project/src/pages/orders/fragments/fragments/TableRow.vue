@@ -67,8 +67,17 @@
         <Table.Td
             @click="setSelectedOrder(order)"  
         >
-            <button class="order-status capitalize px-3" :class="`status-${order.status}`">
+            <button class="relative order-status capitalize px-3 py-1" :class="`status-${order.status}`">
                 {{ order.status=='processing' ? 'New Order' : order.status.replaceAll('-', ' ') }}
+
+                <span 
+                    v-if="order.total_order_per_customer_for_current_order_status > 1"
+                    title="Multiple order place"
+                    class="cursor-pointer absolute -top-2 right-0 w-5 bg-red-500 aspect-square border-none text-white rounded-full text-[10px] hover:scale-110 shadow duration-300"
+                    @click="toggleMultiOrderModel = true"
+                >
+                    {{ order.total_order_per_customer_for_current_order_status }}
+                </span>
             </button>
         </Table.Td>
         <Table.Td
@@ -110,6 +119,8 @@
             </button>
         </Table.Td>
     </Table.Tr>
+
+    <!-- row for fraud data -->
     <Table.Tr
         v-if="order?.customer_report"
         class="group relative !bg-white !hover:bg-white"
@@ -164,6 +175,17 @@
             :order="order"
         />
     </Modal>
+
+    <Modal 
+        v-model="toggleMultiOrderModel"
+        @close="toggleMultiOrderModel = false"
+        class="max-w-[80%] w-full"
+        title="Duplicate Order History"
+    >
+        <MultipleOrders
+            :item="order"
+        />
+    </Modal>
 </template>
 
 <script setup lang="ts">
@@ -172,6 +194,7 @@
     import Address from './address/Index.vue'
     import { baseUrl } from '@/api'
     import FraudHistory from './FraudHistory.vue'
+    import MultipleOrders from './MultipleOrders.vue'
 
     defineProps<{
         order: object
@@ -185,4 +208,5 @@
 
     const toggleModel = ref(false)
     const toggleFraudHistoryModel = ref(false)
+    const toggleMultiOrderModel = ref(false)
 </script>

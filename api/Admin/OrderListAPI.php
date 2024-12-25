@@ -93,6 +93,7 @@ class OrderListAPI
         foreach ($orders as $order) {
             $product_info = getProductInfo($order);
             $customer_ip = $order->get_meta('_customer_ip_address', true);
+            $total_order_per_customer_for_current_order_status = get_total_orders_by_billing_phone_and_status($order);
             
             // Fetch fraud data from the custom table
             $table_name = $wpdb->prefix . __PREFIX.'fraud_customers';
@@ -109,6 +110,7 @@ class OrderListAPI
                 'id'            => $order->get_id(),
                 'status'        => $order->get_status(),
                 'total'         => $order->get_total(),
+                'total_order_per_customer_for_current_order_status' => $total_order_per_customer_for_current_order_status,
                 'date_created'  => $order->get_date_created() ? $order->get_date_created()->date('M j, Y \a\t g:i A') : null,
                 'customer_id'   => $order->get_customer_id(),
                 'customer_name' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),

@@ -107,6 +107,13 @@ const menus = [
     visible: true
   },
   {
+    title: "Black List",
+    to: {
+        name: "customBlackList",
+    },
+    visible: true
+  },
+  {
     title: "Fraud Check",
     to: {
         name: "fraudCheck",
