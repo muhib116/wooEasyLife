@@ -49,12 +49,12 @@ class API_Register {
         // new WooEasyLife\Admin\BlockFakeCustomer();
 
 
+        new \WooEasyLife\API\Frontend\OTPHandlerAPI();
         new \WooEasyLife\API\Admin\OrderStatisticsAPI();
         new \WooEasyLife\API\Admin\CustomOrderStatusAPI();
         new \WooEasyLife\API\Admin\WPOptionAPI();
-        new \WooEasyLife\API\Frontend\OTPHandlerAPI();
         new \WooEasyLife\API\Admin\SMSConfigAPI();
         new \WooEasyLife\API\Admin\BlockListAPI();
-
+        new \WooEasyLife\API\Admin\SMSHistoryAPI();
     }
 }

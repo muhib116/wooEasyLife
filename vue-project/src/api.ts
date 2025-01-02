@@ -14,7 +14,12 @@ export const localApiBaseURL = `${baseUrl}/wp-json/wooeasylife/v1`
 export const getPaymentMethods = async () => {
     return await axios.get(`${localApiBaseURL}/payment-methods`)
 }
-export const getOrderList = async (payload) => {
+export const getOrderList = async (payload: {
+    status?: string
+    per_page?: number
+    page?: number
+    billing_phone?: string
+}) => {
     const { data } = await axios.get(`${localApiBaseURL}/orders`, {
         params: payload
     })
@@ -168,3 +173,26 @@ export const deleteBlockListData = async (id:string | number) => {
     return data
 }
 // block list CRUD end
+
+
+
+// sms history CRUD start
+export const createSMSHistory = async (payload: {
+    phone_number: string,
+    message: string,
+    status: "sent" | "failed"
+}[]) => {
+    const { data } = await axios.post(`${localApiBaseURL}/sms-history`, payload)
+    return data
+}
+
+export const getSMSHistoryData = async () => {
+    const { data } = await axios.get(`${localApiBaseURL}/sms-history`)
+    return data
+}
+
+export const deleteSMSHistory = async (id:string | number) => {
+    const { data } = await axios.delete(`${localApiBaseURL}/sms-history/${id}`)
+    return data
+}
+// sms history CRUD end

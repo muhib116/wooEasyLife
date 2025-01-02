@@ -1,4 +1,5 @@
 import axios from "axios"
+import { createSMSHistory } from "./api"
 
 export const remoteApiBaseURL = 'https://api.wpsalehub.com/api'
 const headers = {
@@ -43,9 +44,16 @@ export const getCourierConfig = async () => {
 // sms integration start
 export const sendSMS = async (payload: {
   phone: string,
-  content: string
+  content: string,
+  status?: string
 }) => {
   const { data } = await axios.post(`${remoteApiBaseURL}/sms/send`, payload, headers)
+  await createSMSHistory({
+    phone_number: payload.phone,
+    message: payload.content,
+    status: data.data.response_code == 202 ? payload.status || '' : 'failed',
+    error_message: data.data.error_message
+  })
   return data
 }
 // sms integration end

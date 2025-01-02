@@ -10,7 +10,9 @@
         size="24"
     />
     <div>
-      <span class="font-medium"><span class="capitalize">{{ type }}</span> alert!</span> {{ title }}
+      <span class="font-semibold"><span class="capitalize">{{ type }}</span> alert!</span> 
+      <br />
+      <div v-html="title"></div>
     </div>
   </div>  
 </template>
