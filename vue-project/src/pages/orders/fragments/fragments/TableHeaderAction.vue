@@ -1,7 +1,7 @@
 <template>
     <div class="flex justify-between text-[10px] px-4 my-4">
         <div class="flex-justify-controller">
-            <div v-if="[...selectedOrders].length" class="flex gap-3 items-center">
+            <div class="flex gap-3 items-center">
                 <span 
                     class="size-6 shadow -mr-2 flex items-center justify-center text-[10px] aspect-square rounded-full bg-orange-500 text-white "
                 >
@@ -33,15 +33,33 @@
             />
         </div>
     </div>
+
+    <Modal
+        v-model="toggleNewOrder"
+        title="Create New Order"
+        @close="toggleNewOrder = false"
+    >
+        <CreateNewOrder />
+    </Modal>
+    <Modal
+        v-model="togglePrintInvoice"
+        title="Print Invoice"
+        @close="togglePrintInvoice = false"
+    >
+        <PrintInvoice />
+    </Modal>
 </template>
 
 <script setup lang="ts">
+    import { inject, computed, ref } from 'vue'
+    import CreateNewOrder from './CreateNewOrder.vue'
+    import PrintInvoice from './PrintInvoice.vue'
     import {
         Button,
         Icon,
-        Input
+        Input,
+        Modal
     } from '@components'
-    import { inject, computed } from 'vue'
 
     
     const {configData} = inject('configData')
@@ -52,18 +70,25 @@
         selectedOrders
     } = inject('useOrders')
 
+    const toggleNewOrder = ref(false)
+    const togglePrintInvoice = ref(false)
+
     const actionBtns = computed(() => [
         {
             icon: 'PhPlus',
             title: 'Create New Order',
             active: true,
-            method: () => {}
+            method: () => {
+                toggleNewOrder.value = true
+            }
         },
         {
             icon: 'PhPrinter',
             title: 'Print Invoice',
             active: true,
-            method: () => {}
+            method: () => {
+                togglePrintInvoice.value = true
+            }
         },
         {
             icon: 'PhTruck',
