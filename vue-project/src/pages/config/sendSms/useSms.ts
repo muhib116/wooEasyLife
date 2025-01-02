@@ -7,6 +7,7 @@ import {
 import { ref } from "vue"
 import List from './List.vue'
 import Create from './Create.vue'
+import Dashboard from './Dashboard.vue'
 import { sendSMS } from "@/remoteApi"
 
 export const useSms = () => {
@@ -20,9 +21,13 @@ export const useSms = () => {
         type: 'danger'
     })
     const hasUnsavedData = ref(false)
-    const activeTab = ref('list')
+    const activeTab = ref('dashboard')
 
     const tabs = ref([
+        {
+            title: 'SMS Dashboard',
+            slug: 'dashboard'
+        },
         {
             title: 'SMS History',
             slug: 'list'
@@ -33,6 +38,7 @@ export const useSms = () => {
         },
     ])
     const components = ref({
+        dashboard: Dashboard,
         list: List,
         create: Create
     })

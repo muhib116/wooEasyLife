@@ -18,7 +18,7 @@ Sales performance
 Sales amount 
 discount amount
 Sales target set
-
+SMS Cost calculation dashboard
 
 =============================
 manual order entry

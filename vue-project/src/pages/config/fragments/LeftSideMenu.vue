@@ -76,5 +76,12 @@
             title: 'Recharge',
             iconName: 'PhCreditCard'
         },
+        {
+            to: {
+                name: "marketing-tools"
+            },
+            title: 'Marketing Tools',
+            iconName: 'PhCode'
+        },
     ]
 </script>

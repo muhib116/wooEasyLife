@@ -11,6 +11,7 @@ import IntegrationView from '@/pages/config/integration/Index.vue'
 import CourierView from '@/pages/config/courier/Index.vue'
 import CustomStatusView from '@/pages/config/customStatus/Index.vue'
 import CustomBlackList from '@/pages/config/customBlackList/Index.vue'
+import MarketingTools from '@/pages/config/marketing-tools/Index.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -74,6 +75,11 @@ const router = createRouter({
           path: '/custom-black-list',
           name: 'customBlackList',
           component: CustomBlackList
+        },
+        {
+          path: '/marketing-tools',
+          name: 'marketing-tools',
+          component: MarketingTools
         },
       ]
     },
