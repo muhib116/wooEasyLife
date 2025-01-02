@@ -26,3 +26,7 @@ order list theke note add korar bebosta thakbe(Customer note, Invoice note, Cour
 on click invoice print
 Cash management (Low priority) from funnel liner
 Marketing Tools (Low priority) from funnel liner
+
+
+
+make the system responsive

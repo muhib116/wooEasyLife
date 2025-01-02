@@ -133,6 +133,29 @@ class CustomOrderStatusAPI extends WP_REST_Controller
                 display: inline-flex !important;
                 align-items: center !important;
             }
+                
+            tr.status-on-hold {
+                background-color: #976e6e22 !important;
+            }
+            .order-status.status-on-hold {
+                background-color:#976e6e !important;
+                color: ' . get_contrast_color('#976e6e') . ' !important;
+            }
+                
+            tr.status-cancelled {
+                background-color: #ff000022 !important;
+            }
+            .order-status.status-cancelled {
+                background-color:#ff0000 !important;
+                color: ' . get_contrast_color('#ff0000') . ' !important;
+            }
+            tr.status-completed {
+                background-color: #0022ff22 !important;
+            }
+            .order-status.status-completed {
+                background-color:#0022ff !important;
+                color: ' . get_contrast_color('#0022ff') . ' !important;
+            }
         </style>
         ';
     }

@@ -230,5 +230,6 @@ if (!class_exists('WooEasyLife')) :
 
     // add_action('init', function () {
         new WooEasyLife();
+        new  WooEasyLife\Init\UpdatePlugin();
     // });
 endif;

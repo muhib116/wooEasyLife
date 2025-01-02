@@ -1,4 +1,3 @@
-import axios from "axios"
 import { onMounted, ref, watch } from "vue"
 import { getOrderList, getOrderStatusListWithCounts, ip_or_phone_block_bulk_entry } from '@/api'
 import { checkCustomer } from '@/remoteApi'

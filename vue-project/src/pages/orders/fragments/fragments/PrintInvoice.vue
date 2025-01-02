@@ -1,0 +1,3 @@
+<template>
+    Print Invoice
+</template>

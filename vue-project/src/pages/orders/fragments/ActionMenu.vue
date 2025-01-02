@@ -44,6 +44,8 @@
     import MenuButton from './fragments/MenuButton.vue'
     import { inject, computed } from 'vue'
     
+    const {configData} = inject('configData')
+    const { handleFraudCheck, handlePhoneNumberBlock, handleIPBlock } = inject('useOrders')
     const shouldShow = computed(() => {
         const {
             fraud_customer_checker,
@@ -54,9 +56,4 @@
 
         return fraud_customer_checker || courier_automation || ip_block || phone_number_block
     })
-
-    
-
-    const {configData} = inject('configData')
-    const { handleFraudCheck, handlePhoneNumberBlock, handleIPBlock } = inject('useOrders')
 </script>

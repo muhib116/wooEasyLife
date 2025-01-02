@@ -12,6 +12,7 @@
                 class="mb-4 px-6"
             />
             <TableFilter />
+            <TableHeaderAction />
             <Table.Table v-if="orders.length">
                 <TableHeader />
                 <Table.TBody>
@@ -29,6 +30,7 @@
 <script setup lang="ts">
     import { Table, Loader, Heading } from '@components'
     import { inject } from 'vue'
+    import TableHeaderAction from './fragments/TableHeaderAction.vue'
     import TableHeader from './fragments/TableHeader.vue'
     import TableRow from './fragments/TableRow.vue'
     import TableFilter from './fragments/TableFilter.vue'
