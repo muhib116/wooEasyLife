@@ -34,6 +34,18 @@
                     />
                 </a>
             </div>
+            <div class="text-[12px] flex gap-1 items-center">
+                <Icon
+                    name="PhCalendar"
+                />
+                {{ order.date_created }}
+            </div>
+            <div class="text-[12px] flex gap-1 items-center">
+                <Icon
+                    name="PhPhone"
+                /> 
+                {{ order.billing_address.phone }}
+            </div>
             <div class="flex gap-2">
                 <span
                     v-if="order.ip_block_listed"
@@ -57,12 +69,31 @@
                 </span>
             </div>
         </Table.Td>
-        <Table.Td
-            @click="setSelectedOrder(order)"
-        >
-            <div class="w-[100px] text-center">
-                {{ order.date_created }}
+        <Table.Td>
+            <div 
+                v-if="order?.customer_report"
+                class="group"
+            >
+                <div class="flex gap-2 text-green-600">
+                    🎉 Confirm order: 
+                    <strong>{{ order.customer_report?.confirmed || 0 }}</strong>
+                </div>
+                <div class="flex gap-2 text-red-600">
+                    ❌ Cancel order: 
+                    <strong>{{ (order.customer_report?.total_order - order.customer_report?.confirmed) || 0 }}</strong>
+                </div>
+                <div class="flex gap-2 text-sky-600">
+                    ✅ Success Rate:
+                    <strong>{{ order.customer_report?.success_rate || '0%' }}</strong>
+                </div>
+                <button
+                    class="hidden group-hover:block text-white bg-orange-500 shadow mt-1 rounded-sm px-2"
+                    @click="toggleFraudHistoryModel=true"
+                >
+                    View Details
+                </button>
             </div>
+            <div v-else>n/a</div>
         </Table.Td>
         <Table.Td
             @click="setSelectedOrder(order)"  
@@ -117,42 +148,6 @@
                 />
                 Details
             </button>
-        </Table.Td>
-    </Table.Tr>
-
-    <!-- row for fraud data -->
-    <Table.Tr
-        v-if="order?.customer_report"
-        class="group relative !bg-white !hover:bg-white"
-    >
-        <span 
-            class="absolute size-3 border-r border-b rotate-45 -mt-[6px] left-1/2"
-            :class="selectedOrders.has(order) ? 'border-green-400 bg-green-50' : 'bg-white'"
-        ></span>
-        <Table.Td colspan="8" class="text-center">
-            <div class="flex gap-6">
-                <div class="text-green-500">
-                    🎉 Total confirm order: 
-                    <strong>{{ order.customer_report?.confirmed }}</strong><br/>
-                </div>
-                <div class="text-red-500">
-                    ❌ Total cancel order: 
-                    <strong>{{ order.customer_report?.total_order - order.customer_report?.confirmed }}</strong>
-                </div>
-                <div class="text-blue-500">
-                    ✅ Success Rate: 
-                    <strong>
-                        {{ order.customer_report?.success_rate }}
-                    </strong>
-
-                </div>
-                <Button.Outline
-                    @click="toggleFraudHistoryModel=true"
-                    class="py-0.5 font-light text-orange-500 ml-auto"
-                >
-                    See details
-                </Button.Outline>
-            </div>
         </Table.Td>
     </Table.Tr>
 

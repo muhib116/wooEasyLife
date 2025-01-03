@@ -11,7 +11,7 @@
             </label>
         </Table.Th>
         <Table.Th>Customer</Table.Th>
-        <Table.Th>Date</Table.Th>
+        <Table.Th>Delivery History</Table.Th>
         <Table.Th>Status</Table.Th>
         <Table.Th>Payment Method</Table.Th>
         <Table.Th>Price</Table.Th>

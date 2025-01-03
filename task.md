@@ -8,7 +8,7 @@ on plugin deactive table and wp_options data can delete or not
 order status manage from plugin order list
 
 alertBox position fixed kore dekhate hobe
-
+OTP resend korle loader jayna
 
 Dashboard:
 =========================
