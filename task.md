@@ -1,5 +1,4 @@
 👉🏻 kun kun user otp dise ar kun kun user otp dey nai tar akta list dekhate hobe phone number soho
-👉🏻 Invoice printing er bebosta rakhte hobe
 
 order list table a search, pagination etc niye kaj korte hobe
 
@@ -9,6 +8,10 @@ order status manage from plugin order list
 
 alertBox position fixed kore dekhate hobe
 OTP resend korle loader jayna
+Invoice a real courier id bosate hobe
+order list a discount and coupon dekhate hobe
+invoice ar header a company info add korte hobe
+invoice er footer note niye kaj korte hobe
 
 Dashboard:
 =========================

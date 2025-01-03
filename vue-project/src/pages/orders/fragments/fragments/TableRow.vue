@@ -87,13 +87,31 @@
                     <strong>{{ order.customer_report?.success_rate || '0%' }}</strong>
                 </div>
                 <button
-                    class="hidden group-hover:block text-white bg-orange-500 shadow mt-1 rounded-sm px-2"
+                    class="opacity-0 group-hover:opacity-100 text-white bg-orange-500 shadow mt-1 rounded-sm px-2"
                     @click="toggleFraudHistoryModel=true"
                 >
                     View Details
                 </button>
             </div>
             <div v-else>n/a</div>
+        </Table.Td>
+        <Table.Td
+            @click="setSelectedOrder(order)"  
+        >
+            💰 Discount: {{ order.discount_total }}
+            <br/>
+            🎟️ Coupons: {{ order.applied_coupons.join(', ') || 'n/a' }}
+        </Table.Td>
+        <Table.Td
+            @click="setSelectedOrder(order)"  
+        >
+            <span title="Delivery partner">
+                🚚 Steadfast
+            </span>
+            <br/>
+            <span title="Consignment Id">
+                🆔 100198765
+            </span>
         </Table.Td>
         <Table.Td
             @click="setSelectedOrder(order)"  
@@ -131,6 +149,18 @@
                     size="20"
                 />
                 Address
+            </button>
+        </Table.Td>
+        <Table.Td>
+            <button
+                class="relative flex flex-col whitespace-nowrap justify-center items-center text--500"
+                @click="toggleNotesModel = true"
+            >
+                <Icon
+                    name="PhNote"
+                    size="20"
+                />
+                Notes
             </button>
         </Table.Td>
         <Table.Td class="pointer-events-none">
@@ -181,6 +211,17 @@
             :item="order"
         />
     </Modal>
+
+    <Modal 
+        v-model="toggleNotesModel"
+        @close="toggleNotesModel = false"
+        class="max-w-[50%] w-full"
+        title="Notes"
+    >
+        <Notes
+            :order="order"
+        />
+    </Modal>
 </template>
 
 <script setup lang="ts">
@@ -190,6 +231,7 @@
     import { baseUrl } from '@/api'
     import FraudHistory from './FraudHistory.vue'
     import MultipleOrders from './MultipleOrders.vue'
+    import Notes from './notes/Index.vue'
 
     defineProps<{
         order: object
@@ -204,4 +246,5 @@
     const toggleModel = ref(false)
     const toggleFraudHistoryModel = ref(false)
     const toggleMultiOrderModel = ref(false)
+    const toggleNotesModel = ref(false)
 </script>

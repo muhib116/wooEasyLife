@@ -90,7 +90,8 @@ class OrderListAPI
         // Prepare the order data.
         $data = [];
         global $wpdb;
-        foreach ($orders as $order) {
+        foreach ($orders as $order) 
+        {
             $product_info = getProductInfo($order);
             $customer_ip = $order->get_meta('_customer_ip_address', true);
             $total_order_per_customer_for_current_order_status = get_total_orders_by_billing_phone_and_status($order);
@@ -105,6 +106,9 @@ class OrderListAPI
 
             $ip_block_listed = get_block_data_by_type($customer_ip, 'ip');
             $phone_block_listed = get_block_data_by_type($_billing_phone, 'phone_number');
+            $discount_total = $order->get_discount_total(); // Total discount amount
+            $discount_tax = $order->get_discount_tax(); // Discount tax, if any
+            $applied_coupons = $order->get_coupon_codes(); // Array of coupon codes
 
             $data[] = [
                 'id'            => $order->get_id(),
@@ -117,6 +121,10 @@ class OrderListAPI
                 'customer_ip'   => $customer_ip,
                 'phone_block_listed' => $phone_block_listed,
                 'ip_block_listed' => $ip_block_listed,
+                'discount_total' => $discount_total,
+                'discount_tax' => $discount_tax,
+                'currency_symbol' => get_woocommerce_currency_symbol($order->get_currency()),
+                'applied_coupons' => $applied_coupons,
                 'payment_method' => $order->get_payment_method(), // e.g., 'paypal'
                 'payment_method_title' => $order->get_payment_method_title(), // e.g., 'PayPal'
                 'transaction_id' => $order->get_transaction_id() ?: '',

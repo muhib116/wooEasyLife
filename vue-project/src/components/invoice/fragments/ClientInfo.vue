@@ -5,25 +5,49 @@
                 Bill to :
             </p>
             <p class="text-gray-500">
-                Laravel LLC.
-            <br />
-                102, San-Fransico, CA, USA
+                {{ data.first_name }} {{ data.last_name }}
+                <br />
+                {{ data.address_1 }} {{ data.address_2 }}
             </p>
             <p class="text-gray-500">
-                info@laravel.com
+                {{ data.phone }}
             </p>
         </div>
     
         <div class="text-right">
             <p class="">
+                Courier Id:
+                <span class="text-gray-500">
+                    111015996
+                </span>
+            </p>
+            <p class="">
                 Invoice number:
-                <span class="text-gray-500">INV-2023786123</span>
+                <span class="text-gray-500">
+                    {{ data.order_id }}
+                </span>
             </p>
             <p>
-                Invoice date: <span class="text-gray-500">03/07/2023</span>
-                <br />
-                Due date:<span class="text-gray-500">31/07/2023</span>
+                Invoice date: 
+                <span class="text-gray-500">
+                    {{ date }}
+                </span>
             </p>
         </div>
     </div>
 </template>
+
+<script setup lang="ts">
+    import { printDate } from '@/helper'
+    defineProps<{
+        data: {
+            first_name: string
+            last_name: string
+            address_1: string
+            address_2: string
+            phone: string
+            order_id: string
+        }
+        date: string
+    }>()
+</script>
