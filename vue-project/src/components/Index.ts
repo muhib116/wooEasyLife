@@ -15,6 +15,7 @@ import ThreeDotActionButton from './ThreeDotActionButton.vue'
 import MessageBox from './MessageBox.vue'
 import Switch from './Switch.vue'
 import Select from './select/index'
+import Invoice from './invoice/Index'
 
 export {
     Icon,
@@ -33,5 +34,6 @@ export {
     ThreeDotActionButton,
     MessageBox,
     Switch,
-    Select
+    Select,
+    Invoice
 }

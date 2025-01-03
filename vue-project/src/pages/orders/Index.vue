@@ -1,11 +1,16 @@
 <template>
     <Layout>
-        <Container>
+        <PrintInvoice
+            v-if="showInvoices"
+        />
+        <Container
+            v-else
+        >
             <div class="flex gap-6 w-full items-start">
                 <Card.Native class="flex-1 !px-0">
                     <OrderList />
                 </Card.Native>
-                <ActionMenu />
+                <!-- <ActionMenu /> -->
             </div>
         </Container>
     </Layout>
@@ -17,8 +22,10 @@
     import { provide } from 'vue'
     import OrderList from './fragments/OrderList.vue'
     import ActionMenu from './fragments/ActionMenu.vue'
+    import PrintInvoice from './fragments/fragments/PrintInvoice.vue'
 
     const _useOrders = useOrders()
+    const { showInvoices } = _useOrders
 
     provide('useOrders', _useOrders)
 </script>

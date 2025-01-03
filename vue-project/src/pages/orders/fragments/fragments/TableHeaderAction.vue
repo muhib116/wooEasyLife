@@ -41,19 +41,11 @@
     >
         <CreateNewOrder />
     </Modal>
-    <Modal
-        v-model="togglePrintInvoice"
-        title="Print Invoice"
-        @close="togglePrintInvoice = false"
-    >
-        <PrintInvoice />
-    </Modal>
 </template>
 
 <script setup lang="ts">
     import { inject, computed, ref } from 'vue'
     import CreateNewOrder from './CreateNewOrder.vue'
-    import PrintInvoice from './PrintInvoice.vue'
     import {
         Button,
         Icon,
@@ -67,11 +59,12 @@
         handleFraudCheck, 
         handlePhoneNumberBlock, 
         handleIPBlock,
-        selectedOrders
+        selectedOrders,
+        showInvoices
     } = inject('useOrders')
 
     const toggleNewOrder = ref(false)
-    const togglePrintInvoice = ref(false)
+    const togglePrintInvoice = ref(true)
 
     const actionBtns = computed(() => [
         {
@@ -87,7 +80,7 @@
             title: 'Print Invoice',
             active: true,
             method: () => {
-                togglePrintInvoice.value = true
+                showInvoices.value = true
             }
         },
         {

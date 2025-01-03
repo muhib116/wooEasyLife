@@ -9,6 +9,7 @@ export const useOrders = () => {
     const selectedOrders = ref(new Set([]))
     const selectAll = ref(false)
     const isLoading = ref(false)
+    const showInvoices = ref(true)
     const orderFilter = ref({
         page: 1,
         per_page: 10,
@@ -144,6 +145,7 @@ export const useOrders = () => {
         selectAll,
         isLoading,
         activeOrder,
+        showInvoices,
         selectedOrders,
         orderStatusWithCounts,
         getOrders,
