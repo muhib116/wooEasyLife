@@ -14,6 +14,7 @@
                     type="number"
                     class="border px-2 pr-1 py-1 w-14"
                     v-model="orderFilter.per_page"
+                    @input="handleGetOrders"
                 />
             </div>
 
@@ -23,12 +24,30 @@
             <!-- Pagination Buttons -->
             <div class="flex items-center space-x-1 ml-4">
                 <!-- First Page Button -->
-                <button class="px-2 py-1 text-gray-400 bg-gray-100 border rounded-sm cursor-not-allowed" disabled>
+                <button 
+                    class="px-2 py-1 border rounded-sm"
+                    :class="orderFilter.page == 1 ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-blue-600 bg-blue-100 border-blue-300 hover:bg-blue-200'"
+                    :disabled="orderFilter.page == 1"
+                    @click="() => {
+                        orderFilter.page = 1
+                        handleGetOrders()
+                    }"
+                >
                     «
                 </button>
                 
                 <!-- Previous Page Button -->
-                <button class="px-2 py-1 text-gray-400 bg-gray-100 border rounded-sm cursor-not-allowed" disabled>
+                <button 
+                    class="px-2 py-1  border rounded-sm"
+                    :class="orderFilter.page == 1 ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-blue-600 bg-blue-100 border-blue-300 hover:bg-blue-200'"
+                    :disabled="orderFilter.page == 1"
+                    @click="() => {
+                        if(orderFilter.page > 1){
+                            orderFilter.page --
+                            handleGetOrders()
+                        }
+                    }"
+                >
                     ‹
                 </button>
                 
@@ -46,10 +65,13 @@
                 
                 <!-- Next Page Button -->
                 <button 
-                    class="px-2 py-1 text-blue-600 bg-blue-100 border border-blue-300 rounded-sm hover:bg-blue-200"
+                    class="px-2 py-1 border rounded-sm"
+                    :class="orderFilter.page == Math.round(totalRecords / orderFilter.per_page) ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-blue-600 bg-blue-100 border-blue-300 hover:bg-blue-200'"
+                    :disabled="orderFilter.page == Math.round(totalRecords / orderFilter.per_page)"
                     @click="() => {
                         if(orderFilter.page < Math.round(totalRecords / orderFilter.per_page)){
                             orderFilter.page ++
+                            handleGetOrders()
                         }
                     }"
                 >
@@ -58,9 +80,12 @@
                 
                 <!-- Last Page Button -->
                 <button 
-                    class="px-2 py-1 text-blue-600 bg-blue-100 border border-blue-300 rounded-sm hover:bg-blue-200"
+                    class="px-2 py-1 border rounded-sm"
+                    :class="orderFilter.page == Math.round(totalRecords / orderFilter.per_page) ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-blue-600 bg-blue-100 border-blue-300 hover:bg-blue-200'"
+                    :disabled="orderFilter.page == Math.round(totalRecords / orderFilter.per_page)"
                     @click="() => {
                         orderFilter.page = Math.round(totalRecords / orderFilter.per_page)
+                        handleGetOrders()
                     }"
                 >
                     »
@@ -76,6 +101,14 @@
 
     const { 
         totalRecords,
-        orderFilter
+        orderFilter,
+        getOrders
     } = inject('useOrders')
+
+    let timeoutId;
+    const handleGetOrders = () => {
+        clearTimeout(timeoutId)
+
+        timeoutId = setTimeout(getOrders, 300)
+    }
 </script>

@@ -1,7 +1,7 @@
 <template>
     <div class="relative">
         <Loader
-            class="absolute left-1/2 -translate-x-1/2 z-30"
+            class="absolute top-[30vh] left-1/2 -translate-x-1/2 z-30"
             :active="isLoading"
         />
 
