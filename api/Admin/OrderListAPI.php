@@ -74,53 +74,59 @@ class OrderListAPI
     public function get_orders($request)
     {
         $status   = $request->get_param('status');
-        $per_page = $request->get_param('per_page');
-        $page     = $request->get_param('page');
+        $per_page = intval($request->get_param('per_page'));
+        $page     = intval($request->get_param('page'));
         $billing_phone = $request->get_param('billing_phone');
-
-        // Use WooCommerce Order Query to fetch orders.
+    
+        // Use WooCommerce Order Query to fetch orders with pagination
         $args = [
             'status'        => $status,
             'limit'         => $per_page,
             'page'          => $page,
             'billing_phone' => $billing_phone,
             'type'          => 'shop_order',
-            'return'        => 'objects',
+            'paginate'      => true, // Enable pagination
         ];
-
-        $orders = wc_get_orders($args);
-
-        if (empty($orders)) {
+    
+        $query = wc_get_orders($args);
+    
+        if (empty($query->orders)) {
             return rest_ensure_response([
                 'message' => 'No orders found.',
                 'data'    => [],
+                'total'   => 0,
+                'pages'   => 0,
             ]);
         }
-
-        // Prepare the order data.
+    
+        // Total records and total pages
+        $total_orders = $query->total;
+        $total_pages  = $query->max_num_pages;
+    
+        // Prepare the order data
         $data = [];
         global $wpdb;
-        foreach ($orders as $order) 
+        foreach ($query->orders as $order) 
         {
             $product_info = getProductInfo($order);
             $customer_ip = $order->get_meta('_customer_ip_address', true);
             $total_order_per_customer_for_current_order_status = get_total_orders_by_billing_phone_and_status($order);
-            
+    
             // Fetch fraud data from the custom table
-            $table_name = $wpdb->prefix . __PREFIX.'fraud_customers';
+            $table_name = $wpdb->prefix . __PREFIX . 'fraud_customers';
             $_billing_phone = $order->get_billing_phone();
             $fraud_data = $wpdb->get_row(
-                $wpdb->prepare("SELECT report FROM $table_name WHERE customer_id = %d", $_billing_phone),
+                $wpdb->prepare("SELECT report FROM $table_name WHERE customer_id = %s", $_billing_phone),
                 ARRAY_A
             );
-
+    
             $ip_block_listed = get_block_data_by_type($customer_ip, 'ip');
             $phone_block_listed = get_block_data_by_type($_billing_phone, 'phone_number');
             $discount_total = $order->get_discount_total(); // Total discount amount
             $discount_tax = $order->get_discount_tax(); // Discount tax, if any
             $applied_coupons = $order->get_coupon_codes(); // Array of coupon codes
             $order_notes = get_order_notes($order);
-
+    
             $data[] = [
                 'id'            => $order->get_id(),
                 'status'        => $order->get_status(),
@@ -137,10 +143,10 @@ class OrderListAPI
                 'order_notes' => $order_notes,
                 'currency_symbol' => get_woocommerce_currency_symbol($order->get_currency()),
                 'applied_coupons' => $applied_coupons,
-                'payment_method' => $order->get_payment_method(), // e.g., 'paypal'
-                'payment_method_title' => $order->get_payment_method_title(), // e.g., 'PayPal'
+                'payment_method' => $order->get_payment_method(),
+                'payment_method_title' => $order->get_payment_method_title(),
                 'transaction_id' => $order->get_transaction_id() ?: '',
-                'product_price' => wc_price($product_info['total_price']), // Get the product price
+                'product_price' => wc_price($product_info['total_price']),
                 'product_info' => $product_info,
                 'billing_address' => [
                     'type' => 'billing',
@@ -175,12 +181,15 @@ class OrderListAPI
                 'customer_report' => json_decode($fraud_data['report'], true)[0]['report']
             ];
         }
-
+    
         return new \WP_REST_Response([
             'status' => 'success',
-            'data'   => $data
+            'data'   => $data,
+            'total'  => $total_orders,
+            'pages'  => $total_pages,
         ], 200);
     }
+    
 
     public function get_order_status_with_counts()
     {

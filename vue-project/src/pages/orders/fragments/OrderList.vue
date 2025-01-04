@@ -13,6 +13,7 @@
             />
             <TableFilter />
             <TableHeaderAction />
+            <Pagination />
             <Table.Table v-if="orders.length">
                 <TableHeader />
                 <Table.TBody>
@@ -23,6 +24,8 @@
                     />
                 </Table.TBody>
             </Table.Table>
+
+            <TableHeaderAction />
         </div>
     </div>
 </template>
@@ -35,6 +38,7 @@
     import TableRow from './fragments/TableRow.vue'
     import TableFilter from './fragments/TableFilter.vue'
     import OrderDetails from './OrderDetails.vue'
+import Pagination from './fragments/Pagination.vue';
 
     const {
         activeOrder,

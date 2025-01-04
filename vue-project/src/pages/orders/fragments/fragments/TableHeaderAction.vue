@@ -25,13 +25,6 @@
                 </template>
             </div>
         </div>
-
-        <div>
-            <Input.Native
-                placeholder="Search customer"
-                class="text-base"
-            />
-        </div>
     </div>
 
     <Modal

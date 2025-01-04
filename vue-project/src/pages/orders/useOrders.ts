@@ -4,6 +4,7 @@ import { checkCustomer } from '@/remoteApi'
 
 export const useOrders = () => {
     const orders = ref([])
+    const totalRecords = ref(0)
     const orderStatusWithCounts = ref([])
     const activeOrder = ref()
     const selectedOrders = ref(new Set([]))
@@ -70,8 +71,9 @@ export const useOrders = () => {
 
     const getOrders = async () => {
         isLoading.value = true
-        const { data } = await getOrderList(orderFilter.value)
+        const { data, total } = await getOrderList(orderFilter.value)
         orders.value = data
+        totalRecords.value = total
         selectedOrders.value.clear()
         isLoading.value = false
     }
@@ -146,6 +148,7 @@ export const useOrders = () => {
         isLoading,
         activeOrder,
         showInvoices,
+        totalRecords,
         selectedOrders,
         orderStatusWithCounts,
         getOrders,
