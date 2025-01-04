@@ -216,7 +216,8 @@
         v-model="toggleNotesModel"
         @close="toggleNotesModel = false"
         class="max-w-[50%] w-full"
-        title="Notes"
+        title="Order Notes"
+        hideFooter
     >
         <Notes
             :order="order"

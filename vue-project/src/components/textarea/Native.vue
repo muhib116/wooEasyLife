@@ -19,7 +19,7 @@
                     v-model="localValue"
                     v-bind="$attrs"
                     :id="uid"
-                    class="relative placeholder:text-inherit placeholder:opacity-60 border border-secondary-five rounded-lg px-4 py-2 block w-full disabled:bg-gray-100 disabled:opacity-60 focus:ring-0 focus:outline-none"
+                    class="relative placeholder:text-inherit placeholder:opacity-60 border border-secondary-five rounded-sm px-4 py-2 block w-full disabled:bg-gray-100 disabled:opacity-60 focus:ring-0 focus:outline-none"
                     :style="inputStyle"
                 />
             </div>

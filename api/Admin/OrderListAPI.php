@@ -53,6 +53,16 @@ class OrderListAPI
                 'permission_callback' => '__return_true', // Allow public access (modify as needed).
             ]
         );
+
+        register_rest_route(
+            __API_NAMESPACE, 
+            '/save-order-notes', 
+            [
+                'methods'             => 'POST',
+                'callback'            => [$this, 'save_order_notes'],
+                'permission_callback' => '__return_true', // Or add your permission logic here
+            ]
+        );
     }
 
     /**
@@ -109,6 +119,7 @@ class OrderListAPI
             $discount_total = $order->get_discount_total(); // Total discount amount
             $discount_tax = $order->get_discount_tax(); // Discount tax, if any
             $applied_coupons = $order->get_coupon_codes(); // Array of coupon codes
+            $order_notes = get_order_notes($order);
 
             $data[] = [
                 'id'            => $order->get_id(),
@@ -123,6 +134,7 @@ class OrderListAPI
                 'ip_block_listed' => $ip_block_listed,
                 'discount_total' => $discount_total,
                 'discount_tax' => $discount_tax,
+                'order_notes' => $order_notes,
                 'currency_symbol' => get_woocommerce_currency_symbol($order->get_currency()),
                 'applied_coupons' => $applied_coupons,
                 'payment_method' => $order->get_payment_method(), // e.g., 'paypal'
@@ -198,6 +210,87 @@ class OrderListAPI
             'data'   => $order_counts
         ], 200);
     }
+
+    public function save_order_notes($request) {
+        global $wpdb;
+        $params = $request->get_json_params();
+    
+        // Validate the payload
+        if (!isset($params['order_id'])) {
+            return new \WP_REST_Response([
+                'status' => 'error',
+                'message' => 'Missing order_id in the payload.',
+            ], 400);
+        }
+    
+        $order_id = intval($params['order_id']);
+        $customer_note = isset($params['customer_note']) ? sanitize_text_field($params['customer_note']) : '';
+        $courier_note = isset($params['courier_note']) ? sanitize_text_field($params['courier_note']) : '';
+        $invoice_note = isset($params['invoice_note']) ? sanitize_text_field($params['invoice_note']) : '';
+    
+        // Check if the order exists
+        $order = wc_get_order($order_id);
+        if (!$order) {
+            return new \WP_REST_Response([
+                'status' => 'error',
+                'message' => 'Order not found.',
+            ], 404);
+        }
+    
+        // Define the table name
+        $table_name = $wpdb->prefix . 'wc_orders_meta';
+    
+        // Insert or update the notes in the `wp_wc_orders_meta` table
+        $notes = [
+            ['meta_key' => 'customer_note', 'meta_value' => $customer_note],
+            ['meta_key' => 'courier_note', 'meta_value' => $courier_note],
+            ['meta_key' => 'invoice_note', 'meta_value' => $invoice_note],
+        ];
+    
+        foreach ($notes as $note) {
+            if (!empty($note['meta_value'])) {
+                // Check if the record already exists
+                $existing = $wpdb->get_var($wpdb->prepare(
+                    "SELECT COUNT(*) FROM $table_name WHERE order_id = %d AND meta_key = %s",
+                    $order_id,
+                    $note['meta_key']
+                ));
+    
+                if ($existing) {
+                    // Update the existing record
+                    $wpdb->update(
+                        $table_name,
+                        ['meta_value' => $note['meta_value']],
+                        ['order_id' => $order_id, 'meta_key' => $note['meta_key']],
+                        ['%s'],
+                        ['%d', '%s']
+                    );
+                } else {
+                    // Insert a new record
+                    $wpdb->insert(
+                        $table_name,
+                        [
+                            'order_id'   => $order_id,
+                            'meta_key'   => $note['meta_key'],
+                            'meta_value' => $note['meta_value'],
+                        ],
+                        ['%d', '%s', '%s']
+                    );
+                }
+            }
+        }
+    
+        return new \WP_REST_Response([
+            'status' => 'success',
+            'message' => 'Order notes saved successfully.',
+            'data' => [
+                'order_id' => $order_id,
+                'customer_note' => $customer_note,
+                'courier_note' => $courier_note,
+                'invoice_note' => $invoice_note,
+            ],
+        ], 200);
+    }      
 }
 
 
@@ -227,4 +320,41 @@ function getProductInfo($order)
         }
     }
     return $productInfo;
+}
+
+function get_order_notes($order) {
+    global $wpdb;
+
+    // Ensure $order is a valid WC_Order object
+    if (!$order instanceof \WC_Order) {
+        return [
+            'status' => 'error',
+            'message' => 'Invalid order object.',
+        ];
+    }
+
+    $order_id = $order->get_id();
+
+    // Define table name
+    $table_name = $wpdb->prefix . 'wc_orders_meta';
+
+    // Fetch notes from the custom table
+    $notes = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT meta_key, meta_value FROM $table_name WHERE order_id = %d AND meta_key IN ('customer_note', 'courier_note', 'invoice_note')",
+            $order_id
+        ),
+        OBJECT_K
+    );
+
+    // Extract notes into an array
+    $customer_note = isset($notes['customer_note']) ? $notes['customer_note']->meta_value : '';
+    $courier_note = isset($notes['courier_note']) ? $notes['courier_note']->meta_value : '';
+    $invoice_note = isset($notes['invoice_note']) ? $notes['invoice_note']->meta_value : '';
+
+    return [
+        'customer_note' => $customer_note,
+        'courier_note' => $courier_note,
+        'invoice_note' => $invoice_note,
+    ];
 }

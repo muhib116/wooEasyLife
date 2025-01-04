@@ -43,6 +43,16 @@ export const getOrderStatuses = async () => {
     const { data } = await axios.get(`${localApiBaseURL}/status-with-counts`)
     return data
 }
+export const saveOrderNote = async (payload: {
+    order_id: string | number
+    customer_note: string
+    courier_note: string
+    invoice_note: string
+}) => {
+    const { data } = await axios.post(`${localApiBaseURL}/save-order-notes`, payload)
+
+    console.log(data)
+}
 // functions for order list
 
 
