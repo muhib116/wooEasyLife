@@ -20,7 +20,9 @@
         </template>
 
         <template #footer>
-            <Footer />
+            <Footer
+                :order="order"
+            />
         </template>
     </Container>
 </template>

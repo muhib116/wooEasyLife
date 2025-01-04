@@ -26,7 +26,6 @@ SMS Cost calculation dashboard
 
 =============================
 manual order entry
-order list theke note add korar bebosta thakbe(Customer note, Invoice note, Courier note)
 Cash management (Low priority) from funnel liner
 Marketing Tools (Low priority) from funnel liner
 
