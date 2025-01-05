@@ -140,6 +140,8 @@ class OrderListAPI
                 'date_created'  => $order->get_date_created() ? $order->get_date_created()->date('M j, Y \a\t g:i A') : null,
                 'customer_id'   => $order->get_customer_id(),
                 'customer_name' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
+                'shipping_cost' => $order->get_shipping_total(),
+                'shipping_methods' => get_order_shipping_methods($order),
                 'customer_ip'   => $customer_ip,
                 'phone_block_listed' => $phone_block_listed,
                 'ip_block_listed' => $ip_block_listed,
@@ -372,4 +374,26 @@ function get_order_notes($order) {
         'courier_note' => $courier_note,
         'invoice_note' => $invoice_note,
     ];
+}
+
+function get_order_shipping_methods($order) {
+    // Validate the order object
+    if (!$order instanceof \WC_Order) {
+        return [
+            'status' => 'error',
+            'message' => 'Invalid order object or ID.',
+        ];
+    }
+
+    // Initialize the result array
+    $shipping_methods_data = [];
+
+    // Get the shipping methods for the order
+    $shipping_methods = $order->get_shipping_methods();
+
+    foreach ($shipping_methods as $shipping_method) {
+        $shipping_methods_data[] = $shipping_method->get_method_title();
+    }
+
+    return $shipping_methods_data;
 }

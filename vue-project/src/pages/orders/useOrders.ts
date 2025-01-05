@@ -13,7 +13,7 @@ export const useOrders = () => {
     const showInvoices = ref(false)
     const orderFilter = ref({
         page: 1,
-        per_page: 10,
+        per_page: 30,
         status: '',
         search: ''
     })

@@ -12,11 +12,10 @@
         </Table.Th>
         <Table.Th>Customer</Table.Th>
         <Table.Th>Delivery History</Table.Th>
-        <Table.Th>Discount</Table.Th>
         <Table.Th>Delivery Partner</Table.Th>
         <Table.Th>Status</Table.Th>
-        <Table.Th>Payment Method</Table.Th>
-        <Table.Th>Price</Table.Th>
+        <Table.Th>Shipping</Table.Th>
+        <Table.Th>Payment</Table.Th>
         <Table.Th>Address</Table.Th>
         <Table.Th>Note</Table.Th>
         <Table.Th>Action</Table.Th>

@@ -35,26 +35,17 @@
                 </a>
             </div>
             <div class="text-[12px] flex gap-1 items-center">
-                <Icon
-                    name="PhCalendar"
-                />
-                {{ order.date_created }}
+                📅 {{ order.date_created }}
             </div>
             <div class="text-[12px] flex gap-1 items-center">
-                <Icon
-                    name="PhPhone"
-                /> 
-                {{ order.billing_address.phone }}
+                📞 {{ order.billing_address.phone }}
             </div>
             <div
                 class="text-[12px] flex gap-1 items-center"
                 :title="`${order.billing_address.address_1}, ${order.billing_address.address_2}`"
             >
-                <Icon
-                    name="PhMapPinLine"
-                /> 
-
                 <p class="max-w-[200px] truncate">
+                    🏠 
                     {{ order.billing_address.address_1 }},
                     {{ order.billing_address.address_2 }}
                 </p>
@@ -112,15 +103,7 @@
         </Table.Td>
         <Table.Td
             @click="setSelectedOrder(order)"  
-        >
-            <div class="whitespace-nowrap">
-                💰 Discount: {{ order.discount_total }}
-                <br/>
-                🎟️ Coupons: {{ order.applied_coupons.join(', ') || 'n/a' }}
-            </div>
-        </Table.Td>
-        <Table.Td
-            @click="setSelectedOrder(order)"  
+            class="whitespace-nowrap"
         >
             <span title="Delivery partner">
                 🚚 Steadfast
@@ -129,9 +112,14 @@
             <span title="Consignment Id">
                 🆔 100198765
             </span>
+            <br/>
+            <span class="font-medium text-sky-500" title="Courier Status">
+                📦 In Review
+            </span>
         </Table.Td>
         <Table.Td
             @click="setSelectedOrder(order)"  
+            class="whitespace-nowrap" 
         >
             <button class="relative order-status capitalize px-3 py-1" :class="`status-${order.status}`">
                 {{ order.status=='processing' ? 'New Order' : order.status.replaceAll('-', ' ') }}
@@ -149,12 +137,38 @@
         <Table.Td
             @click="setSelectedOrder(order)"  
         >
-            {{ order.payment_method_title || 'n/a' }}
+            <div class="grid">
+                <span 
+                    title="Payment methods"
+                    class="font-medium whitespace-nowrap"
+                >
+                    🚚 {{ order.payment_method_title || 'n/a' }}
+                </span>
+                <span
+                    class="truncate"
+                    :title="`Shipping methods: ${order.shipping_methods.join(', ') || 'n/a'}`"
+                >
+                    📍 {{ order.shipping_methods.join(', ') || 'n/a' }}
+                </span>
+                <span
+                    title="Shipping cost"
+                    class="font-medium text-red-500"
+                >
+                    💰 Cost: <span v-html="order.currency_symbol"></span>{{ order.shipping_cost || 'n/a' }}
+                </span>
+            </div>
         </Table.Td>
         <Table.Td
             @click="setSelectedOrder(order)"
         >
-            <div v-html="order.product_price"></div>
+            <span class="truncate">
+                💵 Price: <span v-html="order.product_price"></span>
+            </span>
+            <div class="whitespace-nowrap">
+                💰 Discount: {{ order.discount_total }}
+                <br/>
+                🎟️ Coupons: {{ order.applied_coupons.join(', ') || 'n/a' }}
+            </div>
         </Table.Td>
         <Table.Td>
             <button
