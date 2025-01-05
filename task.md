@@ -1,7 +1,5 @@
 👉🏻 kun kun user otp dise ar kun kun user otp dey nai tar akta list dekhate hobe phone number soho
 
-on plugin deactive table and wp_options data can delete or not
-
 order status manage from plugin order list
 
 alertBox position fixed kore dekhate hobe
