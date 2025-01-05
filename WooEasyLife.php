@@ -210,8 +210,18 @@ if (!class_exists('WooEasyLife')) :
 
         public function save_default_config()
         {
+            $site_title = get_bloginfo('name');
+            $custom_logo_id = get_theme_mod('custom_logo');
+            $logo_url = wp_get_attachment_image_url($custom_logo_id, 'full');
+
             $config = [
                 "admin_phone" => '',
+                "invoice_company_name" => $site_title,
+                "invoice_logo" => $logo_url,
+                "invoice_email" => '',
+                "invoice_phone" => '',
+                "invoice_print" => false,
+                "clear_data_when_deactivate_plugin" => false,
                 "ip_block" => true,
                 "phone_number_block" => true,
                 "place_order_otp_verification" => false,

@@ -1,6 +1,6 @@
 <template>
 
-    <div class="flex gap-4 justify-center print:hidden">
+    <div class="flex gap-4 justify-center print:hidden bg-white z-50 sticky top-2">
         <Button.Primary
             @click="showInvoices = false"
         >

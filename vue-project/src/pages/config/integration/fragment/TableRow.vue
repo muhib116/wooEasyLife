@@ -10,20 +10,47 @@
             wrapperClass="w-20"
             type="number"
             v-model="configData[objKey]"
-            @input="UpdateConfig"
         />
         <Input.Primary
             v-else-if="objKey == 'admin_phone'"
+            label="to get sms"
             wrapperClass="w-[220px]"
             type="text"
             v-model="configData[objKey]"
-            @input="UpdateConfig"
             placeholder="Enter a valid phone number."
+        />
+        <Input.Primary
+            v-else-if="objKey == 'invoice_company_name'"
+            wrapperClass="w-[220px]"
+            type="text"
+            v-model="configData[objKey]"
+            placeholder="Enter a company name."
+        />
+        <Input.Primary
+            v-else-if="objKey == 'invoice_logo'"
+            wrapperClass="w-[220px]"
+            type="text"
+            v-model="configData[objKey]"
+            placeholder="Enter logo url."
+        />
+        <Input.Primary
+            v-else-if="objKey == 'invoice_phone'"
+            wrapperClass="w-[220px]"
+            type="text"
+            v-model="configData[objKey]"
+            placeholder="Enter a valid phone number."
+        />
+        <Input.Primary
+            v-else-if="objKey == 'invoice_email'"
+            wrapperClass="w-[220px]"
+            type="text"
+            v-model="configData[objKey]"
+            placeholder="Enter a valid email."
         />
         <Switch
             v-else
             v-model="configData[objKey]"
-            @onInput="UpdateConfig"
+            @onInput="UpdateConfig()"
         />
     </Table.Td>
 </Table.Tr>

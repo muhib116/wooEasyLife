@@ -1,17 +1,24 @@
 <template>
     <Card.Native class="relative min-h-[200px]">
-        <Loader
-            :active="isLoading"
-            class="absolute inset-x-1/2 top-[15px] -translate-x-1/2 z-20"
-        />
         <MessageBox
             :title="alertMessage.message"
             :type="alertMessage.type"
         />
-        <div class="mb-2">
+        <div class="mb-2 flex justify-between sticky -top-6 z-50 bg-white">
+            <Loader
+                class="absolute inset-x-1/2 top-[5px] -translate-x-1/2 z-[51]"
+                :active="isLoading"
+            />
+            
             <h3 class="text-xl font-semibold text-gray-900">
                 Configure your preference
             </h3>
+
+            <Button.Primary
+                @onClick="UpdateConfig"
+            >
+                Save Changes
+            </Button.Primary>
         </div>
         <Table.Table>
             <Table.THead>
@@ -36,7 +43,7 @@
 
 
 <script setup>
-    import { Table, MessageBox, Loader, Card } from '@components'
+    import { Table, MessageBox, Loader, Card, Button } from '@components'
     import { useIntegration } from './useIntegration'
     import { provide } from 'vue'
     import TableTrow from './fragment/TableRow.vue'
@@ -46,6 +53,7 @@
         isLoading,
         configData,
         alertMessage,
+        UpdateConfig
     } = _useIntegration
 
     provide('useIntegration', _useIntegration)

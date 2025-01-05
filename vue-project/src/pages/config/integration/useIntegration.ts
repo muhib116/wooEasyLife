@@ -10,9 +10,10 @@ export const useIntegration = () => {
         type: ''
     })
 
-    const UpdateConfig = async () => {
+    const UpdateConfig = async (btn: {isLoading?: boolean}) => {
         try {
             isLoading.value = true
+            btn ? btn.isLoading = true : ''
             await createOrUpdateWPOption({
                 option_name: optionName,
                 data: configData.value
@@ -23,6 +24,7 @@ export const useIntegration = () => {
             alertMessage.value.message = 'Configuration updated successfully!'
             alertMessage.value.type = 'Success'
             isLoading.value = false
+            btn ? btn.isLoading = false : ''
         }
 
         setTimeout(() => {

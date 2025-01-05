@@ -60,7 +60,6 @@
     } = inject('useOrders')
 
     const toggleNewOrder = ref(false)
-    const togglePrintInvoice = ref(true)
 
     const actionBtns = computed(() => [
         {
@@ -74,7 +73,7 @@
         {
             icon: 'PhPrinter',
             title: 'Print Invoice',
-            active: true,
+            active: configData.value.invoice_print,
             method: () => {
                 showInvoices.value = true
             }
