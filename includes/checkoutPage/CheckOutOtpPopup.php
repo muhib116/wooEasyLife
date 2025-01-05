@@ -70,6 +70,7 @@
                             placeholder=""
                             v-model="otpCode"
                             @input="validateOTP"
+                            :disabled="!otpIsNotValid"
                         />
                         <p
                             v-if="otpIsNotValid"
@@ -217,6 +218,7 @@
             }
 
             const resendOTP = async () => {
+                isOTPValidating.value = false
                 woo_easy_life_startCountdown()
                 otpCode.value = ''
                 await axios.post(`${apiBaseUrl}/otp/resend`, {
@@ -230,21 +232,26 @@
                 timeoutId = setTimeout(async () => {
                     if(otpCode.value.length == 4){
                         isOTPValidating.value = true
-                        const { data } = await axios.post(`${apiBaseUrl}/otp/validate`, {
-                            phone_number: billingPhone.value,
-                            otp: otpCode.value
-                        })
 
-                        if(data.status = 'success'){
-                            isOTPValidated.value = true
-                            isOTPValidating.value = false
-
-                            const place_order_btn = document.querySelector('form[name="checkout"] #place_order')
-                            if(place_order_btn){
-                                place_order_btn.click()
+                        
+                        try {
+                            const { data } = await axios.post(`${apiBaseUrl}/otp/validate`, {
+                                phone_number: billingPhone.value,
+                                otp: otpCode.value
+                            })
+                            if(data.status = 'success'){
+                                isOTPValidated.value = true
+                                isOTPValidating.value = false
+                                otpIsNotValid.value = false
+    
+                                const place_order_btn = document.querySelector('form[name="checkout"] #place_order')
+                                if(place_order_btn){
+                                    place_order_btn.click()
+                                }
                             }
-                        }else {
+                        } catch(err) {
                             otpIsNotValid.value = true
+                            otpCode.value = ''
                         }
                     }else {
                         isOTPValidating.value = false
