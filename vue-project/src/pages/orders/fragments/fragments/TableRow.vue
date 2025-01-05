@@ -17,7 +17,7 @@
             @click="setSelectedOrder(order)"  
         >
             <div
-                class="flex gap-1"
+                class="flex gap-1 font-semibold"
             >
                 #{{ order.id }}
                 {{ order.billing_address.first_name }}
@@ -46,6 +46,21 @@
                 /> 
                 {{ order.billing_address.phone }}
             </div>
+            <div
+                class="text-[12px] flex gap-1 items-center"
+                :title="`${order.billing_address.address_1}, ${order.billing_address.address_2}`"
+            >
+                <Icon
+                    name="PhMapPinLine"
+                /> 
+
+                <p class="max-w-[200px] truncate">
+                    {{ order.billing_address.address_1 }},
+                    {{ order.billing_address.address_2 }}
+                </p>
+            </div>
+
+
             <div class="flex gap-2">
                 <span
                     v-if="order.ip_block_listed"
@@ -72,7 +87,7 @@
         <Table.Td>
             <div 
                 v-if="order?.customer_report"
-                class="group"
+                class="group whitespace-nowrap"
             >
                 <div class="flex gap-2 text-green-600">
                     🎉 Confirm order: 
@@ -98,9 +113,11 @@
         <Table.Td
             @click="setSelectedOrder(order)"  
         >
-            💰 Discount: {{ order.discount_total }}
-            <br/>
-            🎟️ Coupons: {{ order.applied_coupons.join(', ') || 'n/a' }}
+            <div class="whitespace-nowrap">
+                💰 Discount: {{ order.discount_total }}
+                <br/>
+                🎟️ Coupons: {{ order.applied_coupons.join(', ') || 'n/a' }}
+            </div>
         </Table.Td>
         <Table.Td
             @click="setSelectedOrder(order)"  
@@ -141,19 +158,7 @@
         </Table.Td>
         <Table.Td>
             <button
-                class="relative flex flex-col whitespace-nowrap justify-center items-center text-red-500"
-                @click="toggleModel = true"
-            >
-                <Icon
-                    name="PhMapTrifold"
-                    size="20"
-                />
-                Address
-            </button>
-        </Table.Td>
-        <Table.Td>
-            <button
-                class="relative flex flex-col whitespace-nowrap justify-center items-center text--500"
+                class="relative flex flex-col whitespace-nowrap justify-center items-center text-orange-500"
                 @click="toggleNotesModel = true"
             >
                 <Icon
@@ -161,6 +166,18 @@
                     size="20"
                 />
                 Notes
+            </button>
+        </Table.Td>
+        <Table.Td>
+            <button
+                class="relative flex flex-col whitespace-nowrap justify-center items-center text-sky-500"
+                @click="toggleModel = true"
+            >
+                <Icon
+                    name="PhMapPinLine"
+                    size="20"
+                />
+                Address
             </button>
         </Table.Td>
         <Table.Td class="pointer-events-none">
