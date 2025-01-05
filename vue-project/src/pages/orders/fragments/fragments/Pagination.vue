@@ -9,13 +9,15 @@
                 placeholder="Search customer"
                 class="text-base border px-2 py-1 rounded-sm"
                 v-model="orderFilter.search"
-                @input="debouncedGetOrders"
             />
             <Button.Primary
-                class="!py-1"
-                @click=""
+                class="!py-1 px-2"
+                @click="debouncedGetOrders"
             >
-                Search
+                <Icon
+                    name="PhMagnifyingGlass"
+                    weight="bold"
+                />
             </Button.Primary>
         </div>
 
@@ -73,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { Input, Button } from '@components'
+import { Input, Button, Icon } from '@components'
 import { computed, inject, ref } from 'vue'
 
 defineProps<{
