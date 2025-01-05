@@ -134,6 +134,7 @@ class OrderListAPI
             $applied_coupons = $order->get_coupon_codes(); // Array of coupon codes
             $order_notes = get_order_notes($order);
             $order_source = $order->get_meta('_order_source', true);
+            $created_via = $order->get_meta('_created_via', true);
 
             $data[] = [
                 'id'            => $order->get_id(),
@@ -145,7 +146,7 @@ class OrderListAPI
                 'customer_name' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
                 'shipping_cost' => $order->get_shipping_total(),
                 'shipping_methods' => get_order_shipping_methods($order),
-                'order_source' => $order_source,
+                'created_via' => $created_via,
                 'customer_ip'   => $customer_ip,
                 'phone_block_listed' => $phone_block_listed,
                 'ip_block_listed' => $ip_block_listed,
