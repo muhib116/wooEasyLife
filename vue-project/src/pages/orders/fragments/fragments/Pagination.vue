@@ -1,114 +1,126 @@
 <template>
     <div class="flex justify-between px-4 mt-2 mb-2">
-        <div>
+        <!-- Search Input -->
+        <div 
+            v-if="!hideSearch" 
+            class="flex gap-1"
+        >
             <Input.Native
                 placeholder="Search customer"
                 class="text-base border px-2 py-1 rounded-sm"
+                v-model="orderFilter.search"
+                @input="debouncedGetOrders"
             />
+            <Button.Primary
+                class="!py-1"
+                @click=""
+            >
+                Search
+            </Button.Primary>
         </div>
 
+        <!-- Pagination Controls -->
         <div class="flex items-center space-x-2 text-sm justify-end">
+            <!-- Per Page Input -->
             <div class="flex items-center gap-2">
-                Per page
+                <span>Per page</span>
                 <Input.Native
                     type="number"
                     class="border px-2 pr-1 py-1 w-14"
                     v-model="orderFilter.per_page"
-                    @input="handleGetOrders"
+                    @input="debouncedGetOrders"
                 />
             </div>
 
             <!-- Total Items -->
             <span>{{ totalRecords }} items</span>
-            
+
             <!-- Pagination Buttons -->
             <div class="flex items-center space-x-1 ml-4">
-                <!-- First Page Button -->
-                <button 
+                <Button.Native
+                    :disabled="isFirstPage"
+                    @onClick="btn => goToPage(1, btn)"
                     class="px-2 py-1 border rounded-sm"
-                    :class="orderFilter.page == 1 ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-blue-600 bg-blue-100 border-blue-300 hover:bg-blue-200'"
-                    :disabled="orderFilter.page == 1"
-                    @click="() => {
-                        orderFilter.page = 1
-                        handleGetOrders()
-                    }"
-                >
-                    «
-                </button>
-                
-                <!-- Previous Page Button -->
-                <button 
-                    class="px-2 py-1  border rounded-sm"
-                    :class="orderFilter.page == 1 ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-blue-600 bg-blue-100 border-blue-300 hover:bg-blue-200'"
-                    :disabled="orderFilter.page == 1"
-                    @click="() => {
-                        if(orderFilter.page > 1){
-                            orderFilter.page --
-                            handleGetOrders()
-                        }
-                    }"
-                >
-                    ‹
-                </button>
-                
-                <!-- Current Page -->
-                <span
-                    class="px-2 py-1 border border-gray-300 rounded-sm"
-                >
-                    {{ orderFilter.page }}
-                </span>
-                
-                <!-- Total Pages -->
+                    :class="isFirstPage ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-blue-600 bg-blue-100 border-blue-300 hover:bg-blue-200'"
+                >«</Button.Native>
+                <Button.Native
+                    :disabled="isFirstPage"
+                    @onClick="goToPreviousPage"
+                    class="px-2 py-1 border rounded-sm"
+                    :class="isFirstPage ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-blue-600 bg-blue-100 border-blue-300 hover:bg-blue-200'"
+                >‹</Button.Native>
                 <span class="text-gray-500">
-                    of {{ orderFilter.per_page ? Math.round(totalRecords / orderFilter.per_page) : '' }}
+                    {{ currentPage }}
                 </span>
-                
-                <!-- Next Page Button -->
-                <button 
+                <span class="text-gray-500">
+                    of {{ totalPages }}
+                </span>
+                <Button.Native
+                    :disabled="isLastPage"
+                    @onClick="goToNextPage"
                     class="px-2 py-1 border rounded-sm"
-                    :class="orderFilter.page == Math.round(totalRecords / orderFilter.per_page) ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-blue-600 bg-blue-100 border-blue-300 hover:bg-blue-200'"
-                    :disabled="orderFilter.page == Math.round(totalRecords / orderFilter.per_page)"
-                    @click="() => {
-                        if(orderFilter.page < Math.round(totalRecords / orderFilter.per_page)){
-                            orderFilter.page ++
-                            handleGetOrders()
-                        }
-                    }"
-                >
-                    ›
-                </button>
-                
-                <!-- Last Page Button -->
-                <button 
+                    :class="isLastPage ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-blue-600 bg-blue-100 border-blue-300 hover:bg-blue-200'"
+                >›</Button.Native>
+                <Button.Native
+                    :disabled="isLastPage"
+                    @onClick="btn => goToPage(totalPages, btn)"
                     class="px-2 py-1 border rounded-sm"
-                    :class="orderFilter.page == Math.round(totalRecords / orderFilter.per_page) ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-blue-600 bg-blue-100 border-blue-300 hover:bg-blue-200'"
-                    :disabled="orderFilter.page == Math.round(totalRecords / orderFilter.per_page)"
-                    @click="() => {
-                        orderFilter.page = Math.round(totalRecords / orderFilter.per_page)
-                        handleGetOrders()
-                    }"
-                >
-                    »
-                </button>
+                    :class="isLastPage ? 'text-gray-400 bg-gray-100 cursor-not-allowed' : 'text-blue-600 bg-blue-100 border-blue-300 hover:bg-blue-200'"
+                >»</Button.Native>
             </div>
-        </div>   
-    </div>   
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
-    import { Input } from '@components'
-    import { inject } from 'vue'
+import { Input, Button } from '@components'
+import { computed, inject, ref } from 'vue'
 
-    const { 
-        totalRecords,
-        orderFilter,
-        getOrders
-    } = inject('useOrders')
+defineProps<{
+    hideSearch?: boolean
+}>()
 
-    let timeoutId;
-    const handleGetOrders = () => {
-        clearTimeout(timeoutId)
+// Inject dependencies
+const { totalRecords, orderFilter, getOrders } = inject('useOrders')
 
-        timeoutId = setTimeout(getOrders, 300)
+// Debounce handler for getting orders
+let timeoutId: any;
+const debouncedGetOrders = () => {
+    orderFilter.value.page = orderFilter.value.page > totalPages.value ? totalPages.value : orderFilter.value.page
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(getOrders, 500)
+}
+
+// Pagination logic
+const currentPage = computed(() =>
+    orderFilter.value.page > totalPages.value ? totalPages.value : orderFilter.value.page
+)
+const totalPages = computed(() =>
+    orderFilter.value.per_page ? Math.ceil(totalRecords.value / orderFilter.value.per_page) : 1
+)
+const isFirstPage = computed(() => orderFilter.value.page <= 1)
+const isLastPage = computed(() => orderFilter.value.page >= totalPages.value)
+
+const goToPage = async (page: number, btn) => {
+    btn.isLoading = true
+    orderFilter.value.page = page
+    await getOrders()
+    btn.isLoading = false
+}
+const goToPreviousPage = async (btn) => {
+    if (!isFirstPage.value) {
+        btn.isLoading = true
+        orderFilter.value.page--
+        await getOrders()
+        btn.isLoading = false
     }
+}
+const goToNextPage = async (btn) => {
+    if (!isLastPage.value) {
+        btn.isLoading = true
+        orderFilter.value.page++
+        await getOrders()
+        btn.isLoading = false
+    }
+}
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-between text-[10px] px-4 my-4">
+    <div v-bind="$attrs" class="flex justify-between text-[10px] px-4 my-4">
         <div class="flex-justify-controller">
             <div class="flex gap-3 items-center">
                 <span 
@@ -25,6 +25,7 @@
                 </template>
             </div>
         </div>
+        <slot></slot>
     </div>
 
     <Modal
@@ -42,10 +43,12 @@
     import {
         Button,
         Icon,
-        Input,
         Modal
     } from '@components'
 
+    defineOptions({
+        inheritAttrs: false
+    })
     
     const {configData} = inject('configData')
     const { 

@@ -77,8 +77,9 @@ class OrderListAPI
         $per_page = intval($request->get_param('per_page'));
         $page     = intval($request->get_param('page'));
         $billing_phone = $request->get_param('billing_phone');
+        $search   = $request->get_param('search'); // Get search parameter
     
-        // Use WooCommerce Order Query to fetch orders with pagination
+        // Use WooCommerce Order Query to fetch orders with pagination and search
         $args = [
             'status'        => $status,
             'limit'         => $per_page,
@@ -88,8 +89,12 @@ class OrderListAPI
             'paginate'      => true, // Enable pagination
         ];
     
-        $query = wc_get_orders($args);
+        // Add search conditions
+        if (!empty($search)) {
+            $args['s'] = $search;
+        }
     
+        $query = wc_get_orders($args);
         if (empty($query->orders)) {
             return rest_ensure_response([
                 'message' => 'No orders found.',
@@ -189,6 +194,7 @@ class OrderListAPI
             'pages'  => $total_pages,
         ], 200);
     }
+    
     
 
     public function get_order_status_with_counts()
