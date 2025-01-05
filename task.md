@@ -34,17 +34,3 @@ plugins update
 tutorial
 help center
 request a feature
-
-
-order source add korte hobe:
-add_action('woocommerce_checkout_update_order_meta', 'auto_detect_order_source', 10, 2);
-
-function auto_detect_order_source($order_id, $data) {
-    if (defined('REST_REQUEST') && REST_REQUEST) {
-        update_post_meta($order_id, '_order_source', 'API');
-    } elseif (is_admin()) {
-        update_post_meta($order_id, '_order_source', 'Admin');
-    } else {
-        update_post_meta($order_id, '_order_source', 'Website');
-    }
-}
