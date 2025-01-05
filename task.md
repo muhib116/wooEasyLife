@@ -8,8 +8,6 @@ alertBox position fixed kore dekhate hobe
 
 Invoice a real courier id bosate hobe
 
-invoice ar header a company info add korte hobe
-
 one click Courier entry
 
 

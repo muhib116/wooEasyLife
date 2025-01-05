@@ -48,15 +48,14 @@ if (!class_exists('WooEasyLife')) :
         {
             global $config_data;
             $config_data = get_option(__PREFIX . 'config');
-
             // Decode the JSON data into an associative array
             $decoded_config_data = is_string($config_data) ? json_decode($config_data, true) : $config_data;
-
+            
             // Ensure it's an array
             if (!is_array($decoded_config_data)) {
                 $decoded_config_data = [];
             }
-
+            
             $config_data = $decoded_config_data;
         }
 
@@ -74,14 +73,18 @@ if (!class_exists('WooEasyLife')) :
 
         public function woo_easy_life_deactivation_hook()
         {
-            if (get_option(__PREFIX.'license') !== false) delete_option(__PREFIX.'license');
-            if (get_option(__PREFIX.'balance') !== false) delete_option(__PREFIX.'balance');
-            if (get_option(__PREFIX.'config') !== false) delete_option(__PREFIX.'config');
+            global $config_data;
 
-            // Remove plugin-specific options
-            if (get_option(__PREFIX.'plugin_installed') !== false) delete_option(__PREFIX.'plugin_installed');
-            if (get_option(__PREFIX.'custom_order_statuses') !== false) delete_option(__PREFIX.'custom_order_statuses');
-            $this->handleDBTable->delete();
+            if($config_data['clear_data_when_deactivate_plugin']){
+                if (get_option(__PREFIX.'license') !== false) delete_option(__PREFIX.'license');
+                if (get_option(__PREFIX.'balance') !== false) delete_option(__PREFIX.'balance');
+                if (get_option(__PREFIX.'config') !== false) delete_option(__PREFIX.'config');
+    
+                // Remove plugin-specific options
+                if (get_option(__PREFIX.'plugin_installed') !== false) delete_option(__PREFIX.'plugin_installed');
+                if (get_option(__PREFIX.'custom_order_statuses') !== false) delete_option(__PREFIX.'custom_order_statuses');
+                $this->handleDBTable->delete();
+            }
         }
 
         public function create_static_statuses()
