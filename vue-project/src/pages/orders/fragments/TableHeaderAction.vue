@@ -32,6 +32,8 @@
         v-model="toggleNewOrder"
         title="Create New Order"
         @close="toggleNewOrder = false"
+        class="max-w-[600px] w-full"
+        hideFooter
     >
         <CreateNewOrder />
     </Modal>
@@ -39,7 +41,7 @@
 
 <script setup lang="ts">
     import { inject, computed, ref } from 'vue'
-    import CreateNewOrder from './CreateNewOrder.vue'
+    import CreateNewOrder from './createNewOrder/Index.vue'
     import {
         Button,
         Icon,
@@ -59,7 +61,7 @@
         showInvoices
     } = inject('useOrders')
 
-    const toggleNewOrder = ref(false)
+    const toggleNewOrder = ref(true)
 
     const actionBtns = computed(() => [
         {

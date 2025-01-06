@@ -19,6 +19,13 @@ class API_Register {
 
         /**
          * API Path
+         * /wp-json/wooeasylife/v1/shipping-methods
+         * method: get
+         */
+        new \WooEasyLife\API\Admin\ShippingMethodsAPI();
+
+        /**
+         * API Path
          * /wp-json/wooeasylife/v1/update-address/{order_id}
          * method: post
          * payload:
@@ -56,5 +63,6 @@ class API_Register {
         new \WooEasyLife\API\Admin\SMSConfigAPI();
         new \WooEasyLife\API\Admin\BlockListAPI();
         new \WooEasyLife\API\Admin\SMSHistoryAPI();
+        new \WooEasyLife\API\Admin\CustomOrderHandleAPI();
     }
 }

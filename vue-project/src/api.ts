@@ -14,6 +14,9 @@ export const localApiBaseURL = `${baseUrl}/wp-json/wooeasylife/v1`
 export const getPaymentMethods = async () => {
     return await axios.get(`${localApiBaseURL}/payment-methods`)
 }
+export const getShippingMethods = async () => {
+    return await axios.get(`${localApiBaseURL}/shipping-methods`)
+}
 export const getOrderList = async (payload: {
     status?: string
     per_page?: number
@@ -206,3 +209,11 @@ export const deleteSMSHistory = async (id:string | number) => {
     return data
 }
 // sms history CRUD end
+
+
+// custom order start
+export const getProducts = async (searchKey?: string) => {
+    const { data } = await axios.get(`${localApiBaseURL}/custom-orders/get-products?search=${searchKey}`)
+    return data
+}
+// custom order end
