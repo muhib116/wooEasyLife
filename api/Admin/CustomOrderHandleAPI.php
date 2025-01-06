@@ -6,8 +6,6 @@ use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_Error;
-use WC_Shipping_Zones;
-use WC_Payment_Gateways;
 
 class CustomOrderHandleAPI extends WP_REST_Controller
 {
@@ -56,11 +54,13 @@ class CustomOrderHandleAPI extends WP_REST_Controller
         $address = $data['address'];
         $payment_method_id = $data['payment_method_id'];
         $shipping_method_id = $data['shipping_method_id'];
-        $order_note = $data['order_note'];
+        $shipping_cost = $data['shipping_cost'];
+        $customer_note = $data['customer_note'];
         $order_status = 'pending';
         $order_source = $data['order_source'];
         $coupon_codes  = $data['coupon_codes'];
-    
+
+
         // Step 1: Initialize the Custom Order
         $order = wc_create_order();
         if (is_wp_error($order)) {
@@ -78,14 +78,14 @@ class CustomOrderHandleAPI extends WP_REST_Controller
         $this->add_billing_and_shipping_details_to_order($order, $address);
     
         // Step 4: Set Payment Method
-        $order->set_payment_method($payment_method_id);
+        $this->add_payment_method_to_order($order, $payment_method_id);
     
         // Step 5: Add Shipping Method
-        $this->add_shipping_method_to_order($order, $shipping_method_id);
+        $this->add_shipping_method_to_order($order, $shipping_method_id, $shipping_cost);
     
-        // Step 6: Add Order Notes
-        if (!empty($order_note)) {
-            $order->add_order_note($order_note, false);
+        // Step 6: Add customer Note
+        if (!empty($customer_note)) {
+            $order->set_customer_note($customer_note);
         }
     
         // Step 7: Set the Order Status
@@ -140,9 +140,10 @@ class CustomOrderHandleAPI extends WP_REST_Controller
     
         // Shipping method
         $shipping_method_id = isset($payload['shipping_method_id']) ? sanitize_text_field($payload['shipping_method_id']) : '';
+        $shipping_cost = isset($payload['shipping_cost']) ? sanitize_text_field($payload['shipping_cost']) : 0;
     
         // Order note
-        $order_note = isset($payload['order_note']) ? sanitize_textarea_field($payload['order_note']) : '';
+        $customer_note = isset($payload['customer_note']) ? sanitize_textarea_field($payload['customer_note']) : '';
     
         // Order source
         $order_source = isset($payload['order_source']) ? sanitize_text_field($payload['order_source']) : 'website';
@@ -157,8 +158,9 @@ class CustomOrderHandleAPI extends WP_REST_Controller
             'products'          => $products,
             'address'           => $address,
             'payment_method_id' => $payment_method_id,
-            'shipping_method_id' => $shipping_method_id,
-            'order_note'        => $order_note,
+            'shipping_method_id'=> $shipping_method_id,
+            'shipping_cost'     => $shipping_cost,
+            'customer_note'        => $customer_note,
             'order_source'      => $order_source,
             'order_status'      => $order_status,
             'coupon_codes'      => $coupon_codes,
@@ -174,29 +176,60 @@ class CustomOrderHandleAPI extends WP_REST_Controller
         }
     }
 
+    private function add_payment_method_to_order($order, $payment_method_id)
+    {
+        // Get the payment gateways
+        $payment_gateways = WC()->payment_gateways->get_available_payment_gateways();
+
+        // Check if the provided payment method exists
+        if (!isset($payment_gateways[$payment_method_id])) {
+            throw new \Exception('Invalid payment method ID.');
+        }
+
+        $payment_gateway = $payment_gateways[$payment_method_id];
+
+        // Set the payment method ID
+        $order->set_payment_method($payment_gateway->id);
+
+        // Set the payment method title
+        $order->set_payment_method_title($payment_gateway->get_title());
+    }
+
     private function add_billing_and_shipping_details_to_order($order, $address) {
         $order->set_address($address, 'billing');
         $order->set_address($address, 'shipping');
     }
 
-    private function add_shipping_method_to_order($order, $shipping_method_id)
+    private function add_shipping_method_to_order($order, $shipping_method_id, $shipping_cost = 0)
     {
+        // Get all available shipping methods
         $shipping_methods = WC()->shipping->get_shipping_methods();
+
+        // Check if the shipping method exists
         $method = $shipping_methods[$shipping_method_id] ?? null;
-    
         if (!$method) {
-            throw new \Exception('Invalid shipping method.');
+            throw new \Exception('Invalid shipping method ID provided.');
         }
-    
-        // Create a shipping item
+
+        // Get the shipping cost, either from the method settings or as provided
+        $calculated_cost = $shipping_cost;
+        if ($calculated_cost == 0) {
+            $calculated_cost = $method->get_instance_option('cost', '0'); // Default to '0' if not set
+        }
+
+        // Create a new shipping item for the order
         $item = new \WC_Order_Item_Shipping();
-        $item->set_method_id($shipping_method_id);
-        $item->set_method_title($method->get_title());
-        $item->set_total($method->get_instance_option('cost', '0')); // Get the cost from the shipping method settings
-    
+        $item->set_method_id($shipping_method_id); // Set the shipping method ID
+        $item->set_method_title($method->get_title()); // Set the shipping method title
+        $item->set_total($calculated_cost); // Set the total shipping cost
+
         // Add the shipping item to the order
         $order->add_item($item);
-    }    
+
+        // Save the shipping item to persist it in the order
+        $item->save();
+    }
+
 
     public function get_products(WP_REST_Request $request)
     {

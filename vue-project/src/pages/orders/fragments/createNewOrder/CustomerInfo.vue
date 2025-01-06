@@ -1,9 +1,4 @@
 <template>
-    <Input.Primary
-        type="date"
-        label="Date"
-        v-model="form.date"
-    />
     <div class="grid grid-cols-2 gap-4">
         <Input.Primary
             label="Customer Name *"

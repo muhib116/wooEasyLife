@@ -35,7 +35,9 @@
         class="max-w-[650px] w-full"
         hideFooter
     >
-        <CreateNewOrder />
+        <CreateNewOrder
+            @close="toggleNewOrder = false"
+        />
     </Modal>
 </template>
 

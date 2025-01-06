@@ -7,20 +7,21 @@ export const useCustomOrder = () => {
     const couponValidationErrorMessage = ref('')
     const appliedCoupon = ref('')
     const couponDiscount = ref(0);
-    const form = ref({
-        date: new Date().toISOString().split('T')[0],
+    const placeHolderData = {
         first_name: '',
         last_name: '',
         address_1: '',
         address_2: '',
         phone: '',
-        order_note: '',
+        customer_note: '',
         created_via: '',
         products: [],
         shippingMethod: {},
         paymentMethod: {},
         coupons: []
-    })
+    }
+
+    const form = ref({...placeHolderData})
     const filteredProducts = computed(() => {
         if(productSearchKey.value){
             return products.value.filter(item => {
@@ -245,14 +246,17 @@ export const useCustomOrder = () => {
                 address,
                 payment_method_id: form.value.paymentMethod.id,
                 shipping_method_id: form.value.shippingMethod.method_id,
-                order_note: form.value.order_note,
+                shipping_cost: form.value.shippingMethod.shipping_cost,
+                customer_note: form.value.customer_note,
                 order_source: form.value.created_via,
                 order_status: '',
                 coupon_codes: coupon_codes
             }
     
             const { data } = await createOrder(payload)
-            console.log(data)
+            if(data.order_id){
+                loadProducts()
+            }
         } catch (err) {
             console.log({err})
         } finally {
