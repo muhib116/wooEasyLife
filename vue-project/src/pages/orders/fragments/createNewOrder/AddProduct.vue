@@ -4,7 +4,7 @@
             <Table.Th>Item</Table.Th>
             <Table.Th>Price</Table.Th>
             <Table.Th>Quantity</Table.Th>
-            <Table.Th>Total</Table.Th>
+            <Table.Th class="text-right">Total</Table.Th>
             <Table.Th>Action</Table.Th>
         </Table.THead>
         <Table.TBody>
@@ -33,33 +33,38 @@
                         label="quantity"
                         type="number"
                         v-model="item.quantity"
-                        class="bg-transparent border w-10 pl-1"
+                        class="bg-transparent border w-10 pl-1 mx-auto"
                         @input="calculateCouponDiscountAmount(form.coupons)"
                     />
                 </Table.Td>
-                <Table.Td>
+                <Table.Td class="text-right">
                     <div class="whitespace-nowrap">
                         <span v-html="item.product.currency_symbol"></span>{{ +(item.product.price) * +(item.quantity) }}
                     </div>
                 </Table.Td>
                 <Table.Td>
                     <Button.Native 
-                        class="hover:text-red-500" title="Remove product"
+                        class="hover:text-red-500 ml-auto" 
+                        title="Remove product"
                         @click="() => {
                             form.products.splice(index, 1)
                             calculateCouponDiscountAmount(form.coupons)
                         }"
                     >
-                        <Icon name="PhX" />
+                        <Icon 
+                            name="PhX" 
+                            weight="bold"
+                            size="20"
+                        />
                     </Button.Native>
                 </Table.Td>
             </Table.Tr>
 
-            <Table.Tr>
+            <Table.Tr class="border-t border-black">
                 <Table.Th colspan="3" class="text-right !font-light">
                     Items Subtotal:	
                 </Table.Th>
-                <Table.Th>
+                <Table.Th class="text-right">
                     <div class="whitespace-nowrap">
                         <span v-html="form.products[0].product.currency_symbol"></span>{{ getItemsTotal }}
                     </div>
@@ -69,7 +74,7 @@
                 <Table.Th colspan="3" class="text-right !font-light">
                     Coupon(s)/Discount:
                 </Table.Th>
-                <Table.Th>
+                <Table.Th class="text-right">
                     <div class="whitespace-nowrap">
                         -<span v-html="form.products[0].product.currency_symbol"></span>{{ couponDiscount }}
                     </div>
@@ -79,7 +84,7 @@
                 <Table.Th colspan="3" class="text-right !font-light">
                     Shipping {{ form.shippingMethod.method_title && `(${form.shippingMethod.method_title})` }}:
                 </Table.Th>
-                <Table.Th>
+                <Table.Th class="text-right">
                     <div class="whitespace-nowrap">
                         <span v-html="form.products[0].product.currency_symbol"></span>
                         {{ form.shippingMethod.shipping_cost || 0 }}
@@ -90,7 +95,7 @@
                 <Table.Th colspan="3" class="text-right !font-light">
                     Order Total:
                 </Table.Th>
-                <Table.Th>
+                <Table.Th class="text-right">
                     <div class="whitespace-nowrap">
                         <span v-html="form.products[0].product.currency_symbol"></span>
                         {{ (getItemsTotal - couponDiscount) + +(form.shippingMethod.shipping_cost || 0) }}
