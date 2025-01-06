@@ -39,8 +39,6 @@ export const useCustomOrder = () => {
             return productItem.product.id === item.id
         })
     
-        console.log(item, { existProduct })
-    
         if (existProduct) {
             existProduct.quantity++
             return
@@ -65,26 +63,64 @@ export const useCustomOrder = () => {
 
             if(data){
                 form.value.coupons.push(data)
-                _applyCoupon(data)
+                _applyCoupon(form.value.coupons)
                 appliedCoupon.value = ''
             }
         } catch({ response }) {
-            couponValidationErrorMessage.value = response.data.message
+            couponValidationErrorMessage.value = response?.data?.message
         } finally {
             btn.isLoading = false
         }
     }
 
-    const _applyCoupon = (data: {
+    const _applyCoupon = (coupons: {
         "discount_type": string,
         "amount": number | string,
         "usage_limit": number,
         "usage_count": number,
         "expiry_date": string
-    }) => {
+    }[]) => {
         //write code here to apply coupon
-        console.log(form.value.coupons, getItemsTotal.value)
-        couponDiscount.value = 150
+        let totalDiscount = 0;
+
+        coupons.forEach(coupon => {
+            const { discount_type, amount, usage_limit, usage_count, expiry_date } = coupon;
+            // Apply discount based on type
+            if (discount_type === "percent") {
+                const discountPercent = parseFloat(amount);
+                if (!isNaN(discountPercent)) {
+                    totalDiscount += (getItemsTotal.value * discountPercent) / 100;
+                } else {
+                    console.warn(`Invalid percentage amount for coupon: ${amount}`);
+                }
+            } else if (discount_type === "fixed_cart") {
+                const discountFixed = parseFloat(amount);
+                if (!isNaN(discountFixed)) {
+                    totalDiscount += Math.min(discountFixed, getItemsTotal.value); // Ensure the discount doesn't exceed the total
+                } else {
+                    console.warn(`Invalid fixed cart amount for coupon: ${amount}`);
+                }
+            } else if (discount_type === "fixed_product") {
+                // Fixed product discounts typically apply per product. Adjust this logic as needed.
+                const discountFixedProduct = parseFloat(amount);
+                if (!isNaN(discountFixedProduct)) {
+                    totalDiscount += Math.min(discountFixedProduct, getItemsTotal.value); // Ensure the discount doesn't exceed the total
+                } else {
+                    console.warn(`Invalid fixed product amount for coupon: ${amount}`);
+                }
+            } else {
+                console.warn(`Unsupported discount type: ${discount_type}`);
+            }
+        });
+        // Ensure discount does not exceed the total
+        totalDiscount = Math.min(totalDiscount, getItemsTotal.value);
+    
+        couponDiscount.value = +totalDiscount.toFixed(2)
+
+        return {
+            totalDiscount: totalDiscount.toFixed(2),
+            discountedTotal: (getItemsTotal.value - totalDiscount).toFixed(2),
+        };
     }
 
     const getItemsTotal = computed(() => {

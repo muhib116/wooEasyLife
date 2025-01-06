@@ -60,10 +60,12 @@
             </Table.Tr>
             <Table.Tr>
                 <Table.Th colspan="3" class="text-right !font-light">
-                    Coupon(s):
+                    Coupon(s)/Discount:
                 </Table.Th>
                 <Table.Th>
-                    -0
+                    <div class="whitespace-nowrap">
+                        -<span v-html="form.products[0].product.currency_symbol"></span>{{ couponDiscount }}
+                    </div>
                 </Table.Th>
             </Table.Tr>
             <Table.Tr>
