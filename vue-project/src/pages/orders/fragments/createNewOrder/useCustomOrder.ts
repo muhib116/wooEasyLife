@@ -92,11 +92,26 @@ export const useCustomOrder = () => {
         "usage_count": number,
         "expiry_date": string
     }[]) => {
+        const calc_discounts_sequentially = coupons[0]?.calc_discounts_sequentially
         //write code here to apply coupon
+        if(calc_discounts_sequentially){
+            _discountsCalculationSequentially(coupons)
+            return
+        }
+        _discountsCalculation(coupons)
+    }
+
+    const _discountsCalculation = (coupons: {
+        "discount_type": string,
+        "amount": number | string,
+        "usage_limit": number,
+        "usage_count": number,
+        "expiry_date": string
+    }[]) => {
         let totalDiscount = 0;
 
         coupons.forEach(coupon => {
-            const { discount_type, amount, usage_limit, usage_count, expiry_date } = coupon;
+            const { discount_type, amount } = coupon;
             // Apply discount based on type
             if (discount_type === "percent") {
                 const discountPercent = parseFloat(amount);
@@ -134,6 +149,64 @@ export const useCustomOrder = () => {
             discountedTotal: (getItemsTotal.value - totalDiscount).toFixed(2),
         };
     }
+    const _discountsCalculationSequentially = (coupons: {
+        "discount_type": string,
+        "amount": number | string,
+        "usage_limit": number,
+        "usage_count": number,
+        "expiry_date": string
+    }[]) => {
+        let remainingTotal = getItemsTotal.value; // Start with the full items total
+        let totalDiscount = 0;
+    
+        // Apply each coupon sequentially
+        coupons.forEach(coupon => {
+            const { discount_type, amount } = coupon;
+    
+            // Skip invalid amounts
+            const discountAmount = parseFloat(amount);
+            if (isNaN(discountAmount)) {
+                console.warn(`Invalid discount amount for coupon: ${amount}`);
+                return;
+            }
+    
+            let appliedDiscount = 0;
+    
+            // Apply discount based on type
+            if (discount_type === "percent") {
+                // Percent discount
+                appliedDiscount = (remainingTotal * discountAmount) / 100;
+            } else if (discount_type === "fixed_cart") {
+                // Fixed cart discount
+                appliedDiscount = Math.min(discountAmount, remainingTotal); // Cannot exceed remaining total
+            } else if (discount_type === "fixed_product") {
+                // Fixed product discount
+                appliedDiscount = Math.min(discountAmount, remainingTotal); // Typically applies per product; adjust logic as needed
+            } else {
+                console.warn(`Unsupported discount type: ${discount_type}`);
+                return;
+            }
+    
+            // Add applied discount to total discount and reduce remaining total
+            totalDiscount += appliedDiscount;
+            remainingTotal -= appliedDiscount;
+    
+            // Ensure remaining total doesn't go below zero
+            remainingTotal = Math.max(remainingTotal, 0);
+        });
+    
+        // Ensure total discount doesn't exceed original items total
+        totalDiscount = Math.min(totalDiscount, getItemsTotal.value);
+    
+        // Update coupon discount value
+        couponDiscount.value = +totalDiscount.toFixed(2);
+    
+        return {
+            totalDiscount: totalDiscount.toFixed(2),
+            discountedTotal: (getItemsTotal.value - totalDiscount).toFixed(2),
+        };
+    };
+    
 
     const getItemsTotal = computed(() => {
         let total_amount = 0

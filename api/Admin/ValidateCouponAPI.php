@@ -106,6 +106,7 @@ class ValidateCouponAPI
                 'message' => 'The coupon is valid and can be applied.',
                 'data'    => [
                     'coupon_code'   => $coupon_code,
+                    'calc_discounts_sequentially' => $this->is_sequential_discounts_enabled(),
                     'discount_type' => $coupon->get_discount_type(),
                     'amount'        => $coupon->get_amount(),
                     'usage_limit'   => $usage_limit,
@@ -120,6 +121,11 @@ class ValidateCouponAPI
                 'message' => 'An unexpected error occurred: ' . $e->getMessage(),
             ], 500);
         }
+    }
+
+    private function is_sequential_discounts_enabled() {
+        $enabled = get_option('woocommerce_calc_discounts_sequentially', 'no');
+        return $enabled === 'yes';
     }
 
     /**

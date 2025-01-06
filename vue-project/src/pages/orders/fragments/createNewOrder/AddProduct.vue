@@ -77,11 +77,12 @@
             </Table.Tr>
             <Table.Tr>
                 <Table.Th colspan="3" class="text-right !font-light">
-                    Shipping (form.shippingMethod.method_title):
+                    Shipping {{ form.shippingMethod.method_title && `(${form.shippingMethod.method_title})` }}:
                 </Table.Th>
                 <Table.Th>
                     <div class="whitespace-nowrap">
-                        <span v-html="form.products[0].product.currency_symbol"></span>{{ form.shippingMethod.shipping_cost }}
+                        <span v-html="form.products[0].product.currency_symbol"></span>
+                        {{ form.shippingMethod.shipping_cost || 0 }}
                     </div>
                 </Table.Th>
             </Table.Tr>
@@ -92,7 +93,7 @@
                 <Table.Th>
                     <div class="whitespace-nowrap">
                         <span v-html="form.products[0].product.currency_symbol"></span>
-                        {{ (getItemsTotal - couponDiscount) + +form.shippingMethod.shipping_cost }}
+                        {{ (getItemsTotal - couponDiscount) + +(form.shippingMethod.shipping_cost || 0) }}
                     </div>
                 </Table.Th>
             </Table.Tr>
