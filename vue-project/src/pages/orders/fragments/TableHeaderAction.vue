@@ -35,9 +35,7 @@
         class="max-w-[650px] w-full"
         hideFooter
     >
-        <CreateNewOrder
-            @close="toggleNewOrder = false"
-        />
+        <CreateNewOrder />
     </Modal>
 </template>
 
@@ -60,10 +58,9 @@
         handlePhoneNumberBlock, 
         handleIPBlock,
         selectedOrders,
-        showInvoices
+        showInvoices,
+        toggleNewOrder
     } = inject('useOrders')
-
-    const toggleNewOrder = ref(false)
 
     const actionBtns = computed(() => [
         {

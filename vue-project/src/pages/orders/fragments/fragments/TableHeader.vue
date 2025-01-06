@@ -10,7 +10,7 @@
                 />
             </label>
         </Table.Th>
-        <Table.Th>Customer</Table.Th>
+        <Table.Th>Order Info</Table.Th>
         <Table.Th>Delivery History</Table.Th>
         <Table.Th>Delivery Partner</Table.Th>
         <Table.Th>Shipping</Table.Th>

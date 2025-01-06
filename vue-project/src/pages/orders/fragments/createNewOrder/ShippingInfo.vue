@@ -2,7 +2,7 @@
     <div class="grid grid-cols-2 gap-4">
         <div v-if="shippingMethods">
             <Select.Primary
-                label="Shipping Method"
+                label="Shipping Method *"
                 :options="shippingMethods.map(item => {
                     return {
                         ...item,
@@ -17,7 +17,7 @@
         </div>
         <div v-if="paymentMethods">
             <Select.Primary
-                label="Payment Method"
+                label="Payment Method *"
                 :options="paymentMethods"
                 returnType="object"
                 v-model="form.paymentMethod"

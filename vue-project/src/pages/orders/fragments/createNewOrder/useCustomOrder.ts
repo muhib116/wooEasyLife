@@ -3,7 +3,7 @@ import { computed, onMounted, ref, inject } from "vue"
 
 export const useCustomOrder = () => 
 {
-    const { getOrders } = inject('useOrders');
+    const { getOrders, toggleNewOrder } = inject('useOrders');
 
     const products = ref([])
     const productSearchKey = ref('')
@@ -227,6 +227,20 @@ export const useCustomOrder = () =>
     })
     
     const handleCreateOrder = async (btn) => {
+        if(
+            form.value.first_name.trim() == '' || 
+            form.value.phone.trim() == '' || 
+            form.value.address_1.trim() == '' || 
+            form.value.created_via.trim() == '' || 
+            !form.value.shippingMethod?.method_id || 
+            !form.value.paymentMethod?.id || 
+            !form.value.products.length
+        ){
+            alert('The fields marked with an asterisk (*) are required and cannot be left empty!');
+            return
+        }
+
+
         try {
             btn.isLoading = true
             const products = form.value.products.map(item => {
@@ -258,7 +272,8 @@ export const useCustomOrder = () =>
     
             const { data } = await createOrder(payload)
             if(data.order_id){
-                getOrders()
+                await getOrders()
+                toggleNewOrder.value = false
             }
         } catch (err) {
             console.log({err})

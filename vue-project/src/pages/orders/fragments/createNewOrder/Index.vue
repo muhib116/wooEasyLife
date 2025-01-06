@@ -10,7 +10,7 @@
         <Coupon />
 
         <Input.Primary
-            label="Customer Note"
+            label="Customer Note (Optional)"
             placeholder="Write customer note."
             v-model="form.customer_note"
         />
@@ -18,10 +18,7 @@
         <div>
             <Button.Primary 
                 class="ml-auto"
-                @onClick="async (btn)=>{
-                    await handleCreateOrder(btn)
-                    $emit('close')
-                }"
+                @onClick="handleCreateOrder"
             >
                 Create Order
             </Button.Primary>

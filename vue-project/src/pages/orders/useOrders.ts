@@ -11,6 +11,8 @@ export const useOrders = () => {
     const selectAll = ref(false)
     const isLoading = ref(false)
     const showInvoices = ref(false)
+    const toggleNewOrder = ref(false)
+
     const orderFilter = ref({
         page: 1,
         per_page: 30,
@@ -148,12 +150,13 @@ export const useOrders = () => {
         selectAll,
         isLoading,
         activeOrder,
+        orderFilter,
         showInvoices,
         totalRecords,
         selectedOrders,
+        toggleNewOrder,
         orderStatusWithCounts,
         getOrders,
-        orderFilter,
         handleIPBlock,
         setActiveOrder,
         setSelectedOrder,
