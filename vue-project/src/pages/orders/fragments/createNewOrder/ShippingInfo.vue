@@ -41,8 +41,15 @@
     onMounted(async () => {
         const { data:_shippingMethods } = await getShippingMethods();
         shippingMethods.value = _shippingMethods
+
+        if(_shippingMethods.length === 1) {
+            form.value.shippingMethod = _shippingMethods[0]
+        }
         
         const { data:_paymentMethods } = await getPaymentMethods();
+        if(_paymentMethods.length === 1) {
+            form.value.paymentMethod = _paymentMethods[0]
+        }
         paymentMethods.value = _paymentMethods
     })
 </script>

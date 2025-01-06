@@ -2,6 +2,7 @@
     <Input.Primary
         type="date"
         label="Date"
+        v-model="form.date"
     />
     <div class="grid grid-cols-2 gap-4">
         <Input.Primary
@@ -25,24 +26,29 @@
             :options="orderSource"
             v-model="selectedSource"
             wrapperClass="flex-1"
+            @change="() => {
+                if(selectedSource == 'other') {
+                    form.created_via = ''
+                }else {
+                    form.created_via = selectedSource
+                }
+            }"
         />
         <Input.Primary
             v-if="selectedSource == 'other'"
             label="Order source name"
             placeholder="Write order source name."
             wrapperClass="flex-1"
+            v-model="form.created_via"
         />
     </div>
 </template>
 
 <script setup lang="ts">
     import { Input, Select, Textarea } from '@components'
-    import { ref } from 'vue'
+    import { ref, inject } from 'vue'
 
     const selectedSource = ref(null)
-    const form = ref({
-        created_via: ''
-    })
     const orderSource = [
         {
             id: 'whats-app',
@@ -65,4 +71,8 @@
             title: 'Other'
         },
     ]
+
+    const {
+        form,
+    } = inject('useCustomOrder')
 </script>

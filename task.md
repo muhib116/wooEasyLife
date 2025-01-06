@@ -21,6 +21,8 @@ SMS Cost calculation dashboard
 
 =============================
 manual order entry
+handle sequential discount
+
 Cash management (Low priority) from funnel liner
 Marketing Tools (Low priority) from funnel liner
 

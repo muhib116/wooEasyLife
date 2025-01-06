@@ -32,7 +32,7 @@
         v-model="toggleNewOrder"
         title="Create New Order"
         @close="toggleNewOrder = false"
-        class="max-w-[600px] w-full"
+        class="max-w-[650px] w-full"
         hideFooter
     >
         <CreateNewOrder />
@@ -61,7 +61,7 @@
         showInvoices
     } = inject('useOrders')
 
-    const toggleNewOrder = ref(true)
+    const toggleNewOrder = ref(false)
 
     const actionBtns = computed(() => [
         {

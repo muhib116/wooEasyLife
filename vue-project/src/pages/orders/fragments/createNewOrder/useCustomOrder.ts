@@ -8,6 +8,8 @@ export const useCustomOrder = () => {
     const appliedCoupon = ref('')
     const couponDiscount = ref(0);
     const form = ref({
+        date: new Date().toISOString().split('T')[0],
+        created_via: '',
         products: [],
         shippingMethod: {},
         paymentMethod: {},
