@@ -6,6 +6,7 @@ export const useCustomOrder = () => {
     const productSearchKey = ref('')
     const couponValidationErrorMessage = ref('')
     const appliedCoupon = ref('')
+    const couponDiscount = ref(0);
     const form = ref({
         products: [],
         coupons: []
@@ -82,8 +83,18 @@ export const useCustomOrder = () => {
         "expiry_date": string
     }) => {
         //write code here to apply coupon
-        console.log(form.value.coupons)
+        console.log(form.value.coupons, getItemsTotal.value)
+        couponDiscount.value = 150
     }
+
+    const getItemsTotal = computed(() => {
+        let total_amount = 0
+        form.value.products.forEach(item => {
+            total_amount += (+item.product.price * +item.quantity)
+        })
+
+        return total_amount
+    })
     
 
     onMounted(() => {
@@ -95,10 +106,12 @@ export const useCustomOrder = () => {
         form,
         products,
         isLoading,
+        getItemsTotal,
         appliedCoupon,
-        couponValidationErrorMessage,
-        filteredProducts,
+        couponDiscount,
         productSearchKey,
+        filteredProducts,
+        couponValidationErrorMessage,
         loadProducts,
         handleCouponValidation,
         addProductToForm,

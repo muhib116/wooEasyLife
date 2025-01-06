@@ -1,36 +1,84 @@
 <template>
+    <Table.Table v-if="form.products?.length">
+        <Table.THead>
+            <Table.Th>Item</Table.Th>
+            <Table.Th>Price</Table.Th>
+            <Table.Th>Quantity</Table.Th>
+            <Table.Th>Total</Table.Th>
+            <Table.Th>Action</Table.Th>
+        </Table.THead>
+        <Table.TBody>
+            <Table.Tr
+                v-for="(item, index) in form.products"
+                :key="index"
+            >
+                <Table.Td>
+                    <div class="flex gap-4 items-center">
+                        <img
+                            :src="item.product.image"
+                            class="size-8"
+                        />
+                        <p>
+                            #{{ item.product.id }} {{ item.product.name }}
+                        </p>
+                    </div>
+                </Table.Td>
+                <Table.Td>
+                    <div class="whitespace-nowrap">
+                        <span v-html="item.product.currency_symbol"></span>{{ item.product.price }}
+                    </div>
+                </Table.Td>
+                <Table.Td>
+                    <Input.Native
+                        label="quantity"
+                        type="number"
+                        v-model="item.quantity"
+                        class="bg-transparent border w-10 pl-1"
+                    />
+                </Table.Td>
+                <Table.Td>
+                    <div class="whitespace-nowrap">
+                        <span v-html="item.product.currency_symbol"></span>{{ +(item.product.price) * +(item.quantity) }}
+                    </div>
+                </Table.Td>
+                <Table.Td>
+                    <Button.Native class="hover:text-red-500" title="Remove product">
+                        <Icon name="PhX" />
+                    </Button.Native>
+                </Table.Td>
+            </Table.Tr>
 
-    <div class="space-y-4">
-        <div
-            v-for="(item, index) in form.products"
-            :key="index"
-            class="flex items-center justify-between p-4 border rounded-sm"
-        >
-            <div class="flex gap-4 items-center">
-                <img
-                    :src="item.product.image"
-                    class="size-8"
-                />
-                <p>
-                    #{{ item.product.id }} {{ item.product.name }}
-                </p>
-            </div>
+            <Table.Tr>
+                <Table.Th colspan="3" class="text-right !font-light">
+                    Items Subtotal:	
+                </Table.Th>
+                <Table.Th>
+                    <div class="whitespace-nowrap">
+                        <span v-html="form.products[0].product.currency_symbol"></span>{{ getItemsTotal }}
+                    </div>
+                </Table.Th>
+            </Table.Tr>
+            <Table.Tr>
+                <Table.Th colspan="3" class="text-right !font-light">
+                    Coupon(s):
+                </Table.Th>
+                <Table.Th>
+                    -0
+                </Table.Th>
+            </Table.Tr>
+            <Table.Tr>
+                <Table.Th colspan="3" class="text-right !font-light">
+                    Order Total:
+                </Table.Th>
+                <Table.Th>
+                    <div class="whitespace-nowrap">
+                        <span v-html="form.products[0].product.currency_symbol"></span>{{ getItemsTotal - couponDiscount }}
+                    </div>
+                </Table.Th>
+            </Table.Tr>
 
-            <div class="flex gap-2 items-center">
-                <Input.Native
-                    label="quantity"
-                    type="number"
-                    v-model="item.quantity"
-                    class="bg-transparent border w-10 pl-1"
-                />
-
-                <Button.Native class="hover:text-red-500" title="Remove product">
-                    <Icon name="PhX" />
-                </Button.Native>
-            </div>
-        </div>
-    </div>
-
+        </Table.TBody>
+    </Table.Table>
 
 
     <div v-click-outside="() => toggleProductList = false" >
@@ -83,14 +131,18 @@
 </template>
 
 <script setup lang="ts">
-    import { Input, Button, Icon } from '@components'
+    import { Input, Button, Icon, Table } from '@components'
     import { inject, ref } from 'vue'
 
     const toggleProductList = ref(false)
     const {
         form,
+        getItemsTotal,
+        couponDiscount,
         filteredProducts,
         productSearchKey,
-        addProductToForm
+        addProductToForm,
     } = inject('useCustomOrder')
+
+    const { configData } = inject('configData')
 </script>
