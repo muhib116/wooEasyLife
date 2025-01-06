@@ -38,6 +38,7 @@
                         class="hover:text-red-500"
                         @click="() => {
                             form.coupons.splice(index, 1)
+                            calculateCouponDiscountAmount(form.coupons)
                         }"
                     >
                         <Icon
@@ -59,6 +60,7 @@
         form,
         appliedCoupon,
         handleCouponValidation,
-        couponValidationErrorMessage
+        couponValidationErrorMessage,
+        calculateCouponDiscountAmount
     } = inject('useCustomOrder')
 </script>

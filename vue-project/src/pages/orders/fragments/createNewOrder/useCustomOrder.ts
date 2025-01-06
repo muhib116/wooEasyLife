@@ -48,6 +48,8 @@ export const useCustomOrder = () => {
             product: item,
             quantity: 1
         })
+        
+        calculateCouponDiscountAmount(form.value.coupons)
     }
 
     const handleCouponValidation = async (btn) => {
@@ -55,6 +57,12 @@ export const useCustomOrder = () => {
             couponValidationErrorMessage.value = 'Coupon code cannot be empty.'
             return
         }
+        if(form.value.coupons.find(item => item.coupon_code == appliedCoupon.value)) {
+            couponValidationErrorMessage.value = 'Coupon code already applied.'
+            appliedCoupon.value = ''
+            return
+        }
+
         try {
             btn.isLoading = true
             const { data } = await validateCoupon({
@@ -63,7 +71,7 @@ export const useCustomOrder = () => {
 
             if(data){
                 form.value.coupons.push(data)
-                _applyCoupon(form.value.coupons)
+                calculateCouponDiscountAmount(form.value.coupons)
                 appliedCoupon.value = ''
             }
         } catch({ response }) {
@@ -73,7 +81,7 @@ export const useCustomOrder = () => {
         }
     }
 
-    const _applyCoupon = (coupons: {
+    const calculateCouponDiscountAmount = (coupons: {
         "discount_type": string,
         "amount": number | string,
         "usage_limit": number,
@@ -151,5 +159,6 @@ export const useCustomOrder = () => {
         loadProducts,
         handleCouponValidation,
         addProductToForm,
+        calculateCouponDiscountAmount,
     }
 }

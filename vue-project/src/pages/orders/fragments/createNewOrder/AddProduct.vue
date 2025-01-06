@@ -34,6 +34,7 @@
                         type="number"
                         v-model="item.quantity"
                         class="bg-transparent border w-10 pl-1"
+                        @input="calculateCouponDiscountAmount(form.coupons)"
                     />
                 </Table.Td>
                 <Table.Td>
@@ -42,7 +43,13 @@
                     </div>
                 </Table.Td>
                 <Table.Td>
-                    <Button.Native class="hover:text-red-500" title="Remove product">
+                    <Button.Native 
+                        class="hover:text-red-500" title="Remove product"
+                        @click="() => {
+                            form.products.splice(index, 1)
+                            calculateCouponDiscountAmount(form.coupons)
+                        }"
+                    >
                         <Icon name="PhX" />
                     </Button.Native>
                 </Table.Td>
@@ -144,6 +151,7 @@
         filteredProducts,
         productSearchKey,
         addProductToForm,
+        calculateCouponDiscountAmount,
     } = inject('useCustomOrder')
 
     const { configData } = inject('configData')
