@@ -20,9 +20,9 @@
                 class="ml-auto"
                 @onClick="async (btn)=>{
                     await handleCreateOrder(btn)
+                    $emit('close')
                 }"
             >
-                <!-- $emit('close') -->
                 Create Order
             </Button.Primary>
         </div>

@@ -17,9 +17,24 @@
             @click="setSelectedOrder(order)"  
         >
             <div
+                class="flex gap-2"
+            >
+                <span 
+                    class="px-1 bg-gray-500 text-white capitalize rounded-sm text"
+                    title="Order Id"
+                >
+                    #{{ order.id }}
+                </span>
+                <span 
+                    class="px-1 bg-sky-500 text-white capitalize rounded-sm text"
+                    title="Order source"
+                >
+                    {{ order.created_via.replace('-', ' ') }}
+                </span>
+            </div>
+            <div
                 class="flex gap-1 font-semibold"
             >
-                #{{ order.id }}
                 {{ order.billing_address.first_name }}
                 {{ order.billing_address.last_name }}
                 <a 
@@ -51,7 +66,6 @@
                 </p>
             </div>
 
-
             <div class="flex gap-2">
                 <span
                     v-if="order.ip_block_listed"
@@ -80,17 +94,35 @@
                 v-if="order?.customer_report"
                 class="group whitespace-nowrap"
             >
-                <div class="flex gap-2 text-green-600">
-                    🎉 Confirm order: 
+                <div 
+                    class="flex gap-2"
+                    title="Total order"
+                >
+                    📦 Total: 
+                    <strong>{{ order.customer_report?.total_order || 0 }}</strong>
+                </div>
+                <div 
+                    class="flex gap-2 text-green-600"
+                    title="Confirmed order"
+                >
+                    🎉 Confirmed: 
                     <strong>{{ order.customer_report?.confirmed || 0 }}</strong>
                 </div>
-                <div class="flex gap-2 text-red-600">
-                    ❌ Cancel order: 
+                <div 
+                    class="flex gap-2 text-red-600"
+                    title="Canceled order"
+                >
+                    ❌ Canceled: 
                     <strong>{{ (order.customer_report?.total_order - order.customer_report?.confirmed) || 0 }}</strong>
                 </div>
-                <div class="flex gap-2 text-sky-600">
-                    ✅ Success Rate:
-                    <strong>{{ order.customer_report?.success_rate || '0%' }}</strong>
+                <div 
+                    class="flex gap-2 flex-wrap text-sky-600"
+                    title="Success Rate"
+                >
+                    ✅ Rate:
+                    <strong class="truncate block">
+                        {{ order.customer_report?.success_rate || '0%' }}
+                    </strong>
                 </div>
                 <button
                     class="opacity-0 group-hover:opacity-100 text-white bg-orange-500 shadow mt-1 rounded-sm px-2"
@@ -116,23 +148,6 @@
             <span class="font-medium text-sky-500" title="Courier Status">
                 📦 In Review
             </span>
-        </Table.Td>
-        <Table.Td
-            @click="setSelectedOrder(order)"  
-            class="whitespace-nowrap" 
-        >
-            <button class="relative order-status capitalize px-3 py-1" :class="`status-${order.status}`">
-                {{ order.status=='processing' ? 'New Order' : order.status.replaceAll('-', ' ') }}
-
-                <span 
-                    v-if="order.total_order_per_customer_for_current_order_status > 1"
-                    title="Multiple order place"
-                    class="cursor-pointer absolute -top-2 right-0 w-5 bg-red-500 aspect-square border-none text-white rounded-full text-[10px] hover:scale-110 shadow duration-300"
-                    @click="toggleMultiOrderModel = true"
-                >
-                    {{ order.total_order_per_customer_for_current_order_status }}
-                </span>
-            </button>
         </Table.Td>
         <Table.Td
             @click="setSelectedOrder(order)"  
@@ -169,6 +184,23 @@
                 <br/>
                 🎟️ Coupons: {{ order.applied_coupons.join(', ') || 'n/a' }}
             </div>
+        </Table.Td>
+        <Table.Td
+            @click="setSelectedOrder(order)"  
+            class="whitespace-nowrap" 
+        >
+            <button class="relative order-status capitalize px-3 py-1" :class="`status-${order.status}`">
+                {{ order.status=='processing' ? 'New Order' : order.status.replaceAll('-', ' ') }}
+
+                <span 
+                    v-if="order.total_order_per_customer_for_current_order_status > 1"
+                    title="Multiple order place"
+                    class="cursor-pointer absolute -top-2 right-0 w-5 bg-red-500 aspect-square border-none text-white rounded-full text-[10px] hover:scale-110 shadow duration-300"
+                    @click="toggleMultiOrderModel = true"
+                >
+                    {{ order.total_order_per_customer_for_current_order_status }}
+                </span>
+            </button>
         </Table.Td>
         <Table.Td>
             <button

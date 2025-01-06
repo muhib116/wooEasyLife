@@ -56,7 +56,7 @@ class CustomOrderHandleAPI extends WP_REST_Controller
         $shipping_method_id = $data['shipping_method_id'];
         $shipping_cost = $data['shipping_cost'];
         $customer_note = $data['customer_note'];
-        $order_status = 'pending';
+        $order_status = 'confirmed';
         $order_source = $data['order_source'];
         $coupon_codes  = $data['coupon_codes'];
 
@@ -106,10 +106,12 @@ class CustomOrderHandleAPI extends WP_REST_Controller
 
         $order_id = $order->get_id(); // Retrieve the new order ID.
         storeFraudDataWhenPlaceOrder($order_id);
-        
+
         return new WP_REST_Response([
             'status' => 'success',
-            'order_id' => $order_id,
+            'data' => [
+                "order_id" => $order_id
+            ]
         ], 200);
     }
     

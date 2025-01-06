@@ -172,7 +172,7 @@ function get_block_data_by_type($value, $type = 'phone_number') {
     }
 
     $query = $wpdb->prepare(
-        "SELECT * FROM {$table_name} WHERE type = %s AND ip_or_phone = %s",
+        "SELECT * FROM {$table_name} WHERE type = %s AND REPLACE(REPLACE(REPLACE(ip_or_phone, '+880', '0'), '-', ''), ' ', '') = %s",
         $type,
         $value
     );
@@ -235,4 +235,16 @@ function _storeFraudData($fraud_data)
 {
     $instance = new \WooEasyLife\CRUD\FraudCustomerTable();
     $instance->create_or_update($fraud_data);
+}
+
+function normalize_phone_number($phone) {
+    // Remove all non-digit characters
+    $normalized = preg_replace('/\D/', '', $phone);
+
+    // Check if the number starts with the country code +880 and replace it with 0
+    if (strpos($normalized, '880') === 0) {
+        $normalized = '0' . substr($normalized, 3); // Remove '880' and prepend '0'
+    }
+
+    return $normalized;
 }

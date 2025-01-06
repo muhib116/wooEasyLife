@@ -123,17 +123,16 @@ class OrderListAPI
             $table_name = $wpdb->prefix . __PREFIX . 'fraud_customers';
             $_billing_phone = $order->get_billing_phone();
             $fraud_data = $wpdb->get_row(
-                $wpdb->prepare("SELECT report FROM $table_name WHERE customer_id = %s", $_billing_phone),
+                $wpdb->prepare("SELECT report FROM $table_name WHERE customer_id = %s", normalize_phone_number($_billing_phone)),
                 ARRAY_A
             );
     
             $ip_block_listed = get_block_data_by_type($customer_ip, 'ip');
-            $phone_block_listed = get_block_data_by_type($_billing_phone, 'phone_number');
+            $phone_block_listed = get_block_data_by_type(normalize_phone_number($_billing_phone), 'phone_number');
             $discount_total = $order->get_discount_total(); // Total discount amount
             $discount_tax = $order->get_discount_tax(); // Discount tax, if any
             $applied_coupons = $order->get_coupon_codes(); // Array of coupon codes
             $order_notes = get_order_notes($order);
-            $order_source = $order->get_meta('_order_source', true);
             $created_via = $order->get_meta('_created_via', true);
 
             $data[] = [

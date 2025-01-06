@@ -1,7 +1,10 @@
 import { createOrder, getProducts, validateCoupon } from "@/api"
-import { computed, onMounted, ref } from "vue"
+import { computed, onMounted, ref, inject } from "vue"
 
-export const useCustomOrder = () => {
+export const useCustomOrder = () => 
+{
+    const { getOrders } = inject('useOrders');
+
     const products = ref([])
     const productSearchKey = ref('')
     const couponValidationErrorMessage = ref('')
@@ -255,7 +258,7 @@ export const useCustomOrder = () => {
     
             const { data } = await createOrder(payload)
             if(data.order_id){
-                loadProducts()
+                getOrders()
             }
         } catch (err) {
             console.log({err})
