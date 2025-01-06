@@ -12,7 +12,7 @@
                 returnType="object"
                 itemValue="title"
                 itemKey="method_id"
-                v-model="selectedShippingMethod"
+                v-model="form.shippingMethod"
             />
         </div>
         <div v-if="paymentMethods">
@@ -20,22 +20,24 @@
                 label="Payment Method"
                 :options="paymentMethods"
                 returnType="object"
-                v-model="selectedPaymentMethod"
+                v-model="form.paymentMethod"
             />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { Input, Select, Textarea, Icon } from '@components'
-    import { ref, onMounted } from 'vue'
+    import { Select } from '@components'
+    import { ref, onMounted, inject } from 'vue'
     import { getPaymentMethods, getShippingMethods } from '@/api'
     
     const shippingMethods = ref(null)
     const paymentMethods  = ref(null)
-    const selectedShippingMethod = ref(null)
-    const selectedPaymentMethod  = ref(null)
     
+    const {
+        form
+    } = inject('useCustomOrder')
+
     onMounted(async () => {
         const { data:_shippingMethods } = await getShippingMethods();
         shippingMethods.value = _shippingMethods

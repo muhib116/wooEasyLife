@@ -9,6 +9,8 @@ export const useCustomOrder = () => {
     const couponDiscount = ref(0);
     const form = ref({
         products: [],
+        shippingMethod: {},
+        paymentMethod: {},
         coupons: []
     })
     const filteredProducts = computed(() => {
@@ -48,7 +50,7 @@ export const useCustomOrder = () => {
             product: item,
             quantity: 1
         })
-        
+
         calculateCouponDiscountAmount(form.value.coupons)
     }
 
