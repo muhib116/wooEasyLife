@@ -109,8 +109,12 @@
 
     <div v-click-outside="() => toggleProductList = false" >
         <Button.Primary
+            class="!bg-orange-500"
             @click="toggleProductList = true"
         >
+            <Icon
+                name="PhPlus"
+            />
             Add Product
         </Button.Primary>
         <div v-if="toggleProductList" class="border border-gray-200 p-4 bg-gray-50 z-40 w-full mt-1 relative">

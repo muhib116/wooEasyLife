@@ -8,12 +8,27 @@
         <ShippingInfo />
         <AddProduct />
         <Coupon />
+
+        <Input.Primary
+            label="Order Note"
+            placeholder="Write order note."
+            v-model="form.order_note"
+        />
+
+        <div>
+            <Button.Primary 
+                class="ml-auto"
+                @onClick="handleCreateOrder"
+            >
+                Create Order
+            </Button.Primary>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
     import { provide } from 'vue'
-    import { Loader } from '@components'
+    import { Loader, Input, Button } from '@components'
     import CustomerInfo from './CustomerInfo.vue'
     import ShippingInfo from './ShippingInfo.vue'
     import AddProduct from './AddProduct.vue'
@@ -22,6 +37,8 @@
 
     const _useCustomOrder = useCustomOrder()
     const {
+        form,
+        handleCreateOrder,
         isLoading
     } = _useCustomOrder
 

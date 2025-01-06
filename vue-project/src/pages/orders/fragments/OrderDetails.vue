@@ -28,7 +28,7 @@
                 </span> 
                 {{ activeOrder.billing_address?.phone }}
             </h4>
-            <h4>
+            <h4 v-if="activeOrder.billing_address?.email">
                 <span style="font-weight: bold;">
                     Email:
                 </span> 

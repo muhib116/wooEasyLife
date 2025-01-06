@@ -8,16 +8,19 @@
         <Input.Primary
             label="Customer Name *"
             placeholder="Write customer name."
+            v-model="form.first_name"
         />
         <Input.Primary
             label="Customer Phone Number *"
             placeholder="Write valid phone number."
+            v-model="form.phone"
         />
     </div>
 
     <Textarea.Native
         label="Customer Address *"
         placeholder="Write customer address."
+        v-model="form.address_1"
     />
 
     <div class="flex gap-4">

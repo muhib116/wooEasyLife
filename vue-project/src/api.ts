@@ -222,4 +222,8 @@ export const getProducts = async (searchKey?: string) => {
     const { data } = await axios.get(`${localApiBaseURL}/custom-orders/get-products?search=${searchKey}`)
     return data
 }
+export const createOrder = async (payload) => {
+    const { data } = await axios.post(`${localApiBaseURL}/create-custom-order`, payload)
+    return data
+}
 // custom order end

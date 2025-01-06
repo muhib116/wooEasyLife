@@ -1,4 +1,4 @@
-import { getProducts, validateCoupon } from "@/api"
+import { createOrder, getProducts, validateCoupon } from "@/api"
 import { computed, onMounted, ref } from "vue"
 
 export const useCustomOrder = () => {
@@ -9,6 +9,12 @@ export const useCustomOrder = () => {
     const couponDiscount = ref(0);
     const form = ref({
         date: new Date().toISOString().split('T')[0],
+        first_name: '',
+        last_name: '',
+        address_1: '',
+        address_2: '',
+        phone: '',
+        order_note: '',
         created_via: '',
         products: [],
         shippingMethod: {},
@@ -207,7 +213,6 @@ export const useCustomOrder = () => {
         };
     };
     
-
     const getItemsTotal = computed(() => {
         let total_amount = 0
         form.value.products.forEach(item => {
@@ -217,6 +222,43 @@ export const useCustomOrder = () => {
         return total_amount
     })
     
+    const handleCreateOrder = async (btn) => {
+        try {
+            btn.isLoading = true
+            const products = form.value.products.map(item => {
+                return {
+                    id: item.product.id,
+                    quantity: item.quantity
+                }
+            })
+            const address = [
+                {first_name: form.value.first_name},
+                {last_name: form.value.last_name},
+                {address_1: form.value.address_1},
+                {address_2: form.value.address_2},
+                {phone: form.value.phone}
+            ]
+            const coupon_codes = form.value.coupons.map(item => item.coupon_code)
+    
+            const payload = {
+                products: products,
+                address,
+                payment_method_id: form.value.paymentMethod.id,
+                shipping_method_id: form.value.shippingMethod.method_id,
+                order_note: form.value.order_note,
+                order_source: form.value.created_via,
+                order_status: '',
+                coupon_codes: coupon_codes
+            }
+    
+            const { data } = await createOrder(payload)
+            console.log(data)
+        } catch (err) {
+            console.log({err})
+        } finally {
+            btn.isLoading = false
+        }
+    }
 
     onMounted(() => {
         if(!products.value.length){
@@ -233,6 +275,7 @@ export const useCustomOrder = () => {
         productSearchKey,
         filteredProducts,
         couponValidationErrorMessage,
+        handleCreateOrder,
         loadProducts,
         handleCouponValidation,
         addProductToForm,
