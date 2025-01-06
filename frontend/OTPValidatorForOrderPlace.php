@@ -15,7 +15,7 @@ class OTPValidatorForOrderPlace
         add_filter('woocommerce_checkout_order_button_text', [$this, 'change_order_button_text'], 15);
         add_filter('woocommerce_order_button_text', [$this, 'change_order_button_text'], 15);
         add_action('woocommerce_after_checkout_form', [$this, 'pushPopupTemplateToAfterCheckoutForm'], 15);
-        add_action('woocommerce_checkout_order_processed', [$this, 'storeFraudDataWhenPlaceOrder']);
+        add_action('woocommerce_checkout_order_processed', 'storeFraudDataWhenPlaceOrder');
     }
 
     public function change_order_button_text($text)
@@ -61,42 +61,5 @@ class OTPValidatorForOrderPlace
         if ($place_order_otp_verification) {
             include_once plugin_dir_path(__DIR__) . 'includes/checkoutPage/CheckOutOtpPopup.php';
         }
-    }
-
-    public function storeFraudDataWhenPlaceOrder($order_id)
-    {
-        $order = wc_get_order($order_id);
-        if (!$order) {
-            error_log("Order not found for ID: $order_id");
-            return; // Bail if the order doesn't exist
-        }
-
-        // Extract order details
-        $billing_phone = $order->get_billing_phone();
-
-        // Handle fraud data
-        $fraud_data = getCustomerFraudData($billing_phone);
-
-        if (is_wp_error($fraud_data)) {
-            wc_add_notice(__('We encountered an issue while processing your order. Please try again.', 'your-textdomain'), 'error');
-            return;
-        }
-
-        try {
-            $this->storeFraudData([
-                "customer_id" => $billing_phone,
-                "report" => $fraud_data
-            ]);
-            // $customer_success_rate = $fraud_data[0]['report']['success_rate'] ?? 'n/a';
-        } catch (\Exception $e) {
-            error_log('Error in FraudCustomerTable::create: ' . $e->getMessage());
-            return; // Bail if fraud data storage fails
-        }
-    }
-
-    private function storeFraudData($fraud_data)
-    {
-        $instance = new \WooEasyLife\CRUD\FraudCustomerTable();
-        $instance->create_or_update($fraud_data);
     }
 }

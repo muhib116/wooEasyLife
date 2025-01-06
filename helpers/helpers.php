@@ -204,3 +204,35 @@ function get_total_orders_by_billing_phone_and_status($order) {
 
     return count($orders); // Total orders matching criteria
 }
+
+function storeFraudDataWhenPlaceOrder($order_id)
+{
+    $order = wc_get_order($order_id);
+    if (!$order) {
+        error_log("Order not found for ID: $order_id");
+        return; // Bail if the order doesn't exist
+    }
+
+    // Extract order details
+    $billing_phone = $order->get_billing_phone();
+
+    // Handle fraud data
+    $fraud_data = getCustomerFraudData($billing_phone);
+
+    try {
+        _storeFraudData([
+            "customer_id" => $billing_phone,
+            "report" => $fraud_data
+        ]);
+        // $customer_success_rate = $fraud_data[0]['report']['success_rate'] ?? 'n/a';
+    } catch (\Exception $e) {
+        error_log('Error in FraudCustomerTable::create: ' . $e->getMessage());
+        return; // Bail if fraud data storage fails
+    }
+}
+
+function _storeFraudData($fraud_data)
+{
+    $instance = new \WooEasyLife\CRUD\FraudCustomerTable();
+    $instance->create_or_update($fraud_data);
+}

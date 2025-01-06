@@ -8,6 +8,8 @@ Invoice a real courier id bosate hobe
 
 one click Courier entry
 
+SMS ta amader api throute korte hobe:->helper.php: send_sms()
+
 
 Dashboard:
 =========================
@@ -23,7 +25,7 @@ SMS Cost calculation dashboard
 ✅ manual order entry
 ✅ handle sequential discount
 order create form validation
-froud history entry
+✅ froud history entry
 
 Cash management (Low priority) from funnel liner
 Marketing Tools (Low priority) from funnel liner

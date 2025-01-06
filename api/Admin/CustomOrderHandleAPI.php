@@ -67,7 +67,6 @@ class CustomOrderHandleAPI extends WP_REST_Controller
             return new WP_Error('order_creation_failed', 'Failed to create order.', ['status' => 500]);
         }
     
-        $order_id = $order->get_id(); // Retrieve the new order ID.
     
         // Step 2: Add Products to the Order
         foreach ($data['products'] as $item) {
@@ -104,10 +103,13 @@ class CustomOrderHandleAPI extends WP_REST_Controller
     
         // Step 10: Save the Order
         $order->save();
-    
+
+        $order_id = $order->get_id(); // Retrieve the new order ID.
+        storeFraudDataWhenPlaceOrder($order_id);
+        
         return new WP_REST_Response([
             'status' => 'success',
-            'order_id' => $order->get_id(),
+            'order_id' => $order_id,
         ], 200);
     }
     
