@@ -1,11 +1,14 @@
-import { getProducts } from "@/api"
+import { getProducts, validateCoupon } from "@/api"
 import { computed, onMounted, ref } from "vue"
 
 export const useCustomOrder = () => {
     const products = ref([])
     const productSearchKey = ref('')
+    const couponValidationErrorMessage = ref('')
+    const appliedCoupon = ref('')
     const form = ref({
-        products: []
+        products: [],
+        coupons: []
     })
     const filteredProducts = computed(() => {
         if(productSearchKey.value){
@@ -47,6 +50,40 @@ export const useCustomOrder = () => {
             quantity: 1
         })
     }
+
+    const handleCouponValidation = async (btn) => {
+        if(appliedCoupon.value == '') {
+            couponValidationErrorMessage.value = 'Coupon code cannot be empty.'
+            return
+        }
+        try {
+            btn.isLoading = true
+            const { data } = await validateCoupon({
+                coupon_code: appliedCoupon.value
+            })
+
+            if(data){
+                form.value.coupons.push(data)
+                _applyCoupon(data)
+                appliedCoupon.value = ''
+            }
+        } catch({ response }) {
+            couponValidationErrorMessage.value = response.data.message
+        } finally {
+            btn.isLoading = false
+        }
+    }
+
+    const _applyCoupon = (data: {
+        "discount_type": string,
+        "amount": number | string,
+        "usage_limit": number,
+        "usage_count": number,
+        "expiry_date": string
+    }) => {
+        //write code here to apply coupon
+        console.log(form.value.coupons)
+    }
     
 
     onMounted(() => {
@@ -58,9 +95,12 @@ export const useCustomOrder = () => {
         form,
         products,
         isLoading,
+        appliedCoupon,
+        couponValidationErrorMessage,
         filteredProducts,
         productSearchKey,
         loadProducts,
+        handleCouponValidation,
         addProductToForm,
     }
 }

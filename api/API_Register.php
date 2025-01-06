@@ -26,6 +26,13 @@ class API_Register {
 
         /**
          * API Path
+         * /wp-json/wooeasylife/v1/validate-coupon
+         * method: get
+         */
+        new \WooEasyLife\API\Admin\ValidateCouponAPI();
+
+        /**
+         * API Path
          * /wp-json/wooeasylife/v1/update-address/{order_id}
          * method: post
          * payload:

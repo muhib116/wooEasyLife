@@ -7,16 +7,18 @@
         <CustomerInfo />
         <ShippingInfo />
         <AddProduct />
+        <Coupon />
     </div>
 </template>
 
 <script setup lang="ts">
+    import { provide } from 'vue'
+    import { Loader } from '@components'
     import CustomerInfo from './CustomerInfo.vue'
     import ShippingInfo from './ShippingInfo.vue'
     import AddProduct from './AddProduct.vue'
+    import Coupon from './Coupon.vue'
     import { useCustomOrder } from './useCustomOrder'
-    import { provide } from 'vue'
-    import { Loader } from '@components'
 
     const _useCustomOrder = useCustomOrder()
     const {

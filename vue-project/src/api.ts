@@ -17,6 +17,12 @@ export const getPaymentMethods = async () => {
 export const getShippingMethods = async () => {
     return await axios.get(`${localApiBaseURL}/shipping-methods`)
 }
+export const validateCoupon = async (payload: {
+    coupon_code: string
+  }) => {
+    const { data } = await axios.post(`${localApiBaseURL}/validate-coupon`, payload)
+    return data
+}
 export const getOrderList = async (payload: {
     status?: string
     per_page?: number
