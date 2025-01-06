@@ -24,7 +24,7 @@ SMS Cost calculation dashboard
 =============================
 ✅ manual order entry
 ✅ handle sequential discount
-order create form validation
+✅ order create form validation
 ✅ froud history entry
 
 Cash management (Low priority) from funnel liner
