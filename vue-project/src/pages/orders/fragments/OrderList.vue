@@ -16,7 +16,7 @@
 
             <Pagination>
                 <template #beforeSearch>
-                    <div class="flex gap-3">
+                    <div class="flex gap-1">
                         <Select.Primary
                             inputClass="py-1 px-3 pr-3 rounded-sm block w-full bg-transparent border border-secondary-five"
                             defaultOption="Select Status"

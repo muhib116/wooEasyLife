@@ -1,6 +1,6 @@
 👉🏻 kun kun user otp dise ar kun kun user otp dey nai tar akta list dekhate hobe phone number soho
 
-order status manage from plugin order list
+✅ order status manage from plugin order list
 
 alertBox position fixed kore dekhate hobe
 
