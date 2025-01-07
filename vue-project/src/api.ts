@@ -1,9 +1,9 @@
 import axios from "axios"
 
 export let baseUrl = ''
-if(location.hostname == 'localhost'){
+if (location.hostname == 'localhost') {
     baseUrl = import.meta.env.DEV ? 'http://localhost:8080/wordpress' : location.origin + '/wordpress'
-}else {
+} else {
     baseUrl = location.origin
 }
 
@@ -19,7 +19,7 @@ export const getShippingMethods = async () => {
 }
 export const validateCoupon = async (payload: {
     coupon_code: string
-  }) => {
+}) => {
     const { data } = await axios.post(`${localApiBaseURL}/validate-coupon`, payload)
     return data
 }
@@ -41,11 +41,17 @@ export const getOrderStatusListWithCounts = async () => {
 export const updateAddress = async (payload) => {
     return await axios.post(`${localApiBaseURL}/update-address/${payload.order_id}`, payload)
 }
+export const changeStatus = async (payload: {
+    order_id: number
+    new_status: string
+}[]) => {
+    return await axios.post(`${localApiBaseURL}/orders/change-status`, payload)
+}
 export const getOrderStatistics = async (payload: {
     startDate: string,
     endDate: string
 }) => {
-    const { data } = await axios.get(`${localApiBaseURL}/order-stats`, { params:payload })
+    const { data } = await axios.get(`${localApiBaseURL}/order-stats`, { params: payload })
     return data
 }
 export const getOrderStatuses = async () => {
@@ -81,7 +87,7 @@ export const getCustomStatusList = async () => {
     const { data } = await axios.get(`${localApiBaseURL}/statuses`)
     return data
 }
-export const deleteCustomStatus = async (id:string) => {
+export const deleteCustomStatus = async (id: string) => {
     const { data } = await axios.delete(`${localApiBaseURL}/statuses/${id}`)
     return data
 }
@@ -104,10 +110,10 @@ export const createOrUpdateWPOptionItem = async (payload: {
     const { data } = await axios.post(`${localApiBaseURL}/wp-option-item`, null, {
         params: payload
     })
-        return data
+    return data
 }
 
-export const getWPOption = async (payload: {option_name: string}) => {
+export const getWPOption = async (payload: { option_name: string }) => {
     const { data } = await axios.get(`${localApiBaseURL}/wp-option`, {
         params: payload
     })
@@ -124,7 +130,7 @@ export const getWPOptionItem = async (payload: {
     return data
 }
 
-export const deleteWPOption = async (payload: {option_name: string}) => {
+export const deleteWPOption = async (payload: { option_name: string }) => {
     const { data } = await axios.delete(`${localApiBaseURL}/wp-option`, {
         params: payload
     })
@@ -134,7 +140,7 @@ export const deleteWPOption = async (payload: {option_name: string}) => {
 
 
 // sms config CRUD start
-export const getWoocommerceStatuses = async () => {
+export const getWoocomerceStatuses = async () => {
     const { data } = await axios.get(`${localApiBaseURL}/woo-statuses`)
     return data
 }
@@ -187,7 +193,7 @@ export const getBlockListData = async () => {
     return data
 }
 
-export const deleteBlockListData = async (id:string | number) => {
+export const deleteBlockListData = async (id: string | number) => {
     const { data } = await axios.delete(`${localApiBaseURL}/block-list/${id}`)
     return data
 }
@@ -210,7 +216,7 @@ export const getSMSHistoryData = async () => {
     return data
 }
 
-export const deleteSMSHistory = async (id:string | number) => {
+export const deleteSMSHistory = async (id: string | number) => {
     const { data } = await axios.delete(`${localApiBaseURL}/sms-history/${id}`)
     return data
 }

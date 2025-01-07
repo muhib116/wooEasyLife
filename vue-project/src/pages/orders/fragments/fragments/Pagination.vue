@@ -1,24 +1,27 @@
 <template>
     <div class="flex justify-between px-4 mt-2 mb-2">
-        <!-- Search Input -->
-        <div 
-            v-if="!hideSearch" 
-            class="flex gap-1"
-        >
-            <Input.Native
-                placeholder="Search customer"
-                class="text-base border px-2 py-1 rounded-sm"
-                v-model="orderFilter.search"
-            />
-            <Button.Primary
-                class="!py-1 px-2"
-                @click="debouncedGetOrders"
+        <div class="flex gap-4">
+            <slot name="beforeSearch"></slot>
+            <!-- Search Input -->
+            <div 
+                v-if="!hideSearch" 
+                class="flex gap-1"
             >
-                <Icon
-                    name="PhMagnifyingGlass"
-                    weight="bold"
+                <Input.Native
+                    placeholder="Search customer"
+                    class="text-base border px-2 py-1 rounded-sm"
+                    v-model="orderFilter.search"
                 />
-            </Button.Primary>
+                <Button.Primary
+                    class="!py-1 px-2"
+                    @click="debouncedGetOrders"
+                >
+                    <Icon
+                        name="PhMagnifyingGlass"
+                        weight="bold"
+                    />
+                </Button.Primary>
+            </div>
         </div>
 
         <!-- Pagination Controls -->

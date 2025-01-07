@@ -1,5 +1,5 @@
 import { onMounted, ref, watch } from "vue"
-import { getOrderList, getOrderStatusListWithCounts, ip_or_phone_block_bulk_entry } from '@/api'
+import { changeStatus, getOrderList, getOrderStatusListWithCounts, getWoocomerceStatuses, ip_or_phone_block_bulk_entry } from '@/api'
 import { checkCustomer } from '@/remoteApi'
 
 export const useOrders = () => {
@@ -12,6 +12,8 @@ export const useOrders = () => {
     const isLoading = ref(false)
     const showInvoices = ref(false)
     const toggleNewOrder = ref(false)
+    const wooCommerceStatuses = ref([])
+    const selectedStatus = ref(null)
 
     const orderFilter = ref({
         page: 1,
@@ -74,11 +76,25 @@ export const useOrders = () => {
 
     const getOrders = async () => {
         isLoading.value = true
+        if(orderFilter.value.page==0){
+            orderFilter.value.page = 1
+        }
         const { data, total } = await getOrderList(orderFilter.value)
         orders.value = data
         totalRecords.value = total
         selectedOrders.value.clear()
         isLoading.value = false
+    }
+
+    const loadAllStatuses = async () => {
+        try {
+            isLoading.value = true
+            const { data } = await getWoocomerceStatuses()
+            console.log(data)
+            wooCommerceStatuses.value = data
+        } finally {
+            isLoading.value = false
+        }
     }
 
     const loadOrderStatusList = async () => {
@@ -134,6 +150,36 @@ export const useOrders = () => {
         }
     }
 
+    const handleStatusChange = async (btn) => {
+        if (![...selectedOrders.value].length) {
+            alert('Please select at least on item.')
+            return
+        }
+
+        if (!selectedStatus.value) {
+            alert("Please select status from dropdown.")
+        }
+
+        try {
+            btn.isLoading = true
+            const payload: {
+                order_id: number
+                new_status: string
+            }[] = [...selectedOrders.value].map(item => ({
+                new_status: selectedStatus.value,
+                order_id: item?.id
+            }))
+
+            await changeStatus(payload)
+            loadOrderStatusList()
+            await getOrders()
+        } catch (err) {
+            console.log(err)
+        } finally {
+            btn.isLoading = false
+        }
+    }
+
 
     watch(() => selectedOrders, (newVal) => {
         selectAll.value = selectedOrders.value.size === orders.value.length
@@ -141,7 +187,8 @@ export const useOrders = () => {
         deep: true
     })
     onMounted(() => {
-        loadOrderStatusList();
+        loadOrderStatusList()
+        loadAllStatuses()
         getOrders()
     })
 
@@ -153,8 +200,10 @@ export const useOrders = () => {
         orderFilter,
         showInvoices,
         totalRecords,
+        selectedStatus,
         selectedOrders,
         toggleNewOrder,
+        wooCommerceStatuses,
         orderStatusWithCounts,
         getOrders,
         handleIPBlock,
@@ -162,6 +211,7 @@ export const useOrders = () => {
         setSelectedOrder,
         toggleSelectAll,
         handleFraudCheck,
+        handleStatusChange,
         loadOrderStatusList,
         handlePhoneNumberBlock,
     }

@@ -1,7 +1,7 @@
 <template>
-    <div class="flex items-center text-[10px] gap-2 gap-y-2 flex-wrap px-4 mb-4 text-extralight">
+    <div class="flex items-center text-[12px] gap-2 gap-y-2 flex-wrap px-4 mb-4 text-extralight">
         <Button.Native
-            class="capitalize px-2 leading-[14px] text-black"
+            class="capitalize px-2 py-[2px] leading-[14px] text-black"
             :class="orderFilter.status == '' ? 'font-semibold' : 'font-light'"
             @click="btn => handleFilter('', btn)"
         >
@@ -12,7 +12,7 @@
             :key="index"
         >
             <Button.Native
-                class="capitalize order-status px-2 gap-1 leading-[14px]"
+                class="capitalize order-status px-2 py-[2px] gap-1 leading-[14px]"
                 :class="[
                     orderFilter.status == item.slug ? 'font-semibold' : 'font-light',
                     `status-${item.slug}`

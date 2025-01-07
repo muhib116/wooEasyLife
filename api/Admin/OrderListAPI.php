@@ -63,6 +63,17 @@ class OrderListAPI
                 'permission_callback' => '__return_true', // Or add your permission logic here
             ]
         );
+
+        register_rest_route(
+            __API_NAMESPACE, 
+            '/orders/change-status',
+            [
+                'methods'  => 'POST',
+                'callback' => [$this, 'change_order_status'], // Ensure this function exists and is callable
+                'permission_callback' => '__return_true',
+                'args'     => $this->get_status_change_schema(), // Optional validation
+            ]
+        );
     }
 
     /**
@@ -201,8 +212,6 @@ class OrderListAPI
         ], 200);
     }
     
-    
-
     public function get_order_status_with_counts()
     {
         $statuses = wc_get_order_statuses(); // Retrieve all order statuses
@@ -311,7 +320,101 @@ class OrderListAPI
                 'invoice_note' => $invoice_note,
             ],
         ], 200);
-    }      
+    } 
+    
+    public function change_order_status(\WP_REST_Request $request) {
+        // Get the payload from the request
+        $payload = $request->get_json_params();
+    
+        // Validate the payload
+        if (empty($payload) || !is_array($payload)) {
+            return new \WP_REST_Response([
+                'status'  => 'error',
+                'message' => 'Invalid or empty payload.',
+            ], 400);
+        }
+    
+        $responses = []; // To store the responses for each order
+    
+        foreach ($payload as $entry) {
+            // Validate each entry in the payload
+            if (empty($entry['order_id']) || empty($entry['new_status'])) {
+                $responses[] = [
+                    'status'  => 'error',
+                    'message' => 'Missing order_id or new_status in entry.',
+                    'entry'   => $entry,
+                ];
+                continue;
+            }
+    
+            $order_id = intval($entry['order_id']);
+            $new_status = sanitize_text_field($entry['new_status']);
+    
+            // Get the order by ID
+            $order = wc_get_order($order_id);
+    
+            if (!$order) {
+                $responses[] = [
+                    'status'  => 'error',
+                    'message' => 'Order not found.',
+                    'order_id' => $order_id,
+                ];
+                continue;
+            }
+    
+            // Update the order status
+            try {
+                $order->update_status($new_status, 'Status updated via API', true);
+                $responses[] = [
+                    'status'  => 'success',
+                    'message' => 'Order status updated successfully.',
+                    'order_id' => $order_id,
+                    'new_status' => $new_status,
+                ];
+            } catch (\Exception $e) {
+                $responses[] = [
+                    'status'  => 'error',
+                    'message' => $e->getMessage(),
+                    'order_id' => $order_id,
+                ];
+            }
+        }
+    
+        return new \WP_REST_Response([
+            'status' => 'success',
+            'data'   => $responses,
+        ], 200);
+    }
+
+    /**
+     * Schema for status change input validation
+     */
+    public function get_status_change_schema() {
+        return [
+            'type'       => 'array',
+            'required'   => true,
+            'description' => 'Array of orders with their new statuses.',
+            'items'      => [
+                'type'       => 'object',
+                'properties' => [
+                    'order_id' => [
+                        'required'    => true,
+                        'type'        => 'integer',
+                        'description' => 'ID of the order to update.',
+                    ],
+                    'new_status' => [
+                        'required'    => true,
+                        'type'        => 'string',
+                        'description' => 'New status for the order.',
+                        'enum'        => array_map(function ($status) {
+                            return str_replace('wc-', '', $status);
+                        }, array_keys(wc_get_order_statuses())),
+                    ],
+                ],
+            ],
+        ];
+    }
+    
 }
 
 

@@ -13,7 +13,26 @@
             />
             <TableFilter />
             <TableHeaderAction />
-            <Pagination />
+
+            <Pagination>
+                <template #beforeSearch>
+                    <div class="flex gap-3">
+                        <Select.Primary
+                            inputClass="py-1 px-3 pr-3 rounded-sm block w-full bg-transparent border border-secondary-five"
+                            defaultOption="Select Status"
+                            :options="wooCommerceStatuses"
+                            itemKey="slug"
+                            v-model="selectedStatus"
+                        />
+                        <Button.Primary 
+                            class="!py-1"
+                            @onClick="handleStatusChange"    
+                        >
+                            Apply
+                        </Button.Primary>
+                    </div>
+                </template>
+            </Pagination>
 
             <Table.Table v-if="orders.length">
                 <TableHeader />
@@ -27,7 +46,7 @@
             </Table.Table>
 
             <MessageBox
-                v-else
+                v-else-if="!isLoading"
                 title="No record found!"
                 type="info"
                 class="mx-4"
@@ -43,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-    import { Table, Loader, Heading, MessageBox } from '@components'
+    import { Table, Loader, Heading, MessageBox, Select, Button } from '@components'
     import { inject } from 'vue'
     import TableHeaderAction from './TableHeaderAction.vue'
     import TableHeader from './fragments/TableHeader.vue'
@@ -55,6 +74,9 @@
     const {
         activeOrder,
         orders,
-        isLoading
+        isLoading,
+        selectedStatus,
+        wooCommerceStatuses,
+        handleStatusChange
     } = inject('useOrders')
 </script>

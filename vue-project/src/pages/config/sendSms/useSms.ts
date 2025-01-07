@@ -1,6 +1,6 @@
-import { 
+import {
     getOrderList,
-    getWoocommerceStatuses,
+    getWoocomerceStatuses,
     getSMSHistoryData,
     deleteSMSHistory,
 } from "@/api"
@@ -52,14 +52,14 @@ export const useSms = () => {
         message: '',
         phone_numbers: ''
     }
-    
+
     const tabChange = (slug: string) => {
         activeTab.value = slug
-        form.value = {...defaultFormData}
+        form.value = { ...defaultFormData }
     }
     const messages = ref([])
 
-    const form = ref({...defaultFormData})
+    const form = ref({ ...defaultFormData })
 
     const personalizations = [
         {
@@ -119,16 +119,16 @@ export const useSms = () => {
             slug: 'admin_phone'
         },
     ]
-    
+
     const loadPhoneNumbers = async (status: string) => {
         try {
             isLoading.value = true
             const { data } = await getOrderList({
                 status: status
             })
-    
+
             const phoneNumbers = data.map(item => item.billing_address.phone)
-    
+
             form.value.phone_numbers = [...new Set(phoneNumbers)].join(',')
         } finally {
             isLoading.value = false
@@ -139,7 +139,7 @@ export const useSms = () => {
         message: string
         status?: string
     }) => {
-        if(payload.message == '' || payload.phone_numbers == '') {
+        if (payload.message == '' || payload.phone_numbers == '') {
             alertMessage.value.message = `The fields marked with an asterisk (*) are mandatory.`
             alertMessage.value.type = 'warning'
             setTimeout(() => {
@@ -151,7 +151,7 @@ export const useSms = () => {
             return
         }
 
-        let phones:any = new Set(payload.phone_numbers.replaceAll(/\s+/g, '').split(','))
+        let phones: any = new Set(payload.phone_numbers.replaceAll(/\s+/g, '').split(','))
         phones = [...phones]
 
         try {
@@ -168,7 +168,7 @@ export const useSms = () => {
         } finally {
             isLoading.value = false
             btn.isLoading = false
-            form.value = {...defaultFormData}
+            form.value = { ...defaultFormData }
             setTimeout(() => {
                 alertMessage.value = {
                     message: '',
@@ -178,14 +178,14 @@ export const useSms = () => {
         }
 
     }
-    
+
     const handleDeleteSMS = async (id: number, btn: any) => {
-        if(!confirm('Are you sure to delete this message?')) return
+        if (!confirm('Are you sure to delete this message?')) return
         try {
             btn.isLoading = true
             const res = await deleteSMSHistory(id)
-            
-            if(res.status == "success"){
+
+            if (res.status == "success") {
                 alertMessage.value.message = res.message
                 alertMessage.value.type = 'success'
                 loadSMS()
@@ -201,18 +201,18 @@ export const useSms = () => {
             btn.isLoading = false
         }
     }
-    
+
     const loadSMS = async () => {
         isLoading.value = true
         const { data } = await getSMSHistoryData()
         messages.value = data
         isLoading.value = false
     }
-    
+
     const loadWooStatuses = async () => {
         try {
             isLoading.value = true
-            const { data } = await getWoocommerceStatuses()
+            const { data } = await getWoocomerceStatuses()
             wooStatuses.value = data
         } finally {
             isLoading.value = false

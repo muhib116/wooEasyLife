@@ -1,4 +1,4 @@
-import { createOrUpdateWPOption, createSMS, deleteSMS, getSMS, getWoocommerceStatuses, getWPOption, updateSMS } from "@/api"
+import { createOrUpdateWPOption, createSMS, deleteSMS, getSMS, getWoocomerceStatuses, getWPOption, updateSMS } from "@/api"
 import { onMounted, ref } from "vue"
 import List from './List.vue'
 import Create from './Create.vue'
@@ -51,11 +51,11 @@ export const useSmsConfig = () => {
     ]
     const tabChange = (slug: string) => {
         activeTab.value = slug
-        form.value = {...defaultFormData}
+        form.value = { ...defaultFormData }
     }
     const messages = ref([])
 
-    const form = ref({...defaultFormData})
+    const form = ref({ ...defaultFormData })
 
     const personalizations = [
         {
@@ -115,9 +115,9 @@ export const useSmsConfig = () => {
             slug: 'admin_phone'
         },
     ]
-    
+
     const handleCreateSMS = async (btn, payload) => {
-        if(payload.status == '' || payload.message_for == '' || (payload.message_for == 'admin' && payload.phone_number == '') || payload.message == '') {
+        if (payload.status == '' || payload.message_for == '' || (payload.message_for == 'admin' && payload.phone_number == '') || payload.message == '') {
             alertMessage.value.message = `The fields marked with an asterisk (*) are mandatory.`
             alertMessage.value.type = 'warning'
             setTimeout(() => {
@@ -129,7 +129,7 @@ export const useSmsConfig = () => {
             return
         }
 
-        if(payload.message_for == 'admin' && !validateBDPhoneNumber(payload.phone_number)){
+        if (payload.message_for == 'admin' && !validateBDPhoneNumber(payload.phone_number)) {
             alertMessage.value.message = `Phone number is not valid.`
             alertMessage.value.type = 'warning'
             setTimeout(() => {
@@ -145,14 +145,14 @@ export const useSmsConfig = () => {
             isLoading.value = true
             btn.isLoading = true
             const res = await createSMS(payload)
-            if(res.status == "success"){
+            if (res.status == "success") {
                 alertMessage.value.message = res.message
                 alertMessage.value.type = 'success'
                 form.value = { ...defaultFormData }
             }
-        } 
-        catch ({response}) {
-            if(response.data.status == "error"){
+        }
+        catch ({ response }) {
+            if (response.data.status == "error") {
                 alertMessage.value.message = response.data.message
                 alertMessage.value.type = 'danger'
             }
@@ -170,8 +170,8 @@ export const useSmsConfig = () => {
         }
     }
 
-    const handleUpdateSMS = async(btn, payload) => {
-        if(payload.status == '' || payload.message_for == '' || (payload.message_for == 'admin' && payload.phone_number == '') || payload.message == '') {
+    const handleUpdateSMS = async (btn, payload) => {
+        if (payload.status == '' || payload.message_for == '' || (payload.message_for == 'admin' && payload.phone_number == '') || payload.message == '') {
             alertMessage.value.message = `The fields marked with an asterisk (*) are mandatory.`
             alertMessage.value.type = 'warning'
 
@@ -184,7 +184,7 @@ export const useSmsConfig = () => {
             return
         }
 
-        if(payload.message_for == 'admin' && !validateBDPhoneNumber(payload.phone_number)){
+        if (payload.message_for == 'admin' && !validateBDPhoneNumber(payload.phone_number)) {
             alertMessage.value.message = `Phone number is not valid.`
             alertMessage.value.type = 'warning'
 
@@ -201,15 +201,15 @@ export const useSmsConfig = () => {
             btn.isLoading = true
             isLoading.value = true
             const res = await updateSMS(payload)
-            if(res.status == "success"){
+            if (res.status == "success") {
                 alertMessage.value.message = res.message
                 alertMessage.value.type = 'success'
                 form.value = { ...defaultFormData }
                 loadSMS()
             }
-        } 
-        catch ({response}) {
-            if(response.data.status == "error"){
+        }
+        catch ({ response }) {
+            if (response.data.status == "error") {
                 alertMessage.value.message = response.data.message
                 alertMessage.value.type = 'danger'
             }
@@ -226,14 +226,14 @@ export const useSmsConfig = () => {
             }, 4000)
         }
     }
-    
+
     const handleDeleteSMS = async (id: number, btn: any) => {
-        if(!confirm('Are you sure to delete this message?')) return
+        if (!confirm('Are you sure to delete this message?')) return
         try {
             btn.isLoading = true
             const res = await deleteSMS(id)
-            
-            if(res.status == "success"){
+
+            if (res.status == "success") {
                 alertMessage.value.message = res.message
                 alertMessage.value.type = 'success'
                 loadSMS()
@@ -249,18 +249,18 @@ export const useSmsConfig = () => {
             btn.isLoading = false
         }
     }
-    
+
     const loadSMS = async () => {
         isLoading.value = true
         const { data } = await getSMS()
         messages.value = data
         isLoading.value = false
     }
-    
+
     const loadWooStatuses = async () => {
         try {
             isLoading.value = true
-            const { data } = await getWoocommerceStatuses()
+            const { data } = await getWoocomerceStatuses()
             wooStatuses.value = data
         } finally {
             isLoading.value = false
