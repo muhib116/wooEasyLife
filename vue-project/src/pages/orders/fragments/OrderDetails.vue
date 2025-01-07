@@ -4,14 +4,14 @@
             title="Order Details"
             class="mb-4 px-6"
         />
-        <Button.Native
+        <Button.Primary
             @click="setActiveOrder('')"
         >
             <Icon
                 name="PhCaretLeft"
             />
             Back
-        </Button.Native>
+        </Button.Primary>
     </div>
 
     <div class="px-6">
@@ -69,9 +69,13 @@
                         />
                     </Table.Td>
                     <Table.Td>{{ item.product_name }}</Table.Td>
-                    <Table.Td>{{ item.product_price }}</Table.Td>
+                    <Table.Td>
+                        <span v-html="activeOrder.currency_symbol"></span>{{ item.product_price }}
+                    </Table.Td>
                     <Table.Td>{{ item.product_quantity }}</Table.Td>
-                    <Table.Td>{{ item.product_total }}</Table.Td>
+                    <Table.Td>
+                        <span v-html="activeOrder.currency_symbol"></span>{{ item.product_total }}
+                    </Table.Td>
                 </Table.Tr>
             </Table.TBody>
         </Table.Table>

@@ -10,6 +10,9 @@ one click Courier entry
 
 SMS ta amader api throute korte hobe:->helper.php: send_sms()
 
+cost managment like ad cost
+per order ad cost in dash board
+Total Page view
 
 Dashboard:
 =========================

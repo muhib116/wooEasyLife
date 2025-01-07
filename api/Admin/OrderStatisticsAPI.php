@@ -29,6 +29,11 @@ class OrderStatisticsAPI extends WP_REST_Controller
                 'permission_callback' => '__return_true',
             ]
         );
+        register_rest_route(__API_NAMESPACE, '/top-selling-products', [
+            'methods'             => 'GET',
+            'callback'            => [$this, 'get_top_selling_products'],
+            'permission_callback' => '__return_true', // Adjust permissions as needed
+        ]);
     }
 
     /**
@@ -100,5 +105,57 @@ class OrderStatisticsAPI extends WP_REST_Controller
             'before'    => date('Y-m-d 23:59:59', strtotime($end_date)),
             'inclusive' => true,
         ];
+    }
+
+
+    /**
+     * Get Top-Selling Products
+     *
+     * @param WP_REST_Request $request
+     * @return WP_REST_Response
+     */
+    public function get_top_selling_products(WP_REST_Request $request)
+    {
+        $limit = intval($request->get_param('limit') ?? 10); // Default to 10 products if no limit provided
+
+        // Use WC_Product_Query to get top-selling products
+        $args = [
+            'limit'    => $limit,
+            'orderby'  => 'total_sales',
+            'order'    => 'DESC',
+            'status'   => 'publish',
+            'return'   => 'ids',
+        ];
+
+
+        $query = new \WC_Product_Query($args);
+        $products = $query->get_products();
+
+        if (empty($products)) {
+            return new WP_REST_Response([
+                'status'  => 'error',
+                'message' => 'No top-selling products found.',
+            ], 404);
+        }
+
+        $data = array_map(function ($product_id) {
+            $product = wc_get_product($product_id);
+
+            return [
+                'product_id'   => $product->get_id(),
+                'product_name' => $product->get_name(),
+                'total_sold'   => $product->get_total_sales(),
+                'price'        => $product->get_price(),
+                'image'        => wp_get_attachment_url($product->get_image_id()),
+                'stock_status' => $product->get_stock_status(), // 'instock', 'outofstock', or 'onbackorder'
+                'stock_quantity' => $product->get_stock_quantity(), // Null for products without stock management
+                'manage_stock' => $product->managing_stock(), // Boolean: Whether stock is managed    
+            ];
+        }, $products);
+
+        return new WP_REST_Response([
+            'status' => 'success',
+            'data'   => $data,
+        ], 200);
     }
 }
