@@ -11,6 +11,7 @@ export const useCustomOrder = () =>
     const appliedCoupon = ref('')
     const couponDiscount = ref(0);
     const placeHolderData = {
+        order_status: 'wc-confirmed',
         first_name: '',
         last_name: '',
         address_1: '',
@@ -266,7 +267,7 @@ export const useCustomOrder = () =>
                 shipping_cost: form.value.shippingMethod.shipping_cost,
                 customer_note: form.value.customer_note,
                 order_source: form.value.created_via,
-                order_status: '',
+                order_status: form.value.order_status,
                 coupon_codes: coupon_codes
             }
     

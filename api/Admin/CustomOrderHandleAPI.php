@@ -51,16 +51,16 @@ class CustomOrderHandleAPI extends WP_REST_Controller
     public function create_custom_order(WP_REST_Request $request)
     {
         $data = $this->prepare_order_data_from_request($request);
+
         $address = $data['address'];
         $payment_method_id = $data['payment_method_id'];
         $shipping_method_id = $data['shipping_method_id'];
         $shipping_cost = $data['shipping_cost'];
         $customer_note = $data['customer_note'];
-        $order_status = 'confirmed';
+        $order_status = str_replace('wc-', '', $data['order_status']);
         $order_source = $data['order_source'];
         $coupon_codes  = $data['coupon_codes'];
-
-
+        
         // Step 1: Initialize the Custom Order
         $order = wc_create_order();
         if (is_wp_error($order)) {
@@ -87,20 +87,26 @@ class CustomOrderHandleAPI extends WP_REST_Controller
             $order->set_customer_note($customer_note);
         }
     
-        // Step 7: Set the Order Status
-        $order->update_status($order_status);
         $order->set_created_via($order_source);
     
-        // Step 8: Apply Coupon Codes
+        // Step 7: Apply Coupon Codes
         if (!empty($coupon_codes)) {
             foreach ($coupon_codes as $coupon) {
                 $order->apply_coupon($coupon);
             }
         }
     
-        // Step 9: Calculate Totals
+        // Step 8: Calculate Totals
         $order->calculate_totals();
     
+        //Step 9: Set the Order Status
+        /**
+         * status update state should last 
+         * other wise product or product price, delivery charge or coupon 
+         * calculation not get when send status change sms
+         */
+        $order->update_status($order_status);
+
         // Step 10: Save the Order
         $order->save();
 
@@ -153,7 +159,7 @@ class CustomOrderHandleAPI extends WP_REST_Controller
         $order_source = isset($payload['order_source']) ? sanitize_text_field($payload['order_source']) : 'website';
     
         // Order status
-        $order_status = isset($payload['order_status']) ? sanitize_text_field($payload['order_status']) : 'wc-pending';
+        $order_status = isset($payload['order_status']) ? sanitize_text_field($payload['order_status']) : 'wc-confirmed';
     
         // Coupon codes
         $coupon_codes = !empty($payload['coupon_codes']) ? array_map('sanitize_text_field', $payload['coupon_codes']) : [];

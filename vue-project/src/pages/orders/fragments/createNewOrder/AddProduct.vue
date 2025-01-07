@@ -115,7 +115,7 @@
             <Icon
                 name="PhPlus"
             />
-            Add Product
+            Add Product *
         </Button.Primary>
         <div v-if="toggleProductList" class="border border-gray-200 p-4 bg-gray-50 z-40 w-full mt-1 relative">
             <Button.Native 

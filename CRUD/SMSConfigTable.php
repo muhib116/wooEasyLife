@@ -147,8 +147,6 @@ class SMSConfigTable {
     
         return $wpdb->get_results($query, ARRAY_A);
     }
-    
-
 
     /**
      * Check if an SMS configuration record exists by ID.

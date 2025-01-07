@@ -1,4 +1,11 @@
 <template>
+    <Select.Primary
+        label="Order status"
+        defaultOption="Select Status"
+        :options="wooCommerceStatuses"
+        itemKey="slug"
+        v-model="form.order_status"
+    />
     <div class="grid grid-cols-2 gap-4">
         <Input.Primary
             label="Customer Name *"
@@ -73,4 +80,8 @@
     const {
         form,
     } = inject('useCustomOrder')
+
+    const {
+        wooCommerceStatuses,
+    } = inject('useOrders')
 </script>

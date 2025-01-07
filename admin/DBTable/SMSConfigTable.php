@@ -42,13 +42,19 @@ class SMSConfigTable {
         dbDelta($sql);
         $this->insertDefaultData();
     }
-
     private function insertDefaultData() {
         global $wpdb;
-
+    
         // Define table name
         $table_name = $wpdb->prefix . __PREFIX . 'sms_config';
-
+    
+        // Check if the table already contains records
+        $record_count = $wpdb->get_var("SELECT COUNT(*) FROM $table_name");
+    
+        if ($record_count > 0) {
+            return; // If records exist, exit the function
+        }
+    
         // Insert default data
         $default_data = [
             [
@@ -66,7 +72,7 @@ class SMSConfigTable {
                 'is_active'   => 0
             ]
         ];
-
+    
         foreach ($default_data as $data) {
             // Insert each default row
             $wpdb->insert(
@@ -82,6 +88,7 @@ class SMSConfigTable {
             );
         }
     }
+    
 
     /**
      * Drop the sms_config table
