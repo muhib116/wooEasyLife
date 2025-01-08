@@ -33,6 +33,7 @@ SMS Cost calculation dashboard
 Cash management (Low priority) from funnel liner
 Marketing Tools (Low priority) from funnel liner
 
+windows opareting er jonno shrollbar chikon kore dite hobe
 
 
 make the system responsive

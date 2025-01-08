@@ -1,7 +1,21 @@
 <template>
-    <Card.Native>
-        Top Selling Product
-        <Table.Table>
+    <Card.Native class="relative h-[390px] overflow-auto">
+        <Heading
+            title="Top Selling Products"
+            class="mb-2"
+        />
+        <Loader
+            class="absolute left-1/2 -translate-x-1/2 top-[200px] z-40"
+            :active="isLoading"
+        />
+
+
+        <MessageBox
+            v-if="!topSellingProducts?.length && !isLoading"
+            title="No records found for the top-selling product!"
+            type="info"
+        />
+        <Table.Table v-else-if="!isLoading">
             <Table.THead>
                 <Table.Th>Product</Table.Th>
                 <Table.Th>Sold</Table.Th>
@@ -14,19 +28,31 @@
                     :key="product.product_id"
                 >
                     <Table.Td>
-                        <div class="flex gap-2 items-center">
+                        <a 
+                            class="flex gap-2 items-center text-sky-500 underline"
+                            :href="`${baseUrl}/wp-admin/post.php?post=${product.product_id}&action=edit`"
+                            target="_blank"
+                            title="Click to update product"
+                        >
                             <img
                                 :src="product.image"
                                 class="size-10 object-cover block"
                             />
                             {{ product.product_name }}
-                        </div>
+                        </a>
                     </Table.Td>
                     <Table.Td>
                         {{ product.total_sold }}
                     </Table.Td>
                     <Table.Td>
-                        {{ product.stock_quantity }}
+                        <div
+                            :class="product.low_stock_threshold >= product.stock_quantity ? 'text-red-500 font-bold animate-bounce' : ''"
+                        >
+                            {{ product.stock_quantity }}
+                            <span
+                                v-if="product.low_stock_threshold >= product.stock_quantity"
+                            >Restock needed!</span>
+                        </div>
                     </Table.Td>
                     <Table.Td>
                         {{ product.stock_status }}
@@ -38,10 +64,14 @@
 </template>
 
 <script setup lang="ts">
-    import { Card, Table } from '@components'
+    import { Card, Table, Loader, Heading, MessageBox } from '@components'
     import { useTopSellingProduct } from './UseTopSellingProduct'
+    import {
+        baseUrl
+    } from '@/api'
 
     const {
+        isLoading,
         topSellingProducts
     } = useTopSellingProduct()
 </script>

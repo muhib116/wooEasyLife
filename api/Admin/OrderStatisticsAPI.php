@@ -107,55 +107,54 @@ class OrderStatisticsAPI extends WP_REST_Controller
         ];
     }
 
-
-    /**
-     * Get Top-Selling Products
-     *
-     * @param WP_REST_Request $request
-     * @return WP_REST_Response
-     */
     public function get_top_selling_products(WP_REST_Request $request)
     {
         $limit = intval($request->get_param('limit') ?? 10); // Default to 10 products if no limit provided
-
-        // Use WC_Product_Query to get top-selling products
-        $args = [
-            'limit'    => $limit,
-            'orderby'  => 'total_sales',
-            'order'    => 'DESC',
-            'status'   => 'publish',
-            'return'   => 'ids',
-        ];
-
-
-        $query = new \WC_Product_Query($args);
-        $products = $query->get_products();
-
-        if (empty($products)) {
+    
+        // Use a direct query to ensure accurate sales data
+        global $wpdb;
+    
+        $query = $wpdb->prepare(
+            "SELECT p.ID, p.post_title, pm.meta_value as total_sales
+            FROM {$wpdb->prefix}posts AS p
+            LEFT JOIN {$wpdb->prefix}postmeta AS pm ON p.ID = pm.post_id
+            WHERE p.post_type = 'product'
+            AND p.post_status = 'publish'
+            AND pm.meta_key = 'total_sales'
+            ORDER BY CAST(pm.meta_value AS UNSIGNED) DESC
+            LIMIT %d",
+            $limit
+        );
+    
+        $results = $wpdb->get_results($query);
+    
+        if (empty($results)) {
             return new WP_REST_Response([
                 'status'  => 'error',
                 'message' => 'No top-selling products found.',
             ], 404);
         }
-
-        $data = array_map(function ($product_id) {
-            $product = wc_get_product($product_id);
-
+    
+        $data = array_map(function ($result) {
+            $product = wc_get_product($result->ID);
+    
             return [
-                'product_id'   => $product->get_id(),
+                'product_id'   => $result->ID,
                 'product_name' => $product->get_name(),
-                'total_sold'   => $product->get_total_sales(),
+                'total_sold'   => intval($result->total_sales),
                 'price'        => $product->get_price(),
                 'image'        => wp_get_attachment_url($product->get_image_id()),
                 'stock_status' => $product->get_stock_status(), // 'instock', 'outofstock', or 'onbackorder'
-                'stock_quantity' => $product->get_stock_quantity(), // Null for products without stock management
-                'manage_stock' => $product->managing_stock(), // Boolean: Whether stock is managed    
+                'stock_quantity' => $product->get_stock_quantity() ?: 'Not managing stock', // Null for products without stock management
+                'manage_stock' => $product->managing_stock() ? 'Managing' : 'Not managing',
+                'low_stock_threshold' => $product->get_low_stock_amount() ?: false, // Get low stock threshold
             ];
-        }, $products);
-
+        }, $results);
+    
         return new WP_REST_Response([
             'status' => 'success',
             'data'   => $data,
         ], 200);
     }
+    
 }
