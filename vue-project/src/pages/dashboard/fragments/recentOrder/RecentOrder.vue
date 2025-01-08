@@ -1,5 +1,5 @@
 <template>
-    <Card.Native class="relative h-[390px] overflow-auto">
+    <Card.Native class="relative">
         <Heading
             title="Recent Orders"
             class="mb-2"
@@ -9,31 +9,33 @@
             :active="isLoading"
         />
 
-        <MessageBox
-            v-if="!recentOrders?.length && !isLoading"
-            title="No records found for the top-selling product!"
-            type="info"
-        />
-        <Table.Table v-else-if="!isLoading">
-            <Table.THead class="whitespace-nowrap">
-                <Table.Th>Order Info</Table.Th>
-                <Table.Th>Delivery History</Table.Th>
-                <Table.Th>Delivery Partner</Table.Th>
-                <Table.Th>Shipping</Table.Th>
-                <Table.Th>Payment</Table.Th>
-                <Table.Th>Status</Table.Th>
-                <Table.Th>Note</Table.Th>
-                <Table.Th>Address</Table.Th>
-                <Table.Th>Action</Table.Th>
-            </Table.THead>
-            <Table.TBody>
-                <TableRow 
-                    v-for="order in recentOrders"
-                    :key="order.id"
-                    :order="order"
-                />
-            </Table.TBody>
-        </Table.Table>
+        <div class="h-[320px] overflow-auto">
+            <MessageBox
+                v-if="!recentOrders?.length && !isLoading"
+                title="No records found for the top-selling product!"
+                type="info"
+            />
+            <Table.Table v-else-if="!isLoading">
+                <Table.THead class="whitespace-nowrap">
+                    <Table.Th>Order Info</Table.Th>
+                    <Table.Th>Delivery History</Table.Th>
+                    <Table.Th>Delivery Partner</Table.Th>
+                    <Table.Th>Shipping</Table.Th>
+                    <Table.Th>Payment</Table.Th>
+                    <Table.Th>Status</Table.Th>
+                    <Table.Th>Note</Table.Th>
+                    <Table.Th>Address</Table.Th>
+                    <Table.Th>Action</Table.Th>
+                </Table.THead>
+                <Table.TBody>
+                    <TableRow 
+                        v-for="order in recentOrders"
+                        :key="order.id"
+                        :order="order"
+                    />
+                </Table.TBody>
+            </Table.Table>
+        </div>
     </Card.Native>
 </template>
 

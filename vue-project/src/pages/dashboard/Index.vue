@@ -3,13 +3,6 @@
         <Container>
             <div class="grid gap-8 font-light">
                 <Filter />
-
-                Sale Performance chart
-                Order sources with chart
-                Available Courier balance
-                Courier Delevery Report
-                Sales target
-                Recent Order | Top Saling Product
                 <div class="grid grid-cols-2 gap-5 w-full">
                     <RecentOrder />
                     <TopSellingProduct />

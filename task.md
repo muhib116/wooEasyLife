@@ -16,7 +16,12 @@ Total Page view
 
 Dashboard:
 =========================
-Top selling product list
+    Sale Performance chart
+    Order sources with chart
+    Available Courier balance
+    Courier Delevery Report
+    Sales target
+
 Order source
 Sales performance
 Sales amount 
