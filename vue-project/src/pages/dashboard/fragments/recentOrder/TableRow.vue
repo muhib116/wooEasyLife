@@ -1,4 +1,5 @@
 <template>
+    {{ useOrders }}
     <Table.Tr
         class="group"
         :class="`status-${order.status}`"

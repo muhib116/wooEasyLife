@@ -90,7 +90,6 @@ export const useOrders = () => {
         try {
             isLoading.value = true
             const { data } = await getWoocomerceStatuses()
-            console.log(data)
             wooCommerceStatuses.value = data
         } finally {
             isLoading.value = false

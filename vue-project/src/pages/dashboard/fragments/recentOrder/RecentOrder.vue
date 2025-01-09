@@ -10,12 +10,13 @@
         />
 
         <div class="h-[320px] overflow-auto">
+            <OrderDetails v-if="activeOrder" />
             <MessageBox
                 v-if="!recentOrders?.length && !isLoading"
                 title="No records found for the top-selling product!"
                 type="info"
             />
-            <Table.Table v-else-if="!isLoading">
+            <Table.Table v-else-if="!isLoading && !activeOrder">
                 <Table.THead class="whitespace-nowrap">
                     <Table.Th>Order Info</Table.Th>
                     <Table.Th>Delivery History</Table.Th>
@@ -43,9 +44,18 @@
     import { Card, Table, Loader, Heading, MessageBox } from '@components'
     import { useRecentOrder } from './UseRecentOrder'
     import TableRow from './TableRow.vue'
+    import { useOrders } from '@/pages/orders/useOrders.ts'
+    import { provide } from 'vue'
+    import OrderDetails from '@/pages/orders/fragments/OrderDetails.vue'
 
     const {
         isLoading,
         recentOrders
     } = useRecentOrder()
+    const _useOrders = useOrders()
+    const {
+        activeOrder
+    } = _useOrders
+
+    provide('useOrders', _useOrders)
 </script>
