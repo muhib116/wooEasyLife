@@ -39,6 +39,11 @@ class OrderStatisticsAPI extends WP_REST_Controller
             'callback'            => [$this, 'get_sales_progress'],
             'permission_callback' => '__return_true', // Adjust permissions as needed
         ]);
+        register_rest_route(__API_NAMESPACE, '/order-progress', [
+            'methods'             => 'GET',
+            'callback'            => [$this, 'get_order_progress'],
+            'permission_callback' => '__return_true', // Adjust permissions as needed
+        ]);
     }
 
     /**
@@ -232,6 +237,79 @@ class OrderStatisticsAPI extends WP_REST_Controller
             'status'    => 'success',
             'data'      => [
                 'series'     => [['name' => 'Total sale', 'data' => $series]],
+                'categories' => $categories,
+            ],
+        ], 200);
+    }
+    
+    public function get_order_progress(WP_REST_Request $request)
+    {
+        global $wpdb;
+    
+        // Retrieve the start_date and end_date from the request
+        $start_date = $request->get_param('start_date') ?? date('Y-m-d', strtotime('-6 days'));
+        $end_date = $request->get_param('end_date') ?? date('Y-m-d');
+    
+        // Validate the date format
+        if (!strtotime($start_date) || !strtotime($end_date)) {
+            return new \WP_REST_Response([
+                'status'  => 'error',
+                'message' => 'Invalid date format. Use YYYY-MM-DD.',
+            ], 400);
+        }
+    
+        $args = [
+            'limit'        => -1, // Retrieve all orders
+            'orderby'      => 'date',
+            'order'        => 'DESC', // Descending order
+            'return'       => 'objects', // Return full order objects
+            'type'         => 'shop_order',
+            'date_created' => $start_date . '...' . $end_date, // Date range
+        ];
+    
+        // Fetch orders using wc_get_orders
+        $orders = wc_get_orders($args);
+    
+        // Check if any orders are found
+        if (empty($orders)) {
+            return new \WP_REST_Response([
+                'status'    => 'success',
+                'data'      => [
+                    'series'     => [['name' => 'Total order', 'data' => []]],
+                    'categories' => [],
+                ],
+            ], 200);
+        }
+    
+        // Initialize an array to store sales count by date
+        $sales_count = [];
+        foreach ($orders as $order) {
+            $date = $order->get_date_created() ? $order->get_date_created()->date('Y-m-d') : null;
+    
+            if (!isset($sales_count[$date])) {
+                $sales_count[$date] = 0;
+            }
+    
+            $sales_count[$date] += 1; // Increment the count for the date
+        }
+    
+        // Format the response
+        $series = [];
+        $categories = [];
+        $current_date = strtotime($start_date);
+        $end_date_timestamp = strtotime($end_date);
+    
+        while ($current_date <= $end_date_timestamp) {
+            $date = date('Y-m-d', $current_date);
+            $categories[] = date('y-M-d', $current_date);
+            $series[] = isset($sales_count[$date]) ? $sales_count[$date] : 0;
+            $current_date = strtotime('+1 day', $current_date);
+        }
+    
+        return new \WP_REST_Response([
+            'status'    => 'success',
+            'data'      => [
+                'series'     => [['name' => 'Total order', 'data' => $series]],
                 'categories' => $categories,
             ],
         ], 200);

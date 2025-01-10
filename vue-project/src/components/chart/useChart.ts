@@ -18,7 +18,8 @@ export const useChart = () =>
                     show: false, // Hides the toolbar
                 },
             },
-            colors: ['#0ca5e9', '#f97315', '#ABA62B', '#8D8D8D', '#2BAD7E', '#3062BB', '#C51B1B', '#2B80AD'],stroke: {
+            colors: ['#0ca5e9', '#f97315', '#ABA62B', '#8D8D8D', '#2BAD7E', '#3062BB', '#C51B1B', '#2B80AD'],
+            stroke: {
                 curve: 'smooth',
                 width: 1
             },
@@ -34,7 +35,7 @@ export const useChart = () =>
                     shadeIntensity: 0,
                     inverseColors: true,
                     opacityFrom: 1,
-                    opacityTo: 0.4,
+                    opacityTo: 0.6,
                     stops: [0, 0, 100]
                 },
             },

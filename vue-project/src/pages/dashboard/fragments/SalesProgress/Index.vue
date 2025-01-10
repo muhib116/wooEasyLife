@@ -35,11 +35,12 @@
 
     const chartData = computed(() => {
         return {
-            type: 'area',
+            type: 'bar',
             options: {
                 xaxis: {
                     categories: salesProgressData.value?.categories || []
-                }
+                },
+                colors: ['#f97315']
             },
             series: salesProgressData.value?.series || []
         }

@@ -35,7 +35,7 @@
 
     const chartData = computed(() => {
         return {
-            type: 'area',
+            type: 'bar',
             options: {
                 xaxis: {
                     categories: orderProgressData.value?.categories || []
