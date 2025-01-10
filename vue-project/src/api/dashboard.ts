@@ -14,13 +14,13 @@ export const getTopSellingProduct = async (limit?: number) => {
     const { data } = await axios.get(`${localApiBaseURL}/top-selling-products?limit=${limit}`)
     return data
 }
-export const getSalesProgressData = async (date: {start_date: string, endDate:string}) => {
+export const getSalesProgressData = async (date: {start_date: string, end_date:string}) => {
     const { data } = await axios.get(`${localApiBaseURL}/sales-progress`, {
         params: date
     })
     return data
 }
-export const getOrderProgressData = async (date: {start_date: string, endDate:string}) => {
+export const getOrderProgressData = async (date: {start_date: string, end_date:string}) => {
     const { data } = await axios.get(`${localApiBaseURL}/order-progress`, {
         params: date
     })

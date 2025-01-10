@@ -1,8 +1,8 @@
 <template>
     <DashboardCard
-        title="Sales Progress"
+        title="Order Progress"
         :Key="chartKey"
-        @dateChange="loadSalesProgressData"
+        @dateChange="loadOrderProgressData"
     >
         <Loader
             :active="isLoading"
@@ -23,25 +23,25 @@
         Loader
     } from '@components'
     import { computed } from 'vue'
-    import { useSalesProgress } from './useOrderProgress.js'
+    import { useOrderProgress } from './useOrderProgress.js'
     import DashboardCard from '../DashboardCard.vue'
 
     const {
         chartKey,
         isLoading,
-        salesProgressData,
-        loadSalesProgressData 
-    } = useSalesProgress()
+        orderProgressData,
+        loadOrderProgressData 
+    } = useOrderProgress()
 
     const chartData = computed(() => {
         return {
             type: 'area',
             options: {
                 xaxis: {
-                    categories: salesProgressData.value?.categories || []
+                    categories: orderProgressData.value?.categories || []
                 }
             },
-            series: salesProgressData.value?.series || []
+            series: orderProgressData.value?.series || []
         }
     })
 </script>
