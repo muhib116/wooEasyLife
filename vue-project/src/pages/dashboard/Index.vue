@@ -28,7 +28,7 @@
     import Filter from './fragments/Filter.vue'
     import { useDashboard } from './useDashboard'
 
-    const _useDashboard = useDashboard()
+    const _useDashboard = useDashboard(true)
 
     provide('useDashboard', _useDashboard)
 </script>

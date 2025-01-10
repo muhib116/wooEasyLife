@@ -18,18 +18,18 @@ export const useChart = () =>
                 },
             },
             xaxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                // categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
             },
         },
         series: [
-            {
-                name: 'Sales',
-                data: [30, 40, 35, 50, 49, 60, 70],
-            },
-            {
-                name: 'Sales',
-                data: [10, 70, 35, 10, 39, 60, 20],
-            },
+            // {
+            //     name: 'Sales',
+            //     data: [30, 40, 35, 50, 49, 60, 70],
+            // },
+            // {
+            //     name: 'Sales',
+            //     data: [10, 70, 35, 10, 39, 60, 20],
+            // },
         ],
     });
     

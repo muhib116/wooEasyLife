@@ -195,10 +195,12 @@ class OrderStatisticsAPI extends WP_REST_Controller
         // Check if any orders are found
         if (empty($orders)) {
             return new \WP_REST_Response([
-                'status'  => 'error',
-                'message' => 'No orders found for the given period.',
-                'data'    => [],
-            ], 404);
+                'status'    => 'success',
+                'data'      => [
+                    'series'     => [['name' => 'Sale per date', 'data' => []]],
+                    'categories' => [],
+                ],
+            ], 200);
         }
     
         // Initialize an array to store sales count by date
@@ -221,7 +223,7 @@ class OrderStatisticsAPI extends WP_REST_Controller
     
         while ($current_date <= $end_date_timestamp) {
             $date = date('Y-m-d', $current_date);
-            $categories[] = $date;
+            $categories[] = date('y-M-d', $current_date);
             $series[] = isset($sales_count[$date]) ? $sales_count[$date] : 0;
             $current_date = strtotime('+1 day', $current_date);
         }

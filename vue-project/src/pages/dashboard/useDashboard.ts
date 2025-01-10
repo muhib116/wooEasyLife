@@ -3,7 +3,7 @@ import { startOfDay, endOfDay, subDays, startOfWeek, endOfWeek, startOfMonth, en
 import { getOrderStatistics, getOrderStatuses } from "@/api"
 
 
-export const useDashboard = () => {
+export const useDashboard = (mountable?: boolean) => {
     const filterOptions = [
         {
             id: 'today',
@@ -31,7 +31,7 @@ export const useDashboard = () => {
         },
     ]
 
-    const selectedFilterOption = ref<string>('today')
+    const selectedFilterOption = ref<string>('this-week')
     const orderStatistics = ref({})
     const isLoading = ref(false)
     const customDates = ref({
@@ -93,9 +93,13 @@ export const useDashboard = () => {
         }
     
         // Format dates as 'YYYY-MM-DD'
+        customDates.value = {
+            start_date: startDate ? format(startDate, 'yyyy-MM-dd') : '',
+            end_date: endDate ? format(endDate, 'yyyy-MM-dd') : ''
+        }
         return {
-            startDate: startDate ? format(startDate, 'yyyy-MM-dd') : '',
-            endDate: endDate ? format(endDate, 'yyyy-MM-dd') : '',
+            startDate: customDates.value.start_date,
+            endDate: customDates.value.end_date,
         }
     }
 
@@ -115,15 +119,18 @@ export const useDashboard = () => {
         await loadOrderStatistics(startDate, endDate)
     }
 
-    onMounted(async () => {
-        try {
-            isLoading.value = true
-            await getData()
-            await loadOrderStatuses()
-        } finally {
-            isLoading.value = false
-        }
-    })
+    // if(mountable){
+        onMounted(async () => {
+            getDateRangeFormatted(selectedFilterOption.value)
+            // try {
+                // isLoading.value = true
+                // await getData()
+                // await loadOrderStatuses()
+            // } finally {
+            //     isLoading.value = false
+            // }
+        })
+    // }
 
     return {
         selectedFilterOption,
@@ -131,6 +138,7 @@ export const useDashboard = () => {
         orderStatuses,
         filterOptions,
         customDates,
+        getDateRangeFormatted,
         getDataByCustomFilter,
         getData,
     }

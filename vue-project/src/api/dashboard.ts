@@ -14,7 +14,9 @@ export const getTopSellingProduct = async (limit?: number) => {
     const { data } = await axios.get(`${localApiBaseURL}/top-selling-products?limit=${limit}`)
     return data
 }
-export const getSalesProgressData = async (startDate?:string, endDate?:string) => {
-    const { data } = await axios.get(`${localApiBaseURL}/sales-progress`)
+export const getSalesProgressData = async (date: {start_date: string, endDate:string}) => {
+    const { data } = await axios.get(`${localApiBaseURL}/sales-progress`, {
+        params: date
+    })
     return data
 }

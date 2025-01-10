@@ -1,5 +1,4 @@
 <template>
-	{{ _chartData }}
 	<VueApexCharts
 		v-bind:type="_chartData.type"
 		v-bind:options="_chartData.options"
