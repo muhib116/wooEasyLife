@@ -61,7 +61,7 @@ export const useDashboard = () => {
     }
 
 
-    const getDateRangeFormatted = (period) => {
+    const getDateRangeFormatted = (period: string) => {
         let startDate, endDate
     
         switch (period) {

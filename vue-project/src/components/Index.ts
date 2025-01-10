@@ -16,6 +16,7 @@ import MessageBox from './MessageBox.vue'
 import Switch from './Switch.vue'
 import Select from './select/index'
 import Invoice from './invoice/Index'
+import Chart from './chart'
 
 export {
     Icon,
@@ -35,5 +36,6 @@ export {
     MessageBox,
     Switch,
     Select,
-    Invoice
+    Invoice,
+    Chart
 }
