@@ -197,7 +197,7 @@ class OrderStatisticsAPI extends WP_REST_Controller
             return new \WP_REST_Response([
                 'status'    => 'success',
                 'data'      => [
-                    'series'     => [['name' => 'Sale per date', 'data' => []]],
+                    'series'     => [['name' => 'Total sale', 'data' => []]],
                     'categories' => [],
                 ],
             ], 200);
@@ -231,7 +231,7 @@ class OrderStatisticsAPI extends WP_REST_Controller
         return new \WP_REST_Response([
             'status'    => 'success',
             'data'      => [
-                'series'     => [['name' => 'Sale per date', 'data' => $series]],
+                'series'     => [['name' => 'Total sale', 'data' => $series]],
                 'categories' => $categories,
             ],
         ], 200);

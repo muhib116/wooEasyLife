@@ -1,8 +1,9 @@
 <template>
 	<VueApexCharts
-		v-bind:type="_chartData.type"
-		v-bind:options="_chartData.options"
-		v-bind:series="_chartData.series"
+		ref="chartRef"
+		:type="_chartData.type"
+		:options="_chartData.options"
+		:series="_chartData.series"
 		width="100%"
 	/>
 </template>
@@ -21,12 +22,17 @@ interface ChartData {
   series: ApexAxisChartSeries | ApexNonAxisChartSeries // Chart data
 }
 
-const props = defineProps<{ chartData: ChartData }>()
+const props = defineProps<{
+	type: string,
+	options: ApexCharts.ApexOptions
+	series: ApexAxisChartSeries | ApexNonAxisChartSeries
+	chartData: ChartData
+}>()
 const {
 	defaultChartData
 } = useChart()
 
 const _chartData = computed(() => {
-	return merge(defaultChartData.value, props.chartData)
+	return merge({}, defaultChartData.value, props.chartData)
 })
 </script>

@@ -20,3 +20,9 @@ export const getSalesProgressData = async (date: {start_date: string, endDate:st
     })
     return data
 }
+export const getOrderProgressData = async (date: {start_date: string, endDate:string}) => {
+    const { data } = await axios.get(`${localApiBaseURL}/order-progress`, {
+        params: date
+    })
+    return data
+}

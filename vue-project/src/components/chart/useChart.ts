@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 export type ChartData = {
     type: 'line' | 'bar' | 'pie' | 'donut' | 'radar' | 'area' | 'scatter'
@@ -9,6 +9,7 @@ export type ChartData = {
 
 export const useChart = () => 
 {
+    const chartRef = ref()
     const defaultChartData = ref({
         type: 'area',
         options: {
@@ -17,9 +18,44 @@ export const useChart = () =>
                     show: false, // Hides the toolbar
                 },
             },
+            colors: ['#0ca5e9', '#f97315', '#ABA62B', '#8D8D8D', '#2BAD7E', '#3062BB', '#C51B1B', '#2B80AD'],stroke: {
+                curve: 'smooth',
+                width: 1
+            },
+            dataLabels: {
+                enabled: false
+            },
             xaxis: {
                 // categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
             },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 0,
+                    inverseColors: true,
+                    opacityFrom: 1,
+                    opacityTo: 0.4,
+                    stops: [0, 0, 100]
+                },
+            },
+            grid: {
+                show: true,
+            },
+            tooltip: {
+                // x: {
+                //     show: false,
+                // }
+            },
+            legend: {
+                show: true,
+                horizontalAlign: 'left',
+                fontSize: '12px',
+                position: 'top',
+                height: 50,
+                labels: {
+                    colors: '#000000'
+                },
+            }
         },
         series: [
             // {
@@ -33,9 +69,8 @@ export const useChart = () =>
         ],
     });
     
-    
-    
     return {
+        chartRef,
         defaultChartData
     }
 }

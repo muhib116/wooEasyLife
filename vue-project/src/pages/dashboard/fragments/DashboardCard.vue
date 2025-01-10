@@ -1,16 +1,52 @@
 <template>
     <div class="relative">
         <Card.Native>
-            <div class="flex justify-between">
+            <div v-if="showCustomDateInput" class="w-full text-sm flex items-end mb-2 gap-3">
+                <div class="flex-1 grid grid-cols-2 gap-3">
+                    <div class="grid">
+                        Start date
+                        <label class="font-light border px-3 py-1 rounded-sm">
+                            <input
+                                class="outline-none bg-transparent w-full !border-none focus:outline-none"
+                                type="date"
+                                v-model="customDates.start_date"
+                            />
+                        </label>
+                    </div>
+        
+                    <div class="grid">
+                        End date
+                        <label class="font-light border px-3 py-1 rounded-sm">
+                            <input
+                                class="outline-none bg-transparent w-full !border-none focus:outline-none"
+                                type="date"
+                                v-model="customDates.end_date"
+                            />
+                        </label>
+                    </div>
+                </div>
+    
+                <Button.Primary
+                    class="ml-auto w-[118px] text-center justify-center !py-[6px]"
+                    @click="() => {
+                        $emit('dateChange', customDates)
+                    }"
+                >
+                    Apply Now
+                </Button.Primary>
+            </div>
+
+            <div class="flex justify-between items-end">
                 <Heading
                     :title="title"
                     :subtitle="subtitle"
                 />
-                <label class="font-light border px-3 py-2 rounded">
+
+                <label class="font-light border px-2 py-1 rounded-sm">
                     <select 
                         class="outline-none bg-transparent w-full !border-none focus:outline-none"
                         v-model="selectedFilterOption"
-                        @change="handleLoadData($emit)"
+                        @change="handleLoadData()"
                     >
                         <option
                             v-for="(option, index) in filterOptions"
@@ -25,50 +61,10 @@
             <slot></slot>
         </Card.Native>
     </div>
-
-    <Modal 
-        v-model="toggleModal" 
-        title="Enter your date range."
-        class="w-[600px]"
-    >
-        <div class="w-full grid gap-3">
-            <div class="grid">
-                Start date
-                <label class="font-light border px-3 py-2 rounded">
-                    <input
-                        class="outline-none bg-transparent w-full !border-none focus:outline-none"
-                        type="date"
-                        v-model="customDates.start_date"
-                    />
-                </label>
-            </div>
-
-            <div class="grid">
-                End date
-                <label class="font-light border px-3 py-2 rounded">
-                    <input
-                        class="outline-none bg-transparent w-full !border-none focus:outline-none"
-                        type="date"
-                        v-model="customDates.end_date"
-                    />
-                </label>
-            </div>
-
-            <Button.Primary
-                class="ml-auto"
-                @click="() => {
-                    $emit('dateChange', customDates)
-                    toggleModal = false
-                }"
-            >
-                Apply Now
-            </Button.Primary>
-        </div>
-    </Modal>
 </template>
 
 <script setup lang="ts">
-    import { Heading, Card, Modal, Button } from '@components'
+    import { Heading, Card, Button } from '@components'
     import { useDashboard } from '../useDashboard'
     import { onMounted, ref } from 'vue'
 
@@ -79,7 +75,7 @@
 
     const emit = defineEmits(['dateChange'])
 
-    const toggleModal = ref(false)
+    const showCustomDateInput = ref(false)
     const {
         filterOptions,
         selectedFilterOption,
@@ -89,9 +85,11 @@
 
     const handleLoadData = () => {
         if(selectedFilterOption.value == 'custom'){
-            toggleModal.value = true
+            showCustomDateInput.value = true
             return
         }
+
+        showCustomDateInput.value = false
         getDateRangeFormatted(selectedFilterOption.value)
         emit('dateChange', customDates.value)
     }

@@ -23,7 +23,7 @@
         Loader
     } from '@components'
     import { computed } from 'vue'
-    import { useSalesProgress } from './useSalesProgress.ts'
+    import { useSalesProgress } from './useOrderProgress.js'
     import DashboardCard from '../DashboardCard.vue'
 
     const {
