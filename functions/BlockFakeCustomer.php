@@ -23,31 +23,24 @@ class BlockFakeCustomer extends WP_REST_Controller
         register_rest_route(__API_NAMESPACE, '/block-customer', [
             'methods'             => 'POST',
             'callback'            => [$this, 'block_customer'],
-            'permission_callback' => [$this, 'permissions_check'],
+            'permission_callback' => api_permission_check(),
             'args'                => $this->get_endpoint_args(),
         ]);
 
         register_rest_route(__API_NAMESPACE, '/blocked-customers', [
             'methods'             => 'GET',
             'callback'            => [$this, 'get_blocked_customers'],
-            'permission_callback' => [$this, 'permissions_check'],
+            'permission_callback' => api_permission_check(),
         ]);
 
         register_rest_route(__API_NAMESPACE, '/update-customer/(?P<id>\d+)', [
             'methods'             => 'PUT',
             'callback'            => [$this, 'update_blocked_customer'],
-            'permission_callback' => [$this, 'permissions_check'],
+            'permission_callback' => api_permission_check(),
             'args'                => $this->get_endpoint_args(),
         ]);
     }
 
-    /**
-     * Permissions callback
-     */
-    public function permissions_check(WP_REST_Request $request)
-    {
-        return current_user_can('manage_woocommerce'); // Only admins can use this API
-    }
 
     /**
      * Arguments for the endpoint

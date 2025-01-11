@@ -24,12 +24,12 @@ class BlockListAPI extends WP_REST_Controller {
             [
                 'methods'             => 'GET',
                 'callback'            => [$this, 'get_all_blocked_entries'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
             ],
             [
                 'methods'             => 'POST',
                 'callback'            => [$this, 'create_blocked_entry'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
                 'args'                => $this->get_block_list_schema(false),
             ],
         ]);
@@ -37,7 +37,7 @@ class BlockListAPI extends WP_REST_Controller {
             [
                 'methods'             => 'POST',
                 'callback'            => [$this, 'create_blocked_entries_in_bulk'],
-                'permission_callback' => '__return_true', // Adjust permissions as needed
+                'permission_callback' => api_permission_check(), // Adjust permissions as needed
                 'args'                => $this->get_bulk_entry_schema(),
             ],
         ]);
@@ -45,18 +45,18 @@ class BlockListAPI extends WP_REST_Controller {
             [
                 'methods'             => 'GET',
                 'callback'            => [$this, 'get_blocked_entry_by_id'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
             ],
             [
                 'methods'             => 'PUT',
                 'callback'            => [$this, 'update_blocked_entry'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
                 'args'                => $this->get_block_list_schema(true),
             ],
             [
                 'methods'             => 'DELETE',
                 'callback'            => [$this, 'delete_blocked_entry'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
             ],
         ]);
     }

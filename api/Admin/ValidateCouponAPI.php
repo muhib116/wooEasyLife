@@ -22,7 +22,7 @@ class ValidateCouponAPI
             [
                 'methods'             => 'POST',
                 'callback'            => [$this, 'validate_coupon'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
                 'args'                => $this->get_validate_coupon_args(),
             ],
         ]);

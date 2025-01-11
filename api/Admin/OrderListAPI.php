@@ -21,7 +21,7 @@ class OrderListAPI
             [
                 'methods'             => 'GET',
                 'callback'            => [$this, 'get_orders'],
-                'permission_callback' => '__return_true', // Allow public access (modify as needed).
+                'permission_callback' => api_permission_check(), // Allow public access (modify as needed).
                 'args'                => [
                     'status' => [
                         'required' => false,
@@ -50,7 +50,7 @@ class OrderListAPI
             [
                 'methods'             => 'GET',
                 'callback'            => [$this, 'get_order_status_with_counts'],
-                'permission_callback' => '__return_true', // Allow public access (modify as needed).
+                'permission_callback' => api_permission_check(), // Allow public access (modify as needed).
             ]
         );
 
@@ -60,7 +60,7 @@ class OrderListAPI
             [
                 'methods'             => 'POST',
                 'callback'            => [$this, 'save_order_notes'],
-                'permission_callback' => '__return_true', // Or add your permission logic here
+                'permission_callback' => api_permission_check(), // Or add your permission logic here
             ]
         );
 
@@ -70,7 +70,7 @@ class OrderListAPI
             [
                 'methods'  => 'POST',
                 'callback' => [$this, 'change_order_status'], // Ensure this function exists and is callable
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
                 'args'     => $this->get_status_change_schema(), // Optional validation
             ]
         );

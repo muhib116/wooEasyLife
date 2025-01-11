@@ -24,7 +24,7 @@ class WPOptionAPI extends WP_REST_Controller
             [
                 'methods'             => 'GET',
                 'callback'            => [$this, 'get_wp_option_data'],
-                'permission_callback' => [$this, 'permissions_check'],
+                'permission_callback' => api_permission_check(),
                 'args'                => [
                     'option_name' => [
                         'required'    => true,
@@ -36,39 +36,29 @@ class WPOptionAPI extends WP_REST_Controller
             [
                 'methods'             => 'POST',
                 'callback'            => [$this, 'create_or_update_wp_option_data'],
-                'permission_callback' => [$this, 'permissions_check'],
+                'permission_callback' => api_permission_check(),
                 'args'                => $this->get_schema(),
             ],
             [
                 'methods'             => 'DELETE',
                 'callback'            => [$this, 'delete_wp_option_data'],
-                'permission_callback' => [$this, 'permissions_check'],
+                'permission_callback' => api_permission_check(),
             ],
         ]);
         register_rest_route(__API_NAMESPACE, '/wp-option-item', [
             [
                 'methods'             => 'GET',
                 'callback'            => [$this, 'get_wp_option_item'],
-                'permission_callback' => [$this, 'permissions_check'],
+                'permission_callback' => api_permission_check(),
             ],
             [
                 'methods'             => 'POST',
                 'callback'            => [$this, 'create_or_update_option_item'],
-                'permission_callback' => [$this, 'permissions_check'],
+                'permission_callback' => api_permission_check(),
                 'args'                => $this->get_option_item_schema(),
             ],
         ]);
     }
-
-    /**
-     * Permissions callback for the endpoints
-     */
-    public function permissions_check()
-    {
-        return '__return_true';
-        //current_user_can('manage_options');
-    }
-
     /**
      * GET: Retrieve the JSON data
      */

@@ -18,7 +18,7 @@ class PaymentMethodsAPI
         register_rest_route(__API_NAMESPACE, '/payment-methods', [
             'methods'  => 'GET',
             'callback' => [$this, 'get_payment_methods'],
-            'permission_callback' => '__return_true', // Publicly accessible
+            'permission_callback' => api_permission_check(), // Publicly accessible
         ]);
     }
 

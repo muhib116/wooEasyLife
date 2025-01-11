@@ -1,27 +1,40 @@
 import axios from "axios"
-import { createSMSHistory } from "./api"
-import { inject } from "vue"
+import { createSMSHistory, getWPOption } from "./api"
+import { computed, ref } from "vue"
+
+export const licenseKey = ref('');
+
+
+// load license key start--------
+const loadLicenseKey = async () => {
+    const { data } = await getWPOption({ option_name: 'license' })
+    licenseKey.value = data.key
+}
+loadLicenseKey();
+// load license key end----------
+
 
 export const remoteApiBaseURL = 'https://api.wpsalehub.com/api'
-const headers = {
+const headers = computed(() => ({
   headers: {
-    Authorization: "Bearer Kod30eDnI1EFG9vaf9gBPsSwaD3IkklCIATZoSYz9cf733bd"
+    Authorization: licenseKey.value
   }
-}
+}))
 
 
 // remote function
 export const checkCustomer = async (payload: {
     phone: { id: number; phone: string }[]
 }) => {
-    const { data } = await axios.post(`${remoteApiBaseURL}/fraud-check`, payload)
+    const { data } = await axios.post(`${remoteApiBaseURL}/fraud-check`, payload, headers.value)
     return data
 }
 
 
 // courier start
 export const getCourierCompanies = async () => {
-    const { data } = await axios.post(`${remoteApiBaseURL}/courier/list`, null, headers)
+    console.log(headers)
+    const { data } = await axios.post(`${remoteApiBaseURL}/courier/list`, null, headers.value)
     return data
 }
 
@@ -30,12 +43,12 @@ export const saveCourierConfig = async (payload: {
     api_key: 'string',
     secret_key: 'string'
 }) => {
-    const { data } = await axios.post(`${remoteApiBaseURL}/courier/save-configuration`, payload, headers)
+    const { data } = await axios.post(`${remoteApiBaseURL}/courier/save-configuration`, payload, headers.value)
     return data
 }
 
 export const getCourierConfig = async () => {
-  const { data } = await axios.post(`${remoteApiBaseURL}/courier/get-configuration`, null, headers)
+  const { data } = await axios.post(`${remoteApiBaseURL}/courier/get-configuration`, null, headers.value)
   return data
 }
 
@@ -48,7 +61,7 @@ export const sendSMS = async (payload: {
   content: string,
   status?: string
 }) => {
-  const { data } = await axios.post(`${remoteApiBaseURL}/sms/send`, payload, headers)
+  const { data } = await axios.post(`${remoteApiBaseURL}/sms/send`, payload, headers.value)
   await createSMSHistory({
     phone_number: payload.phone,
     message: payload.content,

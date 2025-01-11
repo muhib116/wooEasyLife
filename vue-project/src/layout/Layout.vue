@@ -30,8 +30,12 @@
 
     provide('configData', {configData})
 
-    onBeforeMount(async () => {
+    const loadConfig = async () => {
         const { data } = await getWPOption({ option_name: 'config' })
         configData.value = data
+    }
+
+    onBeforeMount(async () => {
+        loadConfig();
     })
 </script>

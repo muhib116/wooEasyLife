@@ -23,7 +23,7 @@ class CustomOrderHandleAPI extends WP_REST_Controller
             [
                 'methods'             => 'post',
                 'callback'            => [$this, 'create_custom_order'],
-                'permission_callback' => [$this, 'permissions_check'],
+                'permission_callback' => api_permission_check(),
             ],
         ]);
 
@@ -31,17 +31,9 @@ class CustomOrderHandleAPI extends WP_REST_Controller
             [
                 'methods'             => 'GET',
                 'callback'            => [$this, 'get_products'],
-                'permission_callback' => [$this, 'permissions_check'],
+                'permission_callback' => api_permission_check(),
             ],
         ]);
-    }
-
-    /**
-     * Permissions callback for the endpoints
-     */
-    public function permissions_check()
-    {
-        return true; // Restrict access to WooCommerce admins
     }
 
 

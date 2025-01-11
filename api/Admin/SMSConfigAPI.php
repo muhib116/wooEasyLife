@@ -24,12 +24,12 @@ class SMSConfigAPI extends WP_REST_Controller {
             [
                 'methods'             => 'GET',
                 'callback'            => [$this, 'get_all_sms_configs'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
             ],
             [
                 'methods'             => 'POST',
                 'callback'            => [$this, 'create_sms_config'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
                 'args'                => $this->get_sms_config_schema(false),
             ],
         ]);
@@ -38,18 +38,18 @@ class SMSConfigAPI extends WP_REST_Controller {
             [
                 'methods'             => 'GET',
                 'callback'            => [$this, 'get_sms_config_by_id'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
             ],
             [
                 'methods'             => 'PUT',
                 'callback'            => [$this, 'update_sms_config'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
                 'args'                => $this->get_sms_config_schema(true),
             ],
             [
                 'methods'             => 'DELETE',
                 'callback'            => [$this, 'delete_sms_config'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
             ],
         ]);
 
@@ -58,7 +58,7 @@ class SMSConfigAPI extends WP_REST_Controller {
             [
                 'methods'             => 'GET',
                 'callback'            => [$this, 'get_all_woocommerce_statuses'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
             ],
         ]);
     }

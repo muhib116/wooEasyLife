@@ -11,12 +11,14 @@ alertBox position fixed kore dekhate hobe
 Invoice a real courier id bosate hobe
 one click Courier entry
 
-** SMS ta amader api throute korte hobe:->helper.php: send_sms()
-** api authanticat from central point
+✅ SMS ta amader api throute korte hobe:->helper.php: send_sms()
+✅ api authanticat from central point
 
 cost managment like ad cost
 per order ad cost in dash board
 Total Page view
+
+check page a form fillup obostay OTP enabled thaklew kuno input field a cursor rekhe inter dile form submit hoye jay.
 
 Dashboard:
 =========================

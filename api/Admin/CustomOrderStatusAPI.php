@@ -173,12 +173,12 @@ class CustomOrderStatusAPI extends WP_REST_Controller
             [
                 'methods'             => 'GET',
                 'callback'            => [$this, 'get_statuses'],
-                'permission_callback' => [$this, 'permissions_check'],
+                'permission_callback' => api_permission_check(),
             ],
             [
                 'methods'             => 'POST',
                 'callback'            => [$this, 'create_status'],
-                'permission_callback' => [$this, 'permissions_check'],
+                'permission_callback' => api_permission_check(),
                 'args'                => $this->get_status_schema(false), // No 'id' required for creation
             ]
         ]);
@@ -187,28 +187,20 @@ class CustomOrderStatusAPI extends WP_REST_Controller
             [
                 'methods'             => 'GET',
                 'callback'            => [$this, 'get_status'],
-                'permission_callback' => [$this, 'permissions_check'],
+                'permission_callback' => api_permission_check(),
             ],
             [
                 'methods'             => 'PUT',
                 'callback'            => [$this, 'update_status'],
-                'permission_callback' => [$this, 'permissions_check'],
+                'permission_callback' => api_permission_check(),
                 'args'                => $this->get_status_schema(true), // 'id' required for update
             ],
             [
                 'methods'             => 'DELETE',
                 'callback'            => [$this, 'delete_status'],
-                'permission_callback' => [$this, 'permissions_check'],
+                'permission_callback' => api_permission_check(),
             ],
         ]);
-    }
-
-    /**
-     * Permissions callback for the endpoints.
-     */
-    public function permissions_check()
-    {
-        return '__return_true'; // Allow all for now (you can restrict later)
     }
 
     /**

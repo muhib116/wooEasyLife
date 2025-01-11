@@ -26,28 +26,20 @@ class OTPHandlerAPI extends WP_REST_Controller
         register_rest_route('wooeasylife/v1', '/otp/send', [
             'methods'             => 'POST',
             'callback'            => [$this, 'send_otp'],
-            'permission_callback' => [$this, 'permissions_check'],
+            'permission_callback' => api_permission_check(),
         ]);
 
         register_rest_route('wooeasylife/v1', '/otp/resend', [
             'methods'             => 'POST',
             'callback'            => [$this, 'resend_otp'],
-            'permission_callback' => [$this, 'permissions_check'],
+            'permission_callback' => api_permission_check(),
         ]);
 
         register_rest_route('wooeasylife/v1', '/otp/validate', [
             'methods'             => 'POST',
             'callback'            => [$this, 'validate_otp'],
-            'permission_callback' => [$this, 'permissions_check'],
+            'permission_callback' => api_permission_check(),
         ]);
-    }
-
-    /**
-     * Permissions callback for API routes.
-     */
-    public function permissions_check()
-    {
-        return true; // Allow public access for now
     }
 
     /**

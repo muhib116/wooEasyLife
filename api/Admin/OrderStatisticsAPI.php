@@ -26,34 +26,34 @@ class OrderStatisticsAPI extends WP_REST_Controller
             [
                 'methods'             => 'GET',
                 'callback'            => [$this, 'get_order_statistics'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
             ]
         );
         register_rest_route(__API_NAMESPACE, '/top-selling-products', [
             'methods'             => 'GET',
             'callback'            => [$this, 'get_top_selling_products'],
-            'permission_callback' => '__return_true', // Adjust permissions as needed
+            'permission_callback' => api_permission_check(), // Adjust permissions as needed
         ]);
         register_rest_route(__API_NAMESPACE, '/sales-progress', [
             'methods'             => 'GET',
             'callback'            => [$this, 'get_sales_progress'],
-            'permission_callback' => '__return_true', // Adjust permissions as needed
+            'permission_callback' => api_permission_check(), // Adjust permissions as needed
         ]);
         register_rest_route(__API_NAMESPACE, '/order-progress', [
             'methods'             => 'GET',
             'callback'            => [$this, 'get_order_progress'],
-            'permission_callback' => '__return_true', // Adjust permissions as needed
+            'permission_callback' => api_permission_check(), // Adjust permissions as needed
         ]);
         register_rest_route(__API_NAMESPACE, '/orders-grouped-by-created-via', [
             'methods'             => 'GET',
             'callback'            => [$this, 'get_orders_grouped_by_created_via'],
-            'permission_callback' => '__return_true', // Adjust permissions as needed
+            'permission_callback' => api_permission_check(), // Adjust permissions as needed
         ]);
         register_rest_route(__API_NAMESPACE, '/order-cycle-time', [
             [
                 'methods'             => 'GET',
                 'callback'            => [$this, 'get_order_cycle_time'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
             ],
         ]);
     }

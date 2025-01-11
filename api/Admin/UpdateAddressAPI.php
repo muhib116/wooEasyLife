@@ -23,7 +23,7 @@ class UpdateAddressAPI extends WP_REST_Controller
         register_rest_route(__API_NAMESPACE, '/update-address/(?P<id>\d+)', [
             'methods'             => 'POST',
             'callback'            => [$this, 'update_address'],
-            'permission_callback' => '__return_true', // Allow public access for testing
+            'permission_callback' => api_permission_check(), // Allow public access for testing
             'args'                => $this->get_endpoint_args_for_item_schema(),
         ]);
     }

@@ -13,7 +13,7 @@
                 Blacklisted Customers
             </h3>
         </div>
-        <Table.Table v-if="blackListData.length">
+        <Table.Table v-if="blackListData?.length">
             <Table.THead>
                 <Table.Th>#sl</Table.Th>
                 <Table.Th>Phone/Ip</Table.Th>
@@ -33,7 +33,7 @@
         <MessageBox
             title="No entries found in the blacklist."
             type="info"
-            v-else
+            v-else-if="!isLoading"
         />
     </Card.Native>
 </template>

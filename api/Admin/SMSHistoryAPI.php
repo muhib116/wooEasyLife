@@ -24,12 +24,12 @@ class SMSHistoryAPI extends WP_REST_Controller {
             [
                 'methods'             => 'GET',
                 'callback'            => [$this, 'get_all_sms_history'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
             ],
             [
                 'methods'             => 'POST',
                 'callback'            => [$this, 'create_sms_history'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
                 'args'                => $this->get_sms_history_schema(false),
             ],
         ]);
@@ -38,12 +38,12 @@ class SMSHistoryAPI extends WP_REST_Controller {
             [
                 'methods'             => 'GET',
                 'callback'            => [$this, 'get_sms_history_by_id'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
             ],
             [
                 'methods'             => 'DELETE',
                 'callback'            => [$this, 'delete_sms_history'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => api_permission_check(),
             ],
         ]);
     }

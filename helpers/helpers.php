@@ -1,4 +1,11 @@
 <?php
+function api_permission_check () {
+    // if (!is_user_logged_in() || !current_user_can('manage_options')) {
+    //     wp_die('Access denied. Only admin can access.');
+    //     return;
+    // }
+    return '__return_true';
+}
 
 function decode_json_if_string($data) {
     // Check if the data is a string and in JSON format
@@ -69,7 +76,7 @@ function get_contrast_color($hexColor) {
 function send_sms($phone_number, $message)
 {
     global $license_key;
-    
+
     $url = "https://api.wpsalehub.com/api/sms/send";
 
     $data = [
