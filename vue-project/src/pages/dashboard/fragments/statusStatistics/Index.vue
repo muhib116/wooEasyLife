@@ -1,17 +1,14 @@
 <template>
-    <Card.Native>
-        <div class="mb-4">
-            <h1 class="font-semibold text-xl">Filtered Data</h1>
-            <p class="opacity-60 text-[18px]">
-                Here is the filtered data, now you are watching {{ selectedFilterOption.replace('-', ' ') }}'s data
-            </p>
-        </div>
+    <DashboardCard
+        title="Status Statistics"
+        @dateChange="loadOrderStatisticsData"
+    >
+        <Loader
+            :active="isLoading"
+            class="absolute inset-x-1/2 top-[200px] -translate-x-1/2 z-20"
+        />
 
-        <div class="grid grid-cols-4 gap-6 !text-white relative">
-            <Loader
-                :active="true"
-                class="absolute inset-x-1/2 top-[200px] -translate-x-1/2 z-20"
-            />
+        <div class="grid md:grid-cols-3 grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 lg:gap-6 !text-white relative">
             <Card.Stylist
                 v-for="(item, index) in orderStatuses"
                 :key="index"
@@ -23,24 +20,34 @@
             />
             
             <Card.Stylist
+                v-if="orderStatistics?.total_revenue"
                 class="bg-cyan-600 text-white"
                 :title="orderStatistics?.total_revenue"
                 subtitle="total revenue"
                 iconName="PhCoins"
             />
         </div>
-    </Card.Native>
+    </DashboardCard>
 </template>
 <script setup lang="ts">
     import { Card, Loader } from '@components'
     import { inject } from 'vue'
+    import { useStatusStatistics } from './useStatusStatistics'
+    import DashboardCard from '../DashboardCard.vue'
+
+    // const {
+    //     orderStatuses,
+    //     orderStatistics,
+    //     isLoading,
+    //     selectedFilterOption
+    // } = inject('useDashboard')
 
     const {
         orderStatuses,
         orderStatistics,
         isLoading,
-        selectedFilterOption
-    } = inject('useDashboard')
+        loadOrderStatisticsData
+    } = useStatusStatistics()
 
     const iconsWithBg = {
         processing: {

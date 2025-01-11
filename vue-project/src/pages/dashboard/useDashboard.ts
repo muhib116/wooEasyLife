@@ -1,6 +1,14 @@
-import { onMounted, ref } from "vue"
-import { startOfDay, endOfDay, subDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, format } from 'date-fns'
-import { getOrderStatistics, getOrderStatuses } from "@/api"
+import { ref } from "vue"
+import { 
+    startOfDay, 
+    endOfDay, 
+    subDays, 
+    startOfMonth, 
+    endOfMonth, 
+    startOfYear, 
+    endOfYear, 
+    format, 
+} from 'date-fns'
 
 
 export const useDashboard = (mountable?: boolean) => {
@@ -33,33 +41,10 @@ export const useDashboard = (mountable?: boolean) => {
 
     const selectedFilterOption = ref<string>('this-week')
     const orderStatistics = ref({})
-    const isLoading = ref(false)
     const customDates = ref({
         start_date: '',
         end_date: ''
     })
-    const orderStatuses = ref([])
-
-    const loadOrderStatistics = async (start_date: string, end_date: string) => {
-        try {
-            isLoading.value = true
-            const { data } = await getOrderStatistics({start_date, end_date})
-            orderStatistics.value = data
-        } finally {
-            isLoading.value = false
-        }
-    }
-
-    const loadOrderStatuses = async () => {
-        const { data } = await getOrderStatuses()
-        orderStatuses.value = data.map(item => {
-            return {
-                title: item.title,
-                slug: item.slug
-            }
-        })
-    }
-
 
     const getDateRangeFormatted = (period: string) => {
         let startDate, endDate
@@ -103,43 +88,11 @@ export const useDashboard = (mountable?: boolean) => {
         }
     }
 
-    const getDataByCustomFilter = async (button = {isLoading: false}) => {
-        const { start_date, end_date } = customDates.value
-        try {
-            button.isLoading = true
-            await loadOrderStatistics(start_date, end_date)
-        } finally {
-            button.isLoading = false
-        }
-    }
-
-    const getData = async () => {
-        if(selectedFilterOption.value == 'custom') return
-        const { startDate, endDate } = getDateRangeFormatted(selectedFilterOption.value)
-        await loadOrderStatistics(startDate, endDate)
-    }
-
-    // if(mountable){
-        onMounted(async () => {
-            getDateRangeFormatted(selectedFilterOption.value)
-            // try {
-                // isLoading.value = true
-                // await getData()
-                // await loadOrderStatuses()
-            // } finally {
-            //     isLoading.value = false
-            // }
-        })
-    // }
-
     return {
         selectedFilterOption,
         orderStatistics,
-        orderStatuses,
         filterOptions,
         customDates,
-        getDateRangeFormatted,
-        getDataByCustomFilter,
-        getData,
+        getDateRangeFormatted
     }
 }

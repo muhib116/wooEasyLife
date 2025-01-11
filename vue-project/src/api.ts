@@ -45,13 +45,7 @@ export const changeStatus = async (payload: {
 }[]) => {
     return await axios.post(`${localApiBaseURL}/orders/change-status`, payload)
 }
-export const getOrderStatistics = async (payload: {
-    startDate: string,
-    endDate: string
-}) => {
-    const { data } = await axios.get(`${localApiBaseURL}/order-stats`, { params: payload })
-    return data
-}
+
 export const getOrderStatuses = async () => {
     const { data } = await axios.get(`${localApiBaseURL}/status-with-counts`)
     return data

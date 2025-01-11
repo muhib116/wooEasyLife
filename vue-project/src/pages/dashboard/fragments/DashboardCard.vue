@@ -36,7 +36,7 @@
                 </Button.Primary>
             </div>
 
-            <div class="flex justify-between items-end">
+            <div class="flex justify-between items-end mb-4">
                 <Heading
                     :title="title"
                     :subtitle="subtitle"
@@ -95,6 +95,7 @@
     }
 
     onMounted(() => {
+        getDateRangeFormatted(selectedFilterOption.value)
         emit('dateChange', customDates.value)
     })
 </script>

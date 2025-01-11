@@ -5,6 +5,13 @@ import {
 import { getOrderList } from "@/api"
 
 
+export const getOrderStatusStatistics = async (payload: {
+    startDate: string,
+    endDate: string
+}) => {
+    const { data } = await axios.get(`${localApiBaseURL}/order-stats`, { params: payload })
+    return data
+}
 
 export const getRecentOrders = async (limit?: number) => {
     const { data } = await getOrderList({per_page: limit})
