@@ -6,6 +6,7 @@
     >
         <Loader
             :active="isLoading"
+            class="bg-white/90 rounded-full p-[2px] absolute inset-1/2 -translate-x-1/2"
         />
         <div class="-ml-3 -mr-3 h-[320px]">
             <Chart.Native
@@ -35,7 +36,7 @@
 
     const chartData = computed(() => {
         return {
-            type: 'bar',
+            type: 'line',
             options: {
                 xaxis: {
                     categories: orderProgressData.value?.categories || []

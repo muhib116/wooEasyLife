@@ -48,7 +48,14 @@ class OrderStatisticsAPI extends WP_REST_Controller
             'methods'             => 'GET',
             'callback'            => [$this, 'get_orders_grouped_by_created_via'],
             'permission_callback' => '__return_true', // Adjust permissions as needed
-        ]); 
+        ]);
+        register_rest_route(__API_NAMESPACE, '/order-cycle-time', [
+            [
+                'methods'             => 'GET',
+                'callback'            => [$this, 'get_order_cycle_time'],
+                'permission_callback' => '__return_true',
+            ],
+        ]);
     }
 
     /**
@@ -390,6 +397,102 @@ class OrderStatisticsAPI extends WP_REST_Controller
         ], 200);
     }
     
+    public function get_order_cycle_time(WP_REST_Request $request)
+    {
+
+        // Retrieve the start_date and end_date from the request
+        $start_date = $request->get_param('start_date') ?? date('Y-m-d', strtotime('-6 days'));
+        $end_date = $request->get_param('end_date') ?? date('Y-m-d');
     
-    
+        // Fetch all orders
+        $args = [
+            'limit'    => -1, // Get all orders
+            'type'     => 'shop_order',
+            'return'   => 'objects', // Return full order objects
+            'date_created' => $start_date . '...' . $end_date, // Date range
+        ];
+
+        $orders = wc_get_orders($args);
+
+        if (empty($orders)) {
+            return new \WP_REST_Response([
+                'status'  => 'error',
+                'message' => 'No orders found.',
+                'data'    => [],
+            ], 404);
+        }
+
+        // Prepare data for chart
+        $status_durations = []; // To store cumulative durations for each status pair
+        $status_counts = []; // To count occurrences of each status pair
+
+        foreach ($orders as $order) {
+            $status_changes = $order->get_meta('_status_history', true);
+
+            if (empty($status_changes)) {
+                continue; // Skip orders with no status history
+            }
+
+            // Decode JSON if stored in that format
+            if (is_string($status_changes)) {
+                $status_changes = json_decode($status_changes, true);
+            }
+
+            // Sort status changes by date
+            usort($status_changes, function ($a, $b) {
+                return strtotime($a['date']) - strtotime($b['date']);
+            });
+
+            $previous_status = null;
+            $previous_date = null;
+
+            foreach ($status_changes as $change) {
+                $current_status = $change['status'];
+                $current_date = $change['date'];
+
+                // Skip if no previous status to compare
+                if ($previous_status !== null && $previous_date !== null) {
+                    $duration = strtotime($current_date) - strtotime($previous_date);
+                    $status_key = "{$previous_status} -> {$current_status}";
+
+                    // Aggregate durations and counts
+                    if (!isset($status_durations[$status_key])) {
+                        $status_durations[$status_key] = 0;
+                        $status_counts[$status_key] = 0;
+                    }
+
+                    $status_durations[$status_key] += $duration;
+                    $status_counts[$status_key]++;
+                }
+
+                // Update previous status and date
+                $previous_status = $current_status;
+                $previous_date = $current_date;
+            }
+        }
+
+        // Prepare data for ApexChart
+        $categories = array_keys($status_durations);
+        $series = [
+            [
+                'name' => 'Average Duration (in minutes)',
+                'data' => array_map(function ($key) use ($status_durations, $status_counts) {
+                    $average_duration = $status_durations[$key] / $status_counts[$key];
+                    return round($average_duration / 60, 2); // Convert to minutes
+                }, $categories),
+            ],
+            // [
+            //     'name' => 'Transition Count',
+            //     'data' => array_values($status_counts),
+            // ],
+        ];
+
+        return new \WP_REST_Response([
+            'status' => 'success',
+            'data'   => [
+                'categories' => $categories,
+                'series'     => $series,
+            ],
+        ], 200);
+    }
 }

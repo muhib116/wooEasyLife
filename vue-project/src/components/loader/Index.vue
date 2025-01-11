@@ -1,7 +1,7 @@
 <template>
     <div
         v-if="active"
-        class="flex gap-1 items-end z-50 bg-white/90 rounded-full p-[2px] absolute inset-1/2 -translate-x-1/2"
+        class="flex gap-1 items-end z-50"
         :style="{
             width: `${size || 40}px`,
             height: `${size || 40}px`,

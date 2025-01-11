@@ -1,8 +1,8 @@
 <template>
     <DashboardCard
-        title="Order Source"
+        title="Order cycle time"
         :Key="chartKey"
-        @dateChange="loadOrderSourceData"
+        @dateChange="loadOrderCycleTimeData"
     >
         <Loader
             :active="isLoading"
@@ -24,32 +24,26 @@
         Loader
     } from '@components'
     import { computed } from 'vue'
-    import { useOrderSource } from './useOrderSource.js'
+    import { useOrderCycleTime } from './useOrderCycleTime.js'
     import DashboardCard from '../DashboardCard.vue'
 
     const {
         chartKey,
         isLoading,
-        orderSourceData,
-        loadOrderSourceData 
-    } = useOrderSource()
+        orderCycleTimeData,
+        loadOrderCycleTimeData 
+    } = useOrderCycleTime()
 
     const chartData = computed(() => {
         return {
+            type: 'bar',
             options: {
                 xaxis: {
-                    categories: orderSourceData.value?.categories || []
+                    categories: orderCycleTimeData.value?.categories || []
                 },
-                colors: ['#39c1a0']
+                colors: ['#6e4189']
             },
-            series: [
-                {
-                    name: 'Total Order',
-                    type: 'bar',
-                    data: orderSourceData.value?.series?.length ? orderSourceData.value?.series[0].data : []
-                }
-                
-            ]
+            series: orderCycleTimeData.value?.series || []
         }
     })
 </script>

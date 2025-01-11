@@ -4,11 +4,16 @@
             <div class="grid gap-8 font-light">
                 <Filter />
 
-                <OrderSource />
                 <div class="grid grid-cols-2 gap-5 w-full">
                     <OrderProgress />
                     <SalesProgress />
                 </div>
+                
+                <div class="grid grid-cols-2 gap-5 w-full">
+                    <OrderSource />
+                    <OrderCycleTime />
+                </div>
+                
 
                 <div class="grid grid-cols-2 gap-5 w-full">
                     <RecentOrder />
@@ -31,6 +36,7 @@
     import SalesProgress from './fragments/SalesProgress/Index.vue'
     import OrderProgress from './fragments/OrderProgress/Index.vue'
     import OrderSource from './fragments/OrderSource/Index.vue'
+    import OrderCycleTime from './fragments/OrderCycleTime/Index.vue'
 
     const _useDashboard = useDashboard(true)
 

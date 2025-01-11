@@ -21,7 +21,7 @@ export const useChart = () =>
             colors: ['#0ca5e9', '#f97315', '#ABA62B', '#8D8D8D', '#2BAD7E', '#3062BB', '#C51B1B', '#2B80AD'],
             stroke: {
                 curve: 'smooth',
-                width: 1
+                width: 2
             },
             dataLabels: {
                 enabled: false
@@ -35,7 +35,7 @@ export const useChart = () =>
                     shadeIntensity: 0,
                     inverseColors: true,
                     opacityFrom: 1,
-                    opacityTo: 0.6,
+                    opacityTo: 0.9,
                     stops: [0, 0, 100]
                 },
             },
