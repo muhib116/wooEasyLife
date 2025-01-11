@@ -5,8 +5,10 @@ import {
     subDays, 
     startOfMonth, 
     endOfMonth, 
+    subMonths,
     startOfYear, 
     endOfYear, 
+    subYears,
     format, 
 } from 'date-fns'
 
@@ -22,16 +24,32 @@ export const useDashboard = (mountable?: boolean) => {
             title: 'Yesterday'
         },
         {
-            id: 'this-week',
-            title: 'This week'
+            id: 'last-7-days',
+            title: 'Last 7 days'
+        },
+        {
+            id: 'last-30-days',
+            title: 'Last 30 days'
+        },
+        {
+            id: 'last-90-days',
+            title: 'Last 90 days'
         },
         {
             id: 'this-month',
             title: 'This month'
         },
         {
+            id: 'last-month',
+            title: 'Last month'
+        },
+        {
             id: 'this-year',
             title: 'This year'
+        },
+        {
+            id: 'last-year',
+            title: 'Last year'
         },
         {
             id: 'custom',
@@ -39,7 +57,7 @@ export const useDashboard = (mountable?: boolean) => {
         },
     ]
 
-    const selectedFilterOption = ref<string>('this-week')
+    const selectedFilterOption = ref<string>('last-7-days')
     const orderStatistics = ref({})
     const customDates = ref({
         start_date: '',
@@ -61,8 +79,18 @@ export const useDashboard = (mountable?: boolean) => {
                 endDate = endOfDay(yesterday) // End of yesterday
                 break
     
-            case 'this-week':
-                startDate= subDays(new Date(), 6)
+            case 'last-7-days':
+                startDate= subDays(new Date(), 7)
+                endDate = startOfDay(new Date())
+                break
+    
+            case 'last-30-days':
+                startDate= subDays(new Date(), 30)
+                endDate = startOfDay(new Date())
+                break
+    
+            case 'last-90-days':
+                startDate= subDays(new Date(), 90)
                 endDate = startOfDay(new Date())
                 break
     
@@ -71,10 +99,20 @@ export const useDashboard = (mountable?: boolean) => {
                 endDate = endOfMonth(new Date()) // End of the current month
                 break
     
+            case 'last-month':
+                startDate = startOfMonth(subMonths(new Date(), 1)); // Start of the last month
+                endDate = endOfMonth(subMonths(new Date(), 1)); // End of the last month
+                break;
+    
             case 'this-year':
                 startDate = startOfYear(new Date()) // Start of the current year
                 endDate = endOfYear(new Date()) // End of the current year
                 break
+    
+            case 'last-year':
+                startDate = startOfYear(subYears(new Date(), 1)); // Start of the last year
+                endDate = endOfYear(subYears(new Date(), 1)); // End of the last year
+                break;
         }
     
         // Format dates as 'YYYY-MM-DD'

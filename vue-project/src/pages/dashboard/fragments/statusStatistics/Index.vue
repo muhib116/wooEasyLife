@@ -8,7 +8,10 @@
             class="absolute inset-x-1/2 top-[200px] -translate-x-1/2 z-20"
         />
 
-        <div class="grid md:grid-cols-3 grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 lg:gap-6 !text-white relative">
+        <div
+            class="grid md:grid-cols-3 grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 lg:gap-6 !text-white relative"
+            v-if="orderStatuses?.length && Object.keys(orderStatistics)?.length"
+        >
             <Card.Stylist
                 v-for="(item, index) in orderStatuses"
                 :key="index"
