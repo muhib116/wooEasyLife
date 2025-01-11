@@ -4,9 +4,10 @@
             <div class="grid gap-8 font-light">
                 <Filter />
 
+                <OrderSource />
                 <div class="grid grid-cols-2 gap-5 w-full">
-                    <SalesProgress />
                     <OrderProgress />
+                    <SalesProgress />
                 </div>
 
                 <div class="grid grid-cols-2 gap-5 w-full">
@@ -29,6 +30,7 @@
     import { useDashboard } from './useDashboard'
     import SalesProgress from './fragments/SalesProgress/Index.vue'
     import OrderProgress from './fragments/OrderProgress/Index.vue'
+    import OrderSource from './fragments/OrderSource/Index.vue'
 
     const _useDashboard = useDashboard(true)
 

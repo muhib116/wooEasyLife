@@ -44,6 +44,11 @@ class OrderStatisticsAPI extends WP_REST_Controller
             'callback'            => [$this, 'get_order_progress'],
             'permission_callback' => '__return_true', // Adjust permissions as needed
         ]);
+        register_rest_route(__API_NAMESPACE, '/orders-grouped-by-created-via', [
+            'methods'             => 'GET',
+            'callback'            => [$this, 'get_orders_grouped_by_created_via'],
+            'permission_callback' => '__return_true', // Adjust permissions as needed
+        ]); 
     }
 
     /**
@@ -315,7 +320,76 @@ class OrderStatisticsAPI extends WP_REST_Controller
         ], 200);
     }
     
+    public function get_orders_grouped_by_created_via(WP_REST_Request $request) {
+        // Retrieve the start_date and end_date from the request
+        $start_date = $request->get_param('start_date') ?? date('Y-m-d', strtotime('-6 days'));
+        $end_date = $request->get_param('end_date') ?? date('Y-m-d');
+    
+    
+        // Define query arguments
+        $args = [
+            'limit'       => -1, // Fetch all orders
+            'orderby'     => 'date',
+            'order'       => 'DESC',
+            'return'      => 'objects',
+            'type'         => 'shop_order',
+            'date_created' => $start_date . '...' . $end_date, // Date range
+        ];
+    
+        // Fetch orders using WooCommerce's wc_get_orders function
+        $orders = wc_get_orders($args);
+    
+        // Initialize an array to store grouped data
+        $grouped_data = [];
+    
+        // Group orders by 'created_via'
+        foreach ($orders as $order) {
+            $created_via = $order->get_meta('_created_via', true);
+    
+            if (!isset($grouped_data[$created_via])) {
+                $grouped_data[$created_via] = [
+                    'created_via' => $created_via ?: 'unknown',
+                    'total_orders' => 0,
+                    'total_amount' => 0,
+                ];
+            }
+    
+            $grouped_data[$created_via]['total_orders']++;
+            $grouped_data[$created_via]['total_amount'] += $order->get_total();
+        }
 
+        // Prepare data for ApexCharts
+        $categories = [];
+        $total_orders_data = [];
+        $total_amount_data = [];
+
+        foreach ($grouped_data as $group) {
+            $categories[] = ucfirst($group['created_via']); // Capitalize the source for categories
+            $total_orders_data[] = $group['total_orders'];
+            $total_amount_data[] = $group['total_amount'];
+        }
+
+        // Format response for ApexCharts
+        $response = [
+            'categories' => $categories,
+            'series' => [
+                [
+                    'name' => 'Total Order',
+                    'data' => $total_orders_data,
+                ],
+                [
+                    'name' => 'Total Amount',
+                    'data' => $total_amount_data,
+                ],
+            ],
+        ];
+    
+        return new \WP_REST_Response([
+            'status' => 'success',
+            'data'   => $response,
+        ], 200);
+    }
+    
     
     
 }

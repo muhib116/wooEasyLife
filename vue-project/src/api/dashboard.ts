@@ -26,3 +26,9 @@ export const getOrderProgressData = async (date: {start_date: string, end_date:s
     })
     return data
 }
+export const getOrderSourceData = async (date: {start_date: string, end_date:string}) => {
+    const { data } = await axios.get(`${localApiBaseURL}/orders-grouped-by-created-via`, {
+        params: date
+    })
+    return data
+}
