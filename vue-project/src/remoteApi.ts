@@ -1,5 +1,6 @@
 import axios from "axios"
 import { createSMSHistory } from "./api"
+import { inject } from "vue"
 
 export const remoteApiBaseURL = 'https://api.wpsalehub.com/api'
 const headers = {

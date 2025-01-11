@@ -1,3 +1,7 @@
+//
+Bearer Kod30eDnI1EFG9vaf9gBPsSwaD3IkklCIATZoSYz9cf733bd
+
+
 👉🏻 kun kun user otp dise ar kun kun user otp dey nai tar akta list dekhate hobe phone number soho
 
 ✅ order status manage from plugin order list
@@ -5,10 +9,10 @@
 alertBox position fixed kore dekhate hobe
 
 Invoice a real courier id bosate hobe
-
 one click Courier entry
 
-SMS ta amader api throute korte hobe:->helper.php: send_sms()
+** SMS ta amader api throute korte hobe:->helper.php: send_sms()
+** api authanticat from central point
 
 cost managment like ad cost
 per order ad cost in dash board

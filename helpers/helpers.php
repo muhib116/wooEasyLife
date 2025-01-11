@@ -68,27 +68,44 @@ function get_contrast_color($hexColor) {
 
 function send_sms($phone_number, $message)
 {
-    $url = "http://bulksmsbd.net/api/smsapi";
-    $api_key = "GuN1Tp8ueoRJACAl072B";
-    $senderid = "8809617619992";
-    $number = $phone_number;
-    $message = $message;
+    global $license_key;
+    
+    $url = "https://api.wpsalehub.com/api/sms/send";
 
     $data = [
-        "api_key" => $api_key,
-        "senderid" => $senderid,
-        "number" => $number,
-        "message" => $message
+        "phone" => $phone_number,
+        "content" => $message,
     ];
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $response = curl_exec($ch);
-    curl_close($ch);
-    return $response;
+
+
+    $headers = [
+        'Authorization' => $license_key,
+        'Content-Type'  => 'application/x-www-form-urlencoded', // Adjust this if the API requires a different content type
+    ];
+
+    // Use wp_remote_post for HTTP requests
+    $response = wp_remote_post($url, [
+        'method'      => 'POST',
+        'body'        => $data,
+        'headers'     => $headers,
+        'timeout'     => 45,
+        'sslverify'   => false,
+    ]);
+
+    // Check for errors in the response
+    if (is_wp_error($response)) {
+        return [
+            'status'  => 'error',
+            'message' => $response->get_error_message(),
+        ];
+    }
+
+    // Decode and return the response
+    $response_body = wp_remote_retrieve_body($response);
+    return [
+        'status'  => 'success',
+        'message' => $response_body,
+    ];
 }
 
 function getCustomerFraudData($phone_number) {

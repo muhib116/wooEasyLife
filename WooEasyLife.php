@@ -22,8 +22,7 @@ define('__PREFIX', 'woo_easy_life_');
 define('__API_NAMESPACE', 'wooeasylife/v1');
 define('__wpsalehub_api_key__', '');
 $config_data;
-
-
+$license_key;
 
 if (!class_exists('WooEasyLife')) :
     require_once 'vendor/autoload.php';
@@ -37,6 +36,7 @@ if (!class_exists('WooEasyLife')) :
             register_deactivation_hook(__FILE__, [$this, 'woo_easy_life_deactivation_hook']);
 
             $this->handleDBTable = new WooEasyLife\Admin\DBTable\HandleDBTable();
+            $this->get_license_key();
             $this->get_and_set_config_data();
             new WooEasyLife\Init\InitClass();
             new WooEasyLife\API\API_Register();
@@ -44,6 +44,12 @@ if (!class_exists('WooEasyLife')) :
             new WooEasyLife\Frontend\Frontend_Class_Register();
         }
 
+        private function get_license_key() {
+            global $license_key;
+            $license_key = get_option(__PREFIX . 'license');
+            $license_key = is_string($license_key) ? json_decode($license_key, true) : $config_data;
+            $license_key = $license_key['key'];
+        }
         private function get_and_set_config_data()
         {
             global $config_data;
