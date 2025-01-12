@@ -14,8 +14,9 @@ import {
 } from 'date-fns'
 
 
-export const useDashboard = (mountable?: boolean) => 
+export const useDashboard = () => 
 {
+    const isLoading = ref(false)
     const orderStatuses = ref([])
 
     const filterOptions = [
@@ -66,6 +67,8 @@ export const useDashboard = (mountable?: boolean) =>
     ]
 
     const selectedFilterOption = ref<string>('last-7-days')
+    const selectedStatusOption = ref<string>('completed');
+
     const orderStatistics = ref({})
     const customDates = ref({
         start_date: '',
@@ -73,13 +76,18 @@ export const useDashboard = (mountable?: boolean) =>
     })
 
     const loadOrderStatuses = async () => {
-        const { data } = await getOrderStatuses()
-        orderStatuses.value = data.map(item => {
-            return {
-                title: item.title,
-                slug: item.slug
-            }
-        })
+        try {
+            isLoading.value = true
+            const { data } = await getOrderStatuses()
+            orderStatuses.value = data.map(item => {
+                return {
+                    title: item.title,
+                    slug: item.slug
+                }
+            })
+        } finally {
+            isLoading.value = false
+        }
     }
 
     const getDateRangeFormatted = (period: string) => {
@@ -150,9 +158,13 @@ export const useDashboard = (mountable?: boolean) =>
     }
 
     onMounted(async () => {
-        await loadOrderStatuses()
+        if(!orderStatuses.value?.length){
+            await loadOrderStatuses()
+        }
     })
     return {
+        isLoading,
+        selectedStatusOption,
         orderStatuses,
         selectedFilterOption,
         orderStatistics,

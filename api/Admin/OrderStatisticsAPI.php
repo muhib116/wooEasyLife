@@ -124,6 +124,7 @@ class OrderStatisticsAPI extends WP_REST_Controller
         // Get the start and end dates from the request
         $start_date = $request->get_param('start_date') ?: date('Y-m-d', strtotime('-7 days')); // Default to last 7 days
         $end_date = $request->get_param('end_date') ?: date('Y-m-d'); // Default to today
+        $status = $request->get_param('status') ?: 'completed'; // Default to today
 
         // Validate dates
         if (strtotime($start_date) > strtotime($end_date)) {
@@ -136,7 +137,7 @@ class OrderStatisticsAPI extends WP_REST_Controller
         // Fetch orders within the date range
         $args = [
             'type'         => 'shop_order',
-            'status'       => ['wc-completed'], // Relevant statuses
+            'status'       => ['wc-'.$status], // Relevant statuses
             'limit'        => -1, // Retrieve all matching orders
             'date_created' => $start_date . '...' . $end_date, // Date range
             'orderby'      => 'date',

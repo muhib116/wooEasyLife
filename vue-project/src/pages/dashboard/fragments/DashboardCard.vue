@@ -29,7 +29,7 @@
                 <Button.Primary
                     class="ml-auto w-[118px] text-center justify-center !py-[6px]"
                     @click="() => {
-                        $emit('dateChange', customDates)
+                        $emit('dateChange', customDates, selectedStatusOption)
                     }"
                 >
                     Apply Now
@@ -42,22 +42,30 @@
                     :subtitle="subtitle"
                 />
 
-                <div class="flex gap-2">
-                    <label class="font-light border px-2 py-1 rounded-sm">
+                <div class="flex gap-2 relative">
+                    <Loader
+                        :active="showStatusFilter && isLoading"
+                        class="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2"
+                    />
+                    <label
+                        v-if="showStatusFilter" 
+                        class="font-light border px-2 py-1 rounded-sm"
+                    >
                         <select 
                             class="outline-none bg-transparent w-full !border-none focus:outline-none"
-                            v-model="selectedFilterOption"
+                            v-model="selectedStatusOption"
                             @change="handleLoadData()"
                         >
                             <option
-                                v-for="(option, index) in filterOptions"
+                                v-for="(option, index) in orderStatuses"
                                 :key="index"
-                                :value="option.id"
+                                :value="option.slug"
                             >
                                 {{ option.title }}
                             </option>
                         </select>
                     </label>
+
                     <label class="font-light border px-2 py-1 rounded-sm">
                         <select 
                             class="outline-none bg-transparent w-full !border-none focus:outline-none"
@@ -81,24 +89,28 @@
 </template>
 
 <script setup lang="ts">
-    import { Heading, Card, Button } from '@components'
+    import { Heading, Card, Button, Loader } from '@components'
     import { useDashboard } from '../useDashboard'
     import { onMounted, ref } from 'vue'
 
-    defineProps<{
+    const props = defineProps<{
         title?: string,
-        subtitle?: string
+        subtitle?: string,
+        showStatusFilter?: boolean
     }>()
 
     const emit = defineEmits(['dateChange'])
 
     const showCustomDateInput = ref(false)
     const {
+        isLoading,
+        orderStatuses,
         filterOptions,
         selectedFilterOption,
+        selectedStatusOption,
         customDates,
         getDateRangeFormatted
-    } = useDashboard()
+    } = useDashboard(props)
 
     const handleLoadData = () => {
         if(selectedFilterOption.value == 'custom'){
@@ -108,11 +120,11 @@
 
         showCustomDateInput.value = false
         getDateRangeFormatted(selectedFilterOption.value)
-        emit('dateChange', customDates.value)
+        emit('dateChange', customDates.value, selectedStatusOption.value)
     }
 
     onMounted(() => {
         getDateRangeFormatted(selectedFilterOption.value)
-        emit('dateChange', customDates.value)
+        emit('dateChange', customDates.value, selectedStatusOption.value)
     })
 </script>

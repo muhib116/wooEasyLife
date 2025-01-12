@@ -1,6 +1,7 @@
 <template>
     <DashboardCard
         title="Sales summary"
+        showStatusFilter
         @dateChange="loadSalesSummaryData"
     >
         <Loader
