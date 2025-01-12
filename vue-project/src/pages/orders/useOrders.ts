@@ -1,6 +1,16 @@
 import { onMounted, ref, watch } from "vue"
-import { changeStatus, getOrderList, getOrderStatusListWithCounts, getWoocomerceStatuses, ip_or_phone_block_bulk_entry } from '@/api'
-import { checkCustomer } from '@/remoteApi'
+import { 
+    changeStatus, 
+    getOrderList, 
+    getOrderStatusListWithCounts, 
+    getWoocomerceStatuses, 
+    ip_or_phone_block_bulk_entry
+} from '@/api'
+import { 
+    checkCustomer,
+    steadfastOrderCreate
+} from '@/remoteApi'
+import { normalizePhoneNumber } from "@/helper"
 
 export const useOrders = () => {
     const orders = ref([])
@@ -179,6 +189,46 @@ export const useOrders = () => {
         }
     }
 
+    const handleCourierEntry = async (btn) => {
+        if (![...selectedOrders.value].length) {
+            alert('Please select at least on item.')
+            return
+        }
+
+        try {
+            btn.isLoading = true
+            const payload: {
+                orders: {
+                    invoice: number | string
+                    recipient_name: string
+                    recipient_phone: string
+                    recipient_address: string
+                    cod_amount: number | string
+                }[]
+            } = {
+                orders: [...selectedOrders.value]
+                        .map(item => ({
+                            invoice: item?.id,
+                            recipient_name: item?.customer_name || '',
+                            recipient_phone: normalizePhoneNumber(item?.billing_address?.phone || item?.shipping_address?.phone || ''),
+                            recipient_address: `${item?.shipping_address?.address_1 || ''} ${item?.shipping_address?.address_2 || ''}`,
+                            cod_amount: item?.total,
+                            note: item?.order_notes?.courier_note || '',
+                        }))
+            }
+
+            console.log(payload)
+
+            const { data } = await steadfastOrderCreate(payload)
+            console.log(data);
+            // await getOrders()
+        } catch (err) {
+            console.log(err)
+        } finally {
+            btn.isLoading = false
+        }
+    }
+
 
     watch(() => selectedOrders, (newVal) => {
         selectAll.value = selectedOrders.value.size === orders.value.length
@@ -211,6 +261,7 @@ export const useOrders = () => {
         toggleSelectAll,
         handleFraudCheck,
         handleStatusChange,
+        handleCourierEntry,
         loadOrderStatusList,
         handlePhoneNumberBlock,
     }

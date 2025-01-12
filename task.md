@@ -19,8 +19,8 @@ Dashboard:
     Courier Delevery Report
     Sales target
 
-👉🏻 Sales amount 
-👉🏻 discount amount
+✅ Sales amount 
+✅ discount amount
 👉🏻 SMS Cost calculation dashboard
 
 =============================

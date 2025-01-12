@@ -56,6 +56,7 @@
                             v-model="selectedStatusOption"
                             @change="handleLoadData()"
                         >
+                            <option>Select status</option>
                             <option
                                 v-for="(option, index) in orderStatuses"
                                 :key="index"

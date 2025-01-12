@@ -86,7 +86,7 @@ function send_sms($phone_number, $message)
 
 
     $headers = [
-        'Authorization' => $license_key,
+        'Authorization' => 'Bearer '.$license_key,
         'Content-Type'  => 'application/x-www-form-urlencoded', // Adjust this if the API requires a different content type
     ];
 

@@ -17,7 +17,7 @@ loadLicenseKey();
 export const remoteApiBaseURL = 'https://api.wpsalehub.com/api'
 const headers = computed(() => ({
   headers: {
-    Authorization: licenseKey.value
+    Authorization: 'Bearer '+licenseKey.value
   }
 }))
 
@@ -52,6 +52,18 @@ export const getCourierConfig = async () => {
   return data
 }
 
+export const steadfastOrderCreate = async (payload: {
+  orders: {
+      invoice: number | string
+      recipient_name: string
+      recipient_phone: string
+      recipient_address: string
+      cod_amount: number | string
+  }[]
+}) => {
+  const { data } = await axios.post(`${remoteApiBaseURL}/steadfast/create-bulk-order`, payload, headers.value)
+  return data
+}
 // courier end
 
 

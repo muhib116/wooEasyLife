@@ -64,7 +64,7 @@ export const printDate = (dateString: string) => {
 }
 
 
-export function calculateSMSDetails(props:string) {
+export const calculateSMSDetails = (props:string) => {
     const GSM_7BIT = "GSM_7BIT";
     const GSM_7BIT_EX = "GSM_7BIT_EX";
     const UTF16 = "UTF16";
@@ -131,4 +131,16 @@ export function calculateSMSDetails(props:string) {
         remainingCharacter: setSmsRemainingCount,
         totalSMS: setSmsPartCount
     }
+}
+
+export const normalizePhoneNumber = (phone: string): string => {
+    // Remove all non-digit characters
+    let normalized = phone.replace(/\D/g, '');
+
+    // Check if the number starts with the country code '880' and replace it with '0'
+    if (normalized.startsWith('880')) {
+        normalized = '0' + normalized.slice(3); // Remove '880' and prepend '0'
+    }
+
+    return normalized;
 }
