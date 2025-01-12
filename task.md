@@ -1,54 +1,47 @@
 //
 Bearer Kod30eDnI1EFG9vaf9gBPsSwaD3IkklCIATZoSYz9cf733bd
 
-
-👉🏻 kun kun user otp dise ar kun kun user otp dey nai tar akta list dekhate hobe phone number soho
-
 ✅ order status manage from plugin order list
-
-alertBox position fixed kore dekhate hobe
-
-Invoice a real courier id bosate hobe
-one click Courier entry
-
 ✅ SMS ta amader api throute korte hobe:->helper.php: send_sms()
 ✅ api authanticat from central point
-
-cost managment like ad cost
-per order ad cost in dash board
-Total Page view
-
-check page a form fillup obostay OTP enabled thaklew kuno input field a cursor rekhe inter dile form submit hoye jay.
+✅ windows opareting er jonno shrollbar chikon kore dite hobe
 
 Dashboard:
 =========================
-    Sale Performance chart
-    Order sources with chart
+✅ Sale Performance chart
+✅ Order sources with chart
+✅ Order cycle time
+✅ order performance chart
+✅ recent order
+✅ top selling product
+
     Available Courier balance
     Courier Delevery Report
     Sales target
 
-Order source
-Sales performance
-Sales amount 
-discount amount
-Sales target set
-SMS Cost calculation dashboard
+👉🏻 Sales amount 
+👉🏻 discount amount
+👉🏻 SMS Cost calculation dashboard
 
 =============================
 ✅ manual order entry
 ✅ handle sequential discount
 ✅ order create form validation
-✅ froud history entry
-
-Cash management (Low priority) from funnel liner
-Marketing Tools (Low priority) from funnel liner
-
-windows opareting er jonno shrollbar chikon kore dite hobe
+✅ fraud history entry
 
 
-make the system responsive
-plugins update
-tutorial
-help center
-request a feature
+
+
+👉🏻 alertBox position fixed kore dekhate hobe
+👉🏻 Invoice a real courier id bosate hobe
+👉🏻 one click Courier entry
+👉🏻 cost managment
+👉🏻 kun kun user otp dise ar kun kun user otp dey nai tar akta list dekhate hobe phone number soho
+👉🏻 check page a form fillup obostay OTP enabled thaklew kuno input field a cursor rekhe inter dile form submit hoye jay.
+👉🏻 make the system responsive
+👉🏻 plugins update
+👉🏻 tutorial
+👉🏻 help center
+👉🏻 request a feature
+👉🏻 Cash management (Low priority) from funnel liner
+👉🏻 Marketing Tools (Low priority) from funnel liner

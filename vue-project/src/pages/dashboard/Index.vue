@@ -2,7 +2,7 @@
     <Layout>
         <Container>
             <div class="grid gap-4 md:gap-6 lg:gap-8 font-light">
-                <StatusStatistics />
+                <OrderStatistics />
 
                 <div class="grid lg:grid-cols-2 gap-5 w-full">
                     <OrderProgress />
@@ -27,7 +27,7 @@
 <script setup lang="ts">
     import { provide } from 'vue'
     import { Layout, Container } from '@layout'
-    import StatusStatistics from './fragments/statusStatistics/Index.vue'
+    import OrderStatistics from './fragments/OrderStatistics/Index.vue'
     import RecentOrder from './fragments/recentOrder/RecentOrder.vue'
     import TopSellingProduct from './fragments/topSallingProduct/TopSellingProduct.vue'
     import Filter from './fragments/Filter.vue'

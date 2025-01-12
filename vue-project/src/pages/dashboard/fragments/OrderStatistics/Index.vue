@@ -34,23 +34,15 @@
 </template>
 <script setup lang="ts">
     import { Card, Loader } from '@components'
-    import { inject } from 'vue'
-    import { useStatusStatistics } from './useStatusStatistics'
+    import { useOrderStatistics } from './useOrderStatistics'
     import DashboardCard from '../DashboardCard.vue'
-
-    // const {
-    //     orderStatuses,
-    //     orderStatistics,
-    //     isLoading,
-    //     selectedFilterOption
-    // } = inject('useDashboard')
 
     const {
         orderStatuses,
         orderStatistics,
         isLoading,
         loadOrderStatisticsData
-    } = useStatusStatistics()
+    } = useOrderStatistics()
 
     const iconsWithBg = {
         processing: {

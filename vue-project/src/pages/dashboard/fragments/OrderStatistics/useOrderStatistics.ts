@@ -2,8 +2,7 @@ import { getOrderStatusStatistics } from "@/api/dashboard"
 import { onMounted, ref } from "vue"
 import { getOrderStatuses } from "@/api"
 
-export const useStatusStatistics = () => {
-    const statusData = ref([])
+export const useOrderStatistics = () => {
     const isLoading = ref(false)
     const chartKey = ref(Date.now()) // Unique key
     const orderStatuses = ref([])
