@@ -13,6 +13,14 @@ export const getOrderStatusStatistics = async (payload: {
     return data
 }
 
+export const getSalesSummary = async (payload: {
+    startDate: string,
+    endDate: string
+}) => {
+    const { data } = await axios.get(`${localApiBaseURL}/sales-summary`, { params: payload })
+    return data
+}
+
 export const getRecentOrders = async (limit?: number) => {
     const { data } = await getOrderList({per_page: limit})
     return data

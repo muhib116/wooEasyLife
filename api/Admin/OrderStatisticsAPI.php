@@ -29,6 +29,13 @@ class OrderStatisticsAPI extends WP_REST_Controller
                 'permission_callback' => api_permission_check(),
             ]
         );
+        register_rest_route(__API_NAMESPACE, '/sales-summary', [
+            [
+                'methods'             => 'GET',
+                'callback'            => [$this, 'get_sales_summary'],
+                'permission_callback' => api_permission_check(),
+            ],
+        ]);
         register_rest_route(__API_NAMESPACE, '/top-selling-products', [
             'methods'             => 'GET',
             'callback'            => [$this, 'get_top_selling_products'],
@@ -63,15 +70,6 @@ class OrderStatisticsAPI extends WP_REST_Controller
      */
     public function get_order_statistics(WP_REST_Request $request)
     {
-        // Check if WooCommerce is active
-        if (!class_exists('WooCommerce')) {
-            return new WP_Error(
-                'woocommerce_not_active',
-                __('WooCommerce is not active', 'text-domain'),
-                ['status' => 404]
-            );
-        }
-
         // Get start and end date from request
         $start_date = $request->get_param('start_date');
         $end_date = $request->get_param('end_date');
@@ -91,16 +89,12 @@ class OrderStatisticsAPI extends WP_REST_Controller
         // Initialize summary variables
         $summary = [
             'total_orders'    => 0,
-            'status_wise'     => [],
-            'total_revenue'   => 0,
+            'status_wise'     => []
         ];
 
         // Loop through orders
         foreach ($orders as $order) {
             $summary['total_orders']++;
-
-            // Add revenue
-            $summary['total_revenue'] += $order->get_total();
 
             // Count statuses
             $status = $order->get_status();
@@ -114,6 +108,85 @@ class OrderStatisticsAPI extends WP_REST_Controller
         return new WP_REST_Response([
             'status' => 'success',
             'data'   => $summary,
+        ], 200);
+    }
+
+    /**
+     * Get comprehensive sales data within a specified date range.
+     *
+     * @param WP_REST_Request $request The REST API request.
+     * @return \WP_REST_Response The sales data.
+     */
+    public function get_sales_summary(WP_REST_Request $request) {
+        // Get the start and end dates from the request
+        $start_date = $request->get_param('start_date') ?: date('Y-m-d', strtotime('-7 days')); // Default to last 7 days
+        $end_date = $request->get_param('end_date') ?: date('Y-m-d'); // Default to today
+
+        // Validate dates
+        if (strtotime($start_date) > strtotime($end_date)) {
+            return new \WP_REST_Response([
+                'status'  => 'error',
+                'message' => 'Invalid date range. Start date cannot be later than the end date.',
+            ], 400);
+        }
+
+        // Fetch orders within the date range
+        $args = [
+            'type'         => 'shop_order',
+            'status'       => ['wc-completed'], // Relevant statuses
+            'limit'        => -1, // Retrieve all matching orders
+            'date_created' => $start_date . '...' . $end_date, // Date range
+            'orderby'      => 'date',
+            'order'        => 'DESC',
+            'return'       => 'objects', // Return full order objects
+        ];
+
+        $orders = wc_get_orders($args);
+
+        // If no orders are found
+        if (empty($orders)) {
+            return new \WP_REST_Response([
+                'status'  => 'success',
+                'message' => 'No orders found in the specified date range.',
+                'data'    => [
+                    'total_sale_amount'      => 0,
+                    'total_discount_amount'  => 0,
+                    'total_orders'           => 0,
+                    'average_order_value'    => 0,
+                    'total_shipping_cost'    => 0,
+                    'start_date'             => $start_date,
+                    'end_date'               => $end_date,
+                ],
+            ], 200);
+        }
+
+        // Initialize variables for calculations
+        $total_sale_amount = 0;
+        $total_discount_amount = 0;
+        $total_shipping_cost = 0;
+        $total_orders = count($orders);
+
+        foreach ($orders as $order) {
+            $total_sale_amount += $order->get_total(); // Total amount including shipping and discounts
+            $total_discount_amount += $order->get_discount_total(); // Total discount amount
+            $total_shipping_cost += $order->get_shipping_total(); // Total shipping cost
+        }
+
+        // Calculate average order value
+        $average_order_value = $total_sale_amount / $total_orders;
+
+        return new \WP_REST_Response([
+            'status'  => 'success',
+            'message' => 'Sales summary retrieved successfully.',
+            'data'    => [
+                'total_sale_amount'      => wc_price($total_sale_amount), // Total sale amount
+                'total_discount_amount'  => wc_price($total_discount_amount), // Total discount amount
+                'total_orders'           => $total_orders, // Total orders
+                'average_order_value'    => wc_price($average_order_value), // Average order value
+                'total_shipping_cost'    => wc_price($total_shipping_cost), // Total shipping cost
+                'start_date'             => $start_date, // Start date
+                'end_date'               => $end_date, // End date
+            ],
         ], 200);
     }
 

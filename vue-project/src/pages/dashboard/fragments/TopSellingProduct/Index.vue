@@ -66,7 +66,7 @@
 
 <script setup lang="ts">
     import { Card, Table, Loader, Heading, MessageBox } from '@components'
-    import { useTopSellingProduct } from './UseTopSellingProduct'
+    import { useTopSellingProduct } from './useTopSellingProduct'
     import {
         baseUrl
     } from '@/api'

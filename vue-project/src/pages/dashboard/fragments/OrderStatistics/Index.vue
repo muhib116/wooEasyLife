@@ -21,14 +21,6 @@
                 :subtitle="item.title"
                 :iconName="iconsWithBg[item.slug]?.icon"
             />
-            
-            <Card.Stylist
-                v-if="orderStatistics?.total_revenue"
-                class="bg-cyan-600 text-white"
-                :title="orderStatistics?.total_revenue"
-                subtitle="total revenue"
-                iconName="PhCoins"
-            />
         </div>
     </DashboardCard>
 </template>
