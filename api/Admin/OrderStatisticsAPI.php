@@ -76,8 +76,11 @@ class OrderStatisticsAPI extends WP_REST_Controller
 
         // Generate date query
         $args = [
-            'status'     => array_keys(wc_get_order_statuses()), // Include all statuses
-            'limit'      => -1, // No limit, fetch all orders
+            'type'   => 'shop_order',
+            'status' => array_keys(wc_get_order_statuses()), // Include all statuses
+            'limit'  => -1, // No limit, fetch all orders
+            'orderby'      => 'date',
+            'order'        => 'DESC',
         ];
 
         if ($start_date && $end_date) {

@@ -52,6 +52,10 @@ export const useDashboard = (mountable?: boolean) => {
             title: 'Last year'
         },
         {
+            id: 'last-2-years',
+            title: 'Last 2 years'
+        },
+        {
             id: 'custom',
             title: 'Custom'
         },
@@ -111,6 +115,11 @@ export const useDashboard = (mountable?: boolean) => {
     
             case 'last-year':
                 startDate = startOfYear(subYears(new Date(), 1)); // Start of the last year
+                endDate = endOfYear(subYears(new Date(), 1)); // End of the last year
+                break;
+    
+            case 'last-2-years':
+                startDate = endOfYear(subYears(new Date(), 2)); // End of the last year
                 endDate = endOfYear(subYears(new Date(), 1)); // End of the last year
                 break;
         }
