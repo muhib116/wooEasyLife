@@ -1,4 +1,5 @@
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
+import { getOrderStatuses } from "@/api"
 import { 
     startOfDay, 
     endOfDay, 
@@ -13,7 +14,10 @@ import {
 } from 'date-fns'
 
 
-export const useDashboard = (mountable?: boolean) => {
+export const useDashboard = (mountable?: boolean) => 
+{
+    const orderStatuses = ref([])
+
     const filterOptions = [
         {
             id: 'today',
@@ -67,6 +71,16 @@ export const useDashboard = (mountable?: boolean) => {
         start_date: '',
         end_date: ''
     })
+
+    const loadOrderStatuses = async () => {
+        const { data } = await getOrderStatuses()
+        orderStatuses.value = data.map(item => {
+            return {
+                title: item.title,
+                slug: item.slug
+            }
+        })
+    }
 
     const getDateRangeFormatted = (period: string) => {
         let startDate, endDate
@@ -135,7 +149,11 @@ export const useDashboard = (mountable?: boolean) => {
         }
     }
 
+    onMounted(async () => {
+        await loadOrderStatuses()
+    })
     return {
+        orderStatuses,
         selectedFilterOption,
         orderStatistics,
         filterOptions,

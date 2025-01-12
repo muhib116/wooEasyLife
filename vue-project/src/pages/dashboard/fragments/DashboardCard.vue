@@ -42,21 +42,38 @@
                     :subtitle="subtitle"
                 />
 
-                <label class="font-light border px-2 py-1 rounded-sm">
-                    <select 
-                        class="outline-none bg-transparent w-full !border-none focus:outline-none"
-                        v-model="selectedFilterOption"
-                        @change="handleLoadData()"
-                    >
-                        <option
-                            v-for="(option, index) in filterOptions"
-                            :key="index"
-                            :value="option.id"
+                <div class="flex gap-2">
+                    <label class="font-light border px-2 py-1 rounded-sm">
+                        <select 
+                            class="outline-none bg-transparent w-full !border-none focus:outline-none"
+                            v-model="selectedFilterOption"
+                            @change="handleLoadData()"
                         >
-                            {{ option.title }}
-                        </option>
-                    </select>
-                </label>
+                            <option
+                                v-for="(option, index) in filterOptions"
+                                :key="index"
+                                :value="option.id"
+                            >
+                                {{ option.title }}
+                            </option>
+                        </select>
+                    </label>
+                    <label class="font-light border px-2 py-1 rounded-sm">
+                        <select 
+                            class="outline-none bg-transparent w-full !border-none focus:outline-none"
+                            v-model="selectedFilterOption"
+                            @change="handleLoadData()"
+                        >
+                            <option
+                                v-for="(option, index) in filterOptions"
+                                :key="index"
+                                :value="option.id"
+                            >
+                                {{ option.title }}
+                            </option>
+                        </select>
+                    </label>
+                </div>
             </div>
             <slot></slot>
         </Card.Native>
