@@ -38,5 +38,5 @@
         hasUnsavedData,
         activeTab,
         form,
-    } = inject("useCourier")
+    } = inject("useCourierConfig")
 </script>

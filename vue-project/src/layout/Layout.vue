@@ -25,11 +25,12 @@
     import { onBeforeMount, provide, ref } from 'vue'
     import { getWPOption } from '@/api'
     import { loadLicenseKey } from '@/remoteApi'
+    import { useCourier } from '@/pages/config/courier/useCourier.ts'
 
     const isDevelopmentMode =  import.meta.env.DEV
     const configData = ref()
-
-    provide('configData', {configData})
+    const _useCourierConfig = useCourier()
+    const { loadCourierConfigData } = _useCourierConfig
 
     const loadConfig = async () => {
         const { data } = await getWPOption({ option_name: 'config' })
@@ -37,7 +38,11 @@
     }
 
     onBeforeMount(async () => {
-        loadLicenseKey()
-        loadConfig()
+        await loadLicenseKey()
+        await loadConfig()
+        await loadCourierConfigData()
     })
+    
+    provide('useCourierConfig', _useCourierConfig)
+    provide('configData', {configData})
 </script>

@@ -65,8 +65,7 @@ export const useCourier = () => {
         }
     }
 
-
-    onMounted(async () => {
+    const loadCourierConfigData = async () => {
         try {
             isLoading.value = true
             const { data } = await getCourierCompanies()
@@ -77,16 +76,17 @@ export const useCourier = () => {
             isLoading.value = false
         }
         changeTab('steadfast')
-    })
+    }
 
     return {
-        courierCompanyNames,
-        handleSaveCourierConfig,
+        form,
         activeTab,
         isLoading,
         courierConfigs,
-        changeTab,
         hasUnsavedData,
-        form
+        courierCompanyNames,
+        changeTab,
+        loadCourierConfigData,
+        handleSaveCourierConfig,
     }
 }

@@ -21,20 +21,16 @@
 
 <script setup lang="ts">
     import { Card, Loader } from '@components'
-    import { useCourier } from './useCourier'
-    import { provide } from 'vue'
+    import { inject } from 'vue'
     import Form from './fragments/Form.vue'
     import TabHeader from '@/pages/config/fragments/TabHeader.vue'
 
 
-    const _useCourier = useCourier()
     const { 
         isLoading, 
         activeTab, 
         courierCompanyNames, 
         hasUnsavedData,
         changeTab
-    } = _useCourier
-
-    provide('useCourier', _useCourier)
+    } = inject('useCourierConfig', {})
 </script>
