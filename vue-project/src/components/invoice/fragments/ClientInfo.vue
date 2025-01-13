@@ -15,10 +15,10 @@
         </div>
     
         <div class="text-right">
-            <p class="">
-                Courier Id:
+            <p class="font-semibold">
+                Consignment id:
                 <span class="text-gray-500">
-                    111015996
+                    {{ courierData?.consignment_id }}
                 </span>
             </p>
             <p class="">
@@ -49,5 +49,8 @@
             order_id: string
         }
         date: string
+        courierData: {
+            consignment_id: string
+        }
     }>()
 </script>

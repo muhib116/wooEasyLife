@@ -5,6 +5,7 @@
             <ClientInfo
                 :data="order.billing_address"
                 :date="order.date_created"
+                :courierData="order.courier_data"
             />
         </template>
         
@@ -48,6 +49,7 @@
                 order_id: string
             }
             date_created: string
+            courier_data: object
             product_info: {
                 product_info: {
                     product_name: string

@@ -1,5 +1,4 @@
-//
-Bearer Kod30eDnI1EFG9vaf9gBPsSwaD3IkklCIATZoSYz9cf733bd
+Kod30eDnI1EFG9vaf9gBPsSwaD3IkklCIATZoSYz9cf733bd
 
 ✅ order status manage from plugin order list
 ✅ SMS ta amader api throute korte hobe:->helper.php: send_sms()
@@ -15,9 +14,9 @@ Dashboard:
 ✅ recent order
 ✅ top selling product
 
-    Available Courier balance
-    Courier Delevery Report
-    Sales target
+Available Courier balance
+Courier Delevery Report
+Sales target
 
 ✅ Sales amount 
 ✅ discount amount
