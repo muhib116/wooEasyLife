@@ -14,8 +14,8 @@ Dashboard:
 ✅ recent order
 ✅ top selling product
 
-Available Courier balance
-Courier Delivery Report
+=>Available Courier balance
+=>Courier Delivery Report
 Sales target
 
 ✅ Sales amount 
@@ -32,11 +32,13 @@ Sales target
 
 
 
+👉🏻 bearar token validation from remote server
 👉🏻 alertBox position fixed kore dekhate hobe
 👉🏻 one click Courier entry
 👉🏻 cost management
 👉🏻 kun kun user otp dise ar kun kun user otp dey nai tar akta list dekhate hobe phone number soho
 👉🏻 check page a form fillup obostay OTP enabled thaklew kuno input field a cursor rekhe inter dile form submit hoye jay.
+
 👉🏻 make the system responsive
 👉🏻 plugins update
 👉🏻 tutorial
@@ -44,3 +46,5 @@ Sales target
 👉🏻 request a feature
 👉🏻 Cash management (Low priority) from funnel liner
 👉🏻 Marketing Tools (Low priority) from funnel liner
+👉🏻 একটা রিকোয়ারমেন্ট ভেবে দেখবেন প্লিজ। অনেক কাস্টমার ওর্ডার করার পর প্রোডাক্ট রিসিভ করে না বা কল ধরে না। কোন কারন ছাড়া রিটার্ন করে দেয়। 
+ডেলিভারি কোম্পানির যেমন হিষ্ট্রি দেখা যায় তেমন আমার এখানে অর্ডার করে আগে নিয়েছে কিনা বা সে রিপিট কাস্টমার কিনা সেটা বোঝা খুব জরুরি। View তে ক্লিক করলে এটা যাতে দেখা যায় সেই ব্যবস্থা করে দেয়ার রিকোয়েস্ট রইল।

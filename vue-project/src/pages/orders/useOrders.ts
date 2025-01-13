@@ -221,15 +221,34 @@ export const useOrders = () => {
                         }))
             }
 
-            console.log(payload)
+            const { data, status } = await steadfastOrderCreate(payload)
+            if(status){
+                const responsePayload = data.map(item => {
+                    return {
+                        order_id: item.invoice,
+                        invoice: item.invoice,
+                        recipient_name: item.recipient_name,
+                        recipient_phone: item.recipient_phone,
+                        recipient_address: item.recipient_address,
+                        cod_amount: item.cod_amount,
+                        partner: 'steadfast',
+                        consignment_id: item.consignment_id,
+                        status: item.status,
+                        tracking_code: item.tracking_code,
+                        parcel_tracking_link: item.tracking_code ? `https://steadfast.com.bd/t/${item.tracking_code}` : null,
+                        created_at: item.created_at,
+                        updated_at: item.updated_at
+                    }
+                })
 
-            const { data } = await steadfastOrderCreate(payload)
-            console.log(data);
-            // after getting courier response store it into DB
-            storeBulkRecordsInToOrdersMeta([]);
-            await getOrders()
-        } catch (err) {
-            console.log(err)
+                await storeBulkRecordsInToOrdersMeta(responsePayload);
+                await getOrders()
+            }
+        } catch ({response}) {
+            const { status, message} = response.data
+            if(!status) {
+                console.log(message) // print in message box, and give a link to configure
+            }
         } finally {
             btn.isLoading = false
         }

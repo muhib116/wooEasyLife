@@ -2,8 +2,15 @@
     <Layout>
         <Container>
             <div class="grid gap-4 md:gap-6 lg:gap-8 font-light">
+                <Courier />
+                
                 <SalesSummary />
                 <OrderStatistics />
+
+                <div class="grid lg:grid-cols-2 gap-5 w-full">
+                    <OrderProgress />
+                    <SalesProgress />
+                </div>
 
                 <div class="grid lg:grid-cols-2 gap-5 w-full">
                     <OrderProgress />
@@ -37,6 +44,7 @@
     import OrderProgress from './fragments/OrderProgress/Index.vue'
     import OrderSource from './fragments/OrderSource/Index.vue'
     import OrderCycleTime from './fragments/OrderCycleTime/Index.vue'
+    import Courier from './fragments/Courier/Index.vue'
 
     const _useDashboard = useDashboard(true)
 

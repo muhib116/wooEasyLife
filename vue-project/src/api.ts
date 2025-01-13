@@ -43,7 +43,7 @@ export const changeStatus = async (payload: {
     order_id: number
     new_status: string
 }[]) => {
-    return await axios.post(`${localApiBaseURL}/orders/change-status`, payload)
+    return await axios.post(`${localApiBaseURL}/storeBulkRecordsInToOrdersMeta`, payload)
 }
 
 export const getOrderStatuses = async () => {
