@@ -6,9 +6,13 @@ import {
     getWoocomerceStatuses, 
     ip_or_phone_block_bulk_entry
 } from '@/api'
+
+import {
+    storeBulkRecordsInToOrdersMeta
+} from '@/api/courier'
 import { 
     checkCustomer,
-    steadfastOrderCreate
+    steadfastOrderCreate,
 } from '@/remoteApi'
 import { normalizePhoneNumber } from "@/helper"
 
@@ -221,7 +225,9 @@ export const useOrders = () => {
 
             const { data } = await steadfastOrderCreate(payload)
             console.log(data);
-            // await getOrders()
+            // after getting courier response store it into DB
+            storeBulkRecordsInToOrdersMeta([]);
+            await getOrders()
         } catch (err) {
             console.log(err)
         } finally {

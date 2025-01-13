@@ -145,6 +145,7 @@ class OrderListAPI
             $applied_coupons = $order->get_coupon_codes(); // Array of coupon codes
             $order_notes = get_order_notes($order);
             $created_via = $order->get_meta('_created_via', true);
+            $courier_data = $courier_data = get_courier_data_from_order($order->get_id());
 
             $data[] = [
                 'id'            => $order->get_id(),
@@ -163,6 +164,7 @@ class OrderListAPI
                 'discount_total' => $discount_total,
                 'discount_tax' => $discount_tax,
                 'order_notes' => $order_notes,
+                'courier_data' => $courier_data,
                 'currency_symbol' => get_woocommerce_currency_symbol($order->get_currency()),
                 'applied_coupons' => $applied_coupons,
                 'payment_method' => $order->get_payment_method(),
@@ -414,7 +416,6 @@ class OrderListAPI
             ],
         ];
     }
-    
 }
 
 

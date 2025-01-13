@@ -7,8 +7,8 @@ export const licenseKey = ref('');
 
 // load license key start--------
 const loadLicenseKey = async () => {
-    const { data } = await getWPOption({ option_name: 'license' })
-    licenseKey.value = data.key
+  const { data } = await getWPOption({ option_name: 'license' })
+  licenseKey.value = data.key
 }
 loadLicenseKey();
 // load license key end----------
@@ -17,34 +17,34 @@ loadLicenseKey();
 export const remoteApiBaseURL = 'https://api.wpsalehub.com/api'
 const headers = computed(() => ({
   headers: {
-    Authorization: 'Bearer '+licenseKey.value
+    Authorization: 'Bearer ' + licenseKey.value
   }
 }))
 
 
 // remote function
 export const checkCustomer = async (payload: {
-    phone: { id: number; phone: string }[]
+  phone: { id: number; phone: string }[]
 }) => {
-    const { data } = await axios.post(`${remoteApiBaseURL}/fraud-check`, payload, headers.value)
-    return data
+  const { data } = await axios.post(`${remoteApiBaseURL}/fraud-check`, payload, headers.value)
+  return data
 }
 
 
 // courier start
 export const getCourierCompanies = async () => {
-    console.log(headers)
-    const { data } = await axios.post(`${remoteApiBaseURL}/courier/list`, null, headers.value)
-    return data
+  console.log(headers)
+  const { data } = await axios.post(`${remoteApiBaseURL}/courier/list`, null, headers.value)
+  return data
 }
 
 export const saveCourierConfig = async (payload: {
-    title: "steadfast" | "paperfly" | "steadfast" | "redx",
-    api_key: 'string',
-    secret_key: 'string'
+  title: "steadfast" | "paperfly" | "steadfast" | "redx",
+  api_key: 'string',
+  secret_key: 'string'
 }) => {
-    const { data } = await axios.post(`${remoteApiBaseURL}/courier/save-configuration`, payload, headers.value)
-    return data
+  const { data } = await axios.post(`${remoteApiBaseURL}/courier/save-configuration`, payload, headers.value)
+  return data
 }
 
 export const getCourierConfig = async () => {
@@ -54,11 +54,11 @@ export const getCourierConfig = async () => {
 
 export const steadfastOrderCreate = async (payload: {
   orders: {
-      invoice: number | string
-      recipient_name: string
-      recipient_phone: string
-      recipient_address: string
-      cod_amount: number | string
+    invoice: number | string
+    recipient_name: string
+    recipient_phone: string
+    recipient_address: string
+    cod_amount: number | string
   }[]
 }) => {
   const { data } = await axios.post(`${remoteApiBaseURL}/steadfast/create-bulk-order`, payload, headers.value)

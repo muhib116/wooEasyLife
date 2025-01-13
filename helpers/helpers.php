@@ -272,3 +272,40 @@ function normalize_phone_number($phone) {
 
     return $normalized;
 }
+
+/**
+ * Get courier data for an order.
+ *
+ * @param WC_Order|int $order WooCommerce order object or order ID.
+ * @return array|WP_Error Array of courier data or WP_Error if invalid order or no data found.
+ */
+function get_courier_data_from_order($order) {
+    global $wpdb;
+
+    // Validate the order object or retrieve order by ID
+    if (!$order instanceof WC_Order) {
+        $order = wc_get_order($order);
+    }
+
+    if (!$order) {
+        return new WP_Error('invalid_order', 'Invalid order object or ID.');
+    }
+
+    $order_id = $order->get_id();
+
+    // Retrieve courier data from wp_wc_orders_meta table
+    $table_name = $wpdb->prefix . 'wc_orders_meta';
+    $result = $wpdb->get_var($wpdb->prepare(
+        "SELECT meta_value FROM {$table_name} WHERE order_id = %d AND meta_key = '_courier_data'",
+        $order_id
+    ));
+
+    if (empty($result)) {
+        return [];
+    }
+
+    // Unserialize the data to return it in array format
+    $courier_data = maybe_unserialize($result);
+
+    return $courier_data;
+}

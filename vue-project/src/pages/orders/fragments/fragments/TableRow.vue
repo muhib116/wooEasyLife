@@ -137,17 +137,29 @@
             @click="setSelectedOrder(order)"  
             class="whitespace-nowrap"
         >
-            <span title="Delivery partner">
-                🚚 Steadfast
-            </span>
-            <br/>
-            <span title="Consignment Id">
-                🆔 100198765
-            </span>
-            <br/>
-            <span class="font-medium text-sky-500" title="Courier Status">
-                📦 In Review
-            </span>
+            <div 
+                v-if="Object.keys(order?.courier_data)?.length"
+                class="grid"
+            >
+                <span title="Delivery partner">
+                    🚚 {{ order?.courier_data?.partner }}
+                </span>
+                <span title="Consignment Id">
+                    🆔 {{ order?.courier_data?.consignment_id }}
+                </span>
+                <span class="font-medium text-sky-500" title="Courier Status">
+                    📦 {{ order?.courier_data?.status }}
+                </span>
+                <a
+                    class="font-medium text-blue-500" 
+                    title="Click to track your parcel"
+                    :href="order?.courier_data?.parcel_tracking_link"
+                    target="_black"
+                >
+                    🚚 Track Parcel
+                </a>
+            </div>
+            <div v-else>n/a</div>
         </Table.Td>
         <Table.Td
             @click="setSelectedOrder(order)"  

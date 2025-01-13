@@ -71,5 +71,6 @@ class API_Register {
         new \WooEasyLife\API\Admin\BlockListAPI();
         new \WooEasyLife\API\Admin\SMSHistoryAPI();
         new \WooEasyLife\API\Admin\CustomOrderHandleAPI();
+        new \WooEasyLife\API\Admin\CourierHandleAPI();
     }
 }
