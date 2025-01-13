@@ -67,7 +67,10 @@
                         </select>
                     </label>
 
-                    <label class="font-light border px-2 py-1 rounded-sm">
+                    <label
+                        v-if="showDateFilter"
+                        class="font-light border px-2 py-1 rounded-sm"
+                    >
                         <select 
                             class="outline-none bg-transparent w-full !border-none focus:outline-none"
                             v-model="selectedFilterOption"
@@ -94,11 +97,14 @@
     import { useDashboard } from '../useDashboard'
     import { onMounted, ref } from 'vue'
 
-    const props = defineProps<{
+    const props = withDefaults(defineProps<{
         title?: string,
         subtitle?: string,
         showStatusFilter?: boolean
-    }>()
+        showDateFilter?: boolean
+    }>(), {
+        showDateFilter: true
+    })
 
     const emit = defineEmits(['dateChange'])
 

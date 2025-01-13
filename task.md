@@ -14,10 +14,6 @@ Dashboard:
 ✅ recent order
 ✅ top selling product
 
-=>Available Courier balance
-=>Courier Delivery Report
-Sales target
-
 ✅ Sales amount 
 ✅ discount amount
 👉🏻 SMS Cost calculation dashboard
@@ -28,9 +24,22 @@ Sales target
 ✅ order create form validation
 ✅ fraud history entry
 ✅ Invoice a real courier id bosate hobe
+✅ repeat customer identifier in order list
 
 
 
+
+
+=> Available Courier balance
+=> Courier Delivery Report
+=> Sales target
+=> courier config a error handle korte hobe
+=> courier entry te error handle korte hobe
+=> courier entry er somoy courier part nar select kore jawar option dite hobe
+=> Courier status update check korar option single/bulk
+=> courier part nar er logo use korte hobe
+=> wp cach clear function call after any changes
+=> code snippet (header, footer)
 
 👉🏻 bearar token validation from remote server
 👉🏻 alertBox position fixed kore dekhate hobe
@@ -46,5 +55,3 @@ Sales target
 👉🏻 request a feature
 👉🏻 Cash management (Low priority) from funnel liner
 👉🏻 Marketing Tools (Low priority) from funnel liner
-👉🏻 একটা রিকোয়ারমেন্ট ভেবে দেখবেন প্লিজ। অনেক কাস্টমার ওর্ডার করার পর প্রোডাক্ট রিসিভ করে না বা কল ধরে না। কোন কারন ছাড়া রিটার্ন করে দেয়। 
-ডেলিভারি কোম্পানির যেমন হিষ্ট্রি দেখা যায় তেমন আমার এখানে অর্ডার করে আগে নিয়েছে কিনা বা সে রিপিট কাস্টমার কিনা সেটা বোঝা খুব জরুরি। View তে ক্লিক করলে এটা যাতে দেখা যায় সেই ব্যবস্থা করে দেয়ার রিকোয়েস্ট রইল।

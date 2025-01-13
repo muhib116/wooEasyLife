@@ -37,6 +37,13 @@
             >
                 {{ order.billing_address.first_name }}
                 {{ order.billing_address.last_name }}
+                <span
+                    v-if="order.repeat_customer"
+                    class="text-green-500"
+                    title="Repeat customer"
+                >
+                    (Repeat)
+                </span>
                 <a 
                     class="text-orange-500 hover:scale-150 duration-200 opacity-0 group-hover:opacity-100"
                     :href="`${baseUrl}/wp-admin/post.php?post=${order.id}&action=edit`"

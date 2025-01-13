@@ -145,7 +145,8 @@ class OrderListAPI
             $applied_coupons = $order->get_coupon_codes(); // Array of coupon codes
             $order_notes = get_order_notes($order);
             $created_via = $order->get_meta('_created_via', true);
-            $courier_data = $courier_data = get_courier_data_from_order($order->get_id());
+            $courier_data = get_courier_data_from_order($order->get_id());
+            $is_repeat_customer = is_repeat_customer_by_id($order->get_id());
 
             $data[] = [
                 'id'            => $order->get_id(),
@@ -165,6 +166,7 @@ class OrderListAPI
                 'discount_tax' => $discount_tax,
                 'order_notes' => $order_notes,
                 'courier_data' => $courier_data,
+                'repeat_customer' => $is_repeat_customer,
                 'currency_symbol' => get_woocommerce_currency_symbol($order->get_currency()),
                 'applied_coupons' => $applied_coupons,
                 'payment_method' => $order->get_payment_method(),
@@ -202,7 +204,7 @@ class OrderListAPI
                     'country'    => $order->get_shipping_country(),
                     'customer_note' => $order->get_customer_note()
                 ],
-                'customer_report' => json_decode($fraud_data['report'], true)[0]['report']
+                'customer_report' => $fraud_data ? json_decode($fraud_data['report'], true)[0]['report'] : null
             ];
         }
     
@@ -504,4 +506,47 @@ function get_order_shipping_methods($order) {
     }
 
     return $shipping_methods_data;
+}
+
+/**
+ * Check if a customer is a repeat customer by customer ID.
+ *
+ * @param WC_Order $order The WooCommerce order object.
+ * @return bool True if the customer is a repeat customer, false otherwise.
+ */
+/**
+ * Check if a customer is a repeat customer based on their billing phone.
+ *
+ * @param int $order_id The ID of the WooCommerce order.
+ * @return bool True if the customer is a repeat customer, false otherwise.
+ */
+function is_repeat_customer_by_id($order_id) {
+    // Retrieve the order object
+    $order = wc_get_order($order_id);
+    if (!$order instanceof \WC_Order) {
+        return false; // Invalid order object
+    }
+
+    // Get the billing phone from the order
+    $billing_phone = $order->get_billing_phone();
+    if (empty($billing_phone)) {
+        return false; // No billing phone provided, cannot determine repeat status
+    }
+
+    // Query WooCommerce for all completed orders with the same billing phone
+    $args = [
+        'billing_phone' => $billing_phone,
+        'status'        => 'wc-completed',
+        'type'          => 'shop_order',
+        'limit'         => -1,
+        'return'        => 'ids', // Only retrieve order IDs
+    ];
+
+    $completed_orders = wc_get_orders($args);
+
+    // Exclude the current order from the list of completed orders
+    $completed_orders = array_diff($completed_orders, [$order_id]);
+
+    // If there are any remaining completed orders, the customer is a repeat customer
+    return count($completed_orders) > 0;
 }

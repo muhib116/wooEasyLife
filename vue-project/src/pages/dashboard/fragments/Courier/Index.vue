@@ -1,7 +1,7 @@
 <template>
-    <div class="grid lg:grid-cols-2 gap-5 w-full">
-        <DeliveryReport />
+    <div class="grid gap-5 w-full">
         <Balance />
+        <DeliveryReport />
     </div>
 </template>
 

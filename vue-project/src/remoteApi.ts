@@ -6,11 +6,10 @@ export const licenseKey = ref('');
 
 
 // load license key start--------
-const loadLicenseKey = async () => {
+export const loadLicenseKey = async () => {
   const { data } = await getWPOption({ option_name: 'license' })
   licenseKey.value = data.key
 }
-loadLicenseKey();
 // load license key end----------
 
 
@@ -33,7 +32,6 @@ export const checkCustomer = async (payload: {
 
 // courier start
 export const getCourierCompanies = async () => {
-  console.log(headers)
   const { data } = await axios.post(`${remoteApiBaseURL}/courier/list`, null, headers.value)
   return data
 }

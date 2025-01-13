@@ -24,6 +24,7 @@
     import { Navigation, Loader } from '@components'
     import { onBeforeMount, provide, ref } from 'vue'
     import { getWPOption } from '@/api'
+    import { loadLicenseKey } from '@/remoteApi'
 
     const isDevelopmentMode =  import.meta.env.DEV
     const configData = ref()
@@ -36,6 +37,7 @@
     }
 
     onBeforeMount(async () => {
-        loadConfig();
+        loadLicenseKey()
+        loadConfig()
     })
 </script>

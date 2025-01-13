@@ -6,9 +6,9 @@
             <div class="flex -mb-[2px]">
                 <a href="#" class="flex items-center">
                     <img
-                    class="w-auto h-10"
-                    src="https://cdn.prod.website-files.com/6080d45a6168d45abde5cba9/60c7b570e1f4d7265bd225a7_software-logo.png"
-                    alt=""
+                        class="w-auto h-10"
+                        :src="`${remoteApiBaseURL}/app-logo`"
+                        alt=""
                     />
                 </a>
 
@@ -88,6 +88,7 @@
 import { Icon } from "@components"
 import { Container } from '@layout'
 import { inject } from "vue"
+import { remoteApiBaseURL } from '@/remoteApi'
 
 const {configData} = inject('configData')
 
