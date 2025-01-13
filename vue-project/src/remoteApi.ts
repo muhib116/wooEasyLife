@@ -40,8 +40,10 @@ export const getCourierCompanies = async () => {
 
 export const saveCourierConfig = async (payload: {
   title: "steadfast" | "paperfly" | "steadfast" | "redx",
+  logo: 'string',
   api_key: 'string',
   secret_key: 'string'
+  is_active: boolean
 }) => {
   const { data } = await axios.post(`${remoteApiBaseURL}/courier/save-configuration`, payload, headers.value)
   return data

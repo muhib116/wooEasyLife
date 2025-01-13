@@ -15,6 +15,10 @@
             v-model="form.secret_key"
             @input="hasUnsavedData = true"
         />
+        <Switch
+            v-model="form.is_active"
+            @input="hasUnsavedData = true"
+        />
         <Button.Primary 
             class="ml-auto"
             :class="hasUnsavedData ? '' : 'pointer-events-none opacity-60'"
@@ -26,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-    import { Button, Input } from '@components'
+    import { Button, Input, Switch } from '@components'
     import { inject } from 'vue'
 
     const {

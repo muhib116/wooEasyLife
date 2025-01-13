@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-    import { Card, Loader, Input, Button } from '@components'
+    import { Card, Loader } from '@components'
     import { useCourier } from './useCourier'
     import { provide } from 'vue'
     import Form from './fragments/Form.vue'

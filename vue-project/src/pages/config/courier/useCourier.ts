@@ -32,6 +32,7 @@ export const useCourier = () => {
                 ...courierCompanyNames.value.find(item => item.slug == tabSlug),
                 api_key: '', 
                 secret_key: '',
+                is_active: false,
             }
             form.value = defaultConfig
         } else {

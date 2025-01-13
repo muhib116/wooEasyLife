@@ -15,7 +15,7 @@ Dashboard:
 ✅ top selling product
 
 Available Courier balance
-Courier Delevery Report
+Courier Delivery Report
 Sales target
 
 ✅ Sales amount 
@@ -27,14 +27,14 @@ Sales target
 ✅ handle sequential discount
 ✅ order create form validation
 ✅ fraud history entry
+✅ Invoice a real courier id bosate hobe
 
 
 
 
 👉🏻 alertBox position fixed kore dekhate hobe
-👉🏻 Invoice a real courier id bosate hobe
 👉🏻 one click Courier entry
-👉🏻 cost managment
+👉🏻 cost management
 👉🏻 kun kun user otp dise ar kun kun user otp dey nai tar akta list dekhate hobe phone number soho
 👉🏻 check page a form fillup obostay OTP enabled thaklew kuno input field a cursor rekhe inter dile form submit hoye jay.
 👉🏻 make the system responsive
