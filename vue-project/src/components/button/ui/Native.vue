@@ -76,7 +76,7 @@
 
     const localLabel = ref('')
     const localClass: string =
-        'flex items-center gap-2 font-semibold relative overflow-hidden hover:scale-105 hover:z-30 duration-200 cursor-pointer'
+        'flex items-center gap-2 font-semibold relative hover:scale-105 hover:z-30 duration-200 cursor-pointer'
     const wrapperClass = computed<string>(() => props.class || '')
 
     const button = ref<{

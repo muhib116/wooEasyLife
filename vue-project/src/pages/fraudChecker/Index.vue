@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
     import { Layout, Container } from '@layout'
-    import { checkCustomer } from '@/remoteApi'
+    import { checkFraudCustomer } from '@/remoteApi'
     import { ref } from 'vue'
     import FraudData from './FraudData.vue'
     import FraudForm from './FraudForm.vue'
@@ -33,7 +33,7 @@
                     phone: phone.value
                 }]
             }
-            const response = await checkCustomer(payload)
+            const response = await checkFraudCustomer(payload)
             data.value = response[0]
         } finally {
             btn.isLoading = false

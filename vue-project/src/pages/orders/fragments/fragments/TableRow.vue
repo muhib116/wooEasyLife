@@ -159,6 +159,7 @@
                     </span>
                 </div>
                 <a
+                    v-if='order?.courier_data?.parcel_tracking_link'
                     class="font-medium text-blue-500" 
                     title="Click to track your parcel"
                     :href="order?.courier_data?.parcel_tracking_link"

@@ -4,6 +4,12 @@
             class="absolute top-[30vh] left-1/2 -translate-x-1/2 z-30"
             :active="isLoading"
         />
+        <MessageBox
+            v-if="alertMessage?.title"
+            :title="alertMessage.title"
+            :type="alertMessage.type"
+            class="mx-4"
+        />
 
         <OrderDetails v-if="activeOrder" />
         <div v-else>
@@ -75,6 +81,7 @@
         activeOrder,
         orders,
         isLoading,
+        alertMessage,
         selectedStatus,
         wooCommerceStatuses,
         handleStatusChange

@@ -22,7 +22,7 @@ const headers = computed(() => ({
 
 
 // remote function
-export const checkCustomer = async (payload: {
+export const checkFraudCustomer = async (payload: {
   phone: { id: number; phone: string }[]
 }) => {
   const { data } = await axios.post(`${remoteApiBaseURL}/fraud-check`, payload, headers.value)
@@ -52,7 +52,7 @@ export const getCourierConfig = async () => {
   return data
 }
 
-export const steadfastOrderCreate = async (payload: {
+export const steadfastBulkOrderCreate = async (payload: {
   orders: {
     invoice: number | string
     recipient_name: string

@@ -25,6 +25,9 @@ Dashboard:
 ✅ fraud history entry
 ✅ Invoice a real courier id bosate hobe
 ✅ repeat customer identifier in order list
+✅ courier entry te error handle korte hobe
+✅ courier entry er somoy courier part nar select kore jawar option dite hobe
+✅ courier part nar er logo use korte hobe
 
 
 
@@ -34,16 +37,13 @@ Dashboard:
 => Courier Delivery Report
 => Sales target
 => courier config a error handle korte hobe
-=> courier entry te error handle korte hobe
-=> courier entry er somoy courier part nar select kore jawar option dite hobe
 => Courier status update check korar option single/bulk
-=> courier part nar er logo use korte hobe
 => wp cach clear function call after any changes
 => code snippet (header, footer)
 
 👉🏻 bearar token validation from remote server
 👉🏻 alertBox position fixed kore dekhate hobe
-👉🏻 one click Courier entry
+🍠 one click Courier entry
 👉🏻 cost management
 👉🏻 kun kun user otp dise ar kun kun user otp dey nai tar akta list dekhate hobe phone number soho
 👉🏻 check page a form fillup obostay OTP enabled thaklew kuno input field a cursor rekhe inter dile form submit hoye jay.

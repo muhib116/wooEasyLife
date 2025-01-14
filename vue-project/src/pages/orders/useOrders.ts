@@ -1,20 +1,15 @@
 import { onMounted, ref, watch } from "vue"
-import { 
-    changeStatus, 
-    getOrderList, 
-    getOrderStatusListWithCounts, 
-    getWoocomerceStatuses, 
+import {
+    changeStatus,
+    getOrderList,
+    getOrderStatusListWithCounts,
+    getWoocomerceStatuses,
     ip_or_phone_block_bulk_entry
 } from '@/api'
-
 import {
-    storeBulkRecordsInToOrdersMeta
-} from '@/api/courier'
-import { 
-    checkCustomer,
-    steadfastOrderCreate,
+    checkFraudCustomer
 } from '@/remoteApi'
-import { normalizePhoneNumber } from "@/helper"
+import { manageCourier } from "./useHandleCourierEntry"
 
 export const useOrders = () => {
     const orders = ref([])
@@ -28,6 +23,10 @@ export const useOrders = () => {
     const toggleNewOrder = ref(false)
     const wooCommerceStatuses = ref([])
     const selectedStatus = ref(null)
+    const alertMessage = ref<{
+        title: string
+        type: "success" | "danger" | "warning" | "info"
+    }>()
 
     const orderFilter = ref({
         page: 1,
@@ -73,7 +72,7 @@ export const useOrders = () => {
                 }),
             }
 
-            const data = await checkCustomer(payload)
+            const data = await checkFraudCustomer(payload)
             if (data.length) {
                 data.forEach(item => {
                     _selectedOrders.forEach(_item => {
@@ -90,7 +89,7 @@ export const useOrders = () => {
 
     const getOrders = async () => {
         isLoading.value = true
-        if(orderFilter.value.page==0){
+        if (orderFilter.value.page == 0) {
             orderFilter.value.page = 1
         }
         const { data, total } = await getOrderList(orderFilter.value)
@@ -193,64 +192,37 @@ export const useOrders = () => {
         }
     }
 
-    const handleCourierEntry = async (btn) => {
+    const handleCourierEntry = async (courierPartner: string, btn) => {
         if (![...selectedOrders.value].length) {
             alert('Please select at least on item.')
             return
         }
-
+        
         try {
             btn.isLoading = true
-            const payload: {
-                orders: {
-                    invoice: number | string
-                    recipient_name: string
-                    recipient_phone: string
-                    recipient_address: string
-                    cod_amount: number | string
-                }[]
-            } = {
-                orders: [...selectedOrders.value]
-                        .map(item => ({
-                            invoice: item?.id,
-                            recipient_name: item?.customer_name || '',
-                            recipient_phone: normalizePhoneNumber(item?.billing_address?.phone || item?.shipping_address?.phone || ''),
-                            recipient_address: `${item?.shipping_address?.address_1 || ''} ${item?.shipping_address?.address_2 || ''}`,
-                            cod_amount: item?.total,
-                            note: item?.order_notes?.courier_note || '',
-                        }))
-            }
-
-            const { data, status } = await steadfastOrderCreate(payload)
-            if(status){
-                const responsePayload = data.map(item => {
-                    return {
-                        order_id: item.invoice,
-                        invoice: item.invoice,
-                        recipient_name: item.recipient_name,
-                        recipient_phone: item.recipient_phone,
-                        recipient_address: item.recipient_address,
-                        cod_amount: item.cod_amount,
-                        partner: 'steadfast',
-                        consignment_id: item.consignment_id,
-                        status: item.status,
-                        tracking_code: item.tracking_code,
-                        parcel_tracking_link: item.tracking_code ? `https://steadfast.com.bd/t/${item.tracking_code}` : null,
-                        created_at: item.created_at,
-                        updated_at: item.updated_at
-                    }
-                })
-
-                await storeBulkRecordsInToOrdersMeta(responsePayload);
+            await manageCourier(selectedOrders, courierPartner, async () => {
                 await getOrders()
-            }
-        } catch ({response}) {
-            const { status, message} = response.data
-            if(!status) {
-                console.log(message) // print in message box, and give a link to configure
+                alertMessage.value = {
+                    type: 'success',
+                    title: 'Your order information has been submitted to the courier platform.'
+                }
+            })
+        } catch ({ response }) {
+            const { status, message } = response?.data
+            if (!status) {
+                alertMessage.value = {
+                    type: 'warning',
+                    title: message
+                }
             }
         } finally {
             btn.isLoading = false
+            setTimeout(() => {
+                alertMessage.value = {
+                    type: 'info',
+                    title: ''
+                }
+            }, 6000)
         }
     }
 
@@ -274,6 +246,7 @@ export const useOrders = () => {
         orderFilter,
         showInvoices,
         totalRecords,
+        alertMessage,
         selectedStatus,
         selectedOrders,
         toggleNewOrder,

@@ -14,7 +14,8 @@ export const useCourier = () => {
     const courierConfigs = ref<{
         id: string | number
         api_key: string,
-        secret_key: string
+        secret_key: string,
+        logo: string
     }[]>([])
 
 
