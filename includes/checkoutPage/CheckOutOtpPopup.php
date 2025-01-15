@@ -70,7 +70,6 @@
                             placeholder=""
                             v-model="otpCode"
                             @input="validateOTP"
-                            :disabled="!otpIsNotValid"
                         />
                         <p
                             v-if="otpIsNotValid"
@@ -263,8 +262,11 @@
             setTimeout(() => {
                 const billing_phoneInput = document.querySelector('#billing_phone')
                 const wooEasyLifeOtpModalOpener = document.getElementById('wooEasyLifeOtpModalOpener')
-                if(billing_phoneInput){
-                    wooEasyLifeOtpModalOpener.onclick = () => {
+                const woocommerceCheckoutForm = document.querySelector("form[name=checkout].checkout.woocommerce-checkout")
+
+                if(billing_phoneInput) {
+                    window.onclick = (e) => {
+                        if(e.target.getAttribute('id') != 'wooEasyLifeOtpModalOpener') return
                         billingPhone.value = billing_phoneInput.value;
                         otpCode.value = ''
 
@@ -284,6 +286,16 @@
                         scrollToBillingPhoneField()
                         alert('Please enter a valid phone number.')
                     };
+                }
+                if (woocommerceCheckoutForm) {
+                    woocommerceCheckoutForm.addEventListener('keydown', (event) => {
+                        if (event.key === 'Enter') {
+                            event.preventDefault() // Prevent the form submission
+                            console.log('Enter key press prevented')
+                        }
+                    })
+                } else {
+                    console.error('Checkout form not found'); // Log an error if the form is not found
                 }
             }, 2000)
 
