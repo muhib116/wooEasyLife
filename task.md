@@ -28,6 +28,7 @@ Dashboard:
 ✅ courier entry te error handle korte hobe
 ✅ courier entry er somoy courier part nar select kore jawar option dite hobe
 ✅ courier part nar er logo use korte hobe
+✅ check page a form fillup obostay OTP enabled thaklew kuno input field a cursor rekhe inter dile form submit hoye jay.
 
 
 
@@ -46,7 +47,6 @@ Dashboard:
 🍠 one click Courier entry
 👉🏻 cost management
 👉🏻 kun kun user otp dise ar kun kun user otp dey nai tar akta list dekhate hobe phone number soho
-👉🏻 check page a form fillup obostay OTP enabled thaklew kuno input field a cursor rekhe inter dile form submit hoye jay.
 
 👉🏻 make the system responsive
 👉🏻 plugins update
@@ -55,3 +55,4 @@ Dashboard:
 👉🏻 request a feature
 👉🏻 Cash management (Low priority) from funnel liner
 👉🏻 Marketing Tools (Low priority) from funnel liner
+👉🏻 Audio notification sound for new order

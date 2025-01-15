@@ -1,6 +1,8 @@
 <?php
 namespace WooEasyLife\API;
 
+use WooEasyLife\API\Admin\NewOrderNotificationAPI;
+
 class API_Register {
     public function __construct() {
         /**
@@ -72,5 +74,6 @@ class API_Register {
         new \WooEasyLife\API\Admin\SMSHistoryAPI();
         new \WooEasyLife\API\Admin\CustomOrderHandleAPI();
         new \WooEasyLife\API\Admin\CourierHandleAPI();
+        new \WooEasyLife\API\Admin\NewOrderNotificationAPI();
     }
 }

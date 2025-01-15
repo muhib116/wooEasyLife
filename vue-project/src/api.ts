@@ -8,6 +8,13 @@ export {
     baseUrl
 }
 
+
+export const checkHasNewOrder = async () => {
+    const { data } = await axios.get(`${localApiBaseURL}/check-new-orders-for-notification`)
+    return data
+}
+
+
 // functions for order list
 export const getPaymentMethods = async () => {
     return await axios.get(`${localApiBaseURL}/payment-methods`)
@@ -43,7 +50,7 @@ export const changeStatus = async (payload: {
     order_id: number
     new_status: string
 }[]) => {
-    return await axios.post(`${localApiBaseURL}/storeBulkRecordsInToOrdersMeta`, payload)
+    return await axios.post(`${localApiBaseURL}/orders/change-status`, payload)
 }
 
 export const getOrderStatuses = async () => {
