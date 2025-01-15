@@ -43,6 +43,7 @@
                 />
 
                 <div class="flex gap-2 relative">
+                    <slot name="before-filter"></slot>
                     <Loader
                         :active="showStatusFilter && isLoading"
                         class="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2"
@@ -85,6 +86,7 @@
                             </option>
                         </select>
                     </label>
+                    <slot name="after-filter"></slot>
                 </div>
             </div>
             <slot></slot>

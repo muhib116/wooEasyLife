@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
     import { Navigation, Loader, MessageBox } from '@components'
-    import { onBeforeMount, onMounted, provide, ref } from 'vue'
+    import { onBeforeMount, provide, ref } from 'vue'
     import { getWPOption } from '@/api'
     import { loadLicenseKey } from '@/remoteApi'
     import { useCourier } from '@/pages/config/courier/useCourier.ts'

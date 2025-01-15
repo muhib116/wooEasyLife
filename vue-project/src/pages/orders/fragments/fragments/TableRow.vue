@@ -10,7 +10,7 @@
             <input
                 type="checkbox"
                 :value="order.id"
-                :checked="selectedOrders.has(order)"
+                :checked="[...selectedOrders].find(item => item.id == order.id)"
             />
         </Table.Td>
         <Table.Td

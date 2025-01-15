@@ -12,7 +12,7 @@ export default defineConfig({
         defineModel: true
       },
   }),
-    vueDevTools(),
+    // vueDevTools(),
   ],
   resolve: {
     alias: {
