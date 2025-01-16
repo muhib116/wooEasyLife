@@ -3,7 +3,7 @@
 /**
  * Plugin Name: WooEasyLife
  * Plugin URI: https://example.com/wooeasylife
- * Description: WooEasyLife is a custom plugin for enhancing WooCommerce functionality.
+ * Description: **WooEasyLife is a custom plugin for enhancing WooCommerce functionality.
  * Version: 1.0.0
  * Author: Muhibbullah Ansary
  * Author URI: https://example.com
@@ -17,6 +17,14 @@
 if (! defined('ABSPATH')) {
     die('Invalid request.');
 }
+
+// require 'plugin-update-checker/plugin-update-checker.php';
+// $MyUpdateChecker = YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
+//     'http://localhost:8080/wordpress/metadata.json',
+//     __FILE__,
+//     'woo-life-changer'
+// );
+
 
 define('__PREFIX', 'woo_easy_life_');
 define('__API_NAMESPACE', 'wooeasylife/v1');
@@ -249,6 +257,22 @@ if (!class_exists('WooEasyLife')) :
 
     // add_action('init', function () {
         new WooEasyLife();
-        new  WooEasyLife\Init\UpdatePlugin();
+        new  WooEasyLife\Init\UpdatePlugin(get_current_plugin_version(), $license_key);
     // });
 endif;
+
+function get_current_plugin_version() {
+    // Define the path to the plugin file
+    $plugin_file = plugin_dir_path(__FILE__) . basename(__FILE__);
+
+    // Check if the file exists
+    if (file_exists($plugin_file)) {
+        // Retrieve the plugin data
+        $plugin_data = get_file_data($plugin_file, array('Version' => 'Version'));
+
+        // Return the version if available
+        return isset($plugin_data['Version']) ? $plugin_data['Version'] : null;
+    }
+
+    return null; // Return null if the file does not exist
+}
