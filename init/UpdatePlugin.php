@@ -103,6 +103,7 @@ class UpdatePlugin
                 'sections'      => [
                     'description' => $plugin_info['sections']['description'] ?? '',
                     'changelog'   => $plugin_info['sections']['changelog'] ?? '',
+                    'author'   => 'Muhibbullah author...',
                 ],
                 'icons' => [
                     '1x' => 'https://ps.w.org/woocommerce/assets/icon-256x256.gif?rev=2869506',
