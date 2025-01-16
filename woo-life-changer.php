@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name: WooEasyLife
  * Plugin URI: https://example.com/wooeasylife
@@ -18,17 +17,10 @@ if (! defined('ABSPATH')) {
     die('Invalid request.');
 }
 
-// require 'plugin-update-checker/plugin-update-checker.php';
-// $MyUpdateChecker = YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
-//     'http://localhost:8080/wordpress/metadata.json',
-//     __FILE__,
-//     'woo-life-changer'
-// );
-
-
 define('__PREFIX', 'woo_easy_life_');
 define('__API_NAMESPACE', 'wooeasylife/v1');
 define('__wpsalehub_api_key__', '');
+
 $config_data;
 $license_key;
 
@@ -75,6 +67,8 @@ if (!class_exists('WooEasyLife')) :
 
         public function woo_easy_life_activation_hook()
         {
+            ob_start(); // Start output buffering
+
             if (empty(get_option(__PREFIX.'license'))) update_option(__PREFIX.'license', ['key'=> ""]);
             if (empty(get_option(__PREFIX.'balance'))) update_option(__PREFIX.'balance', '200');
 
@@ -83,6 +77,8 @@ if (!class_exists('WooEasyLife')) :
             $this->handleDBTable->create();
             $this->create_static_statuses();
             $this->save_default_config();
+
+            ob_end_clean(); // Clear any unexpected output
         }
 
         public function woo_easy_life_deactivation_hook()
@@ -258,8 +254,20 @@ if (!class_exists('WooEasyLife')) :
     // add_action('init', function () {
         new WooEasyLife();
         new  WooEasyLife\Init\UpdatePlugin(get_current_plugin_version(), $license_key);
+        add_action('init', function () {
+            delete_site_transient('update_plugins'); // Clear old cached data
+        
+            $response = wp_remote_get('https://yourwebsite.com/api/get-metadata');
+            if (is_wp_error($response)) {
+                error_log('Error fetching metadata: ' . $response->get_error_message());
+            } else {
+                error_log('Metadata response: ' . wp_remote_retrieve_body($response));
+            }
+        });
     // });
 endif;
+
+
 
 function get_current_plugin_version() {
     // Define the path to the plugin file

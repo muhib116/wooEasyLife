@@ -24,6 +24,7 @@ class UpdatePlugin
         // Add hooks for updates and plugin information
         add_filter('site_transient_update_plugins', [$this, 'check_for_update']);
         add_filter('plugins_api', [$this, 'plugin_info'], 10, 3);
+        add_action('admin_notices', [$this, 'woo_life_changer_update_notice']);
     }
 
     /**
@@ -38,20 +39,10 @@ class UpdatePlugin
             return $transient;
         }
 
-        $response = wp_remote_get(
-            $this->update_server_url,
-            [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $this->license_key,
-                ],
-            ]
-        );
-
-        if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
+        $update_data = $this->get_meta_data();
+        if(!$update_data){
             return $transient;
         }
-
-        $update_data = json_decode(wp_remote_retrieve_body($response), true);
 
         if (
             isset($update_data['version'], $update_data['download_url']) &&
@@ -112,9 +103,67 @@ class UpdatePlugin
                     'description' => $plugin_info['sections']['description'] ?? '',
                     'changelog'   => $plugin_info['sections']['changelog'] ?? '',
                 ],
+                'icons' => [
+                    '1x' => 'https://ps.w.org/woocommerce/assets/icon-256x256.gif?rev=2869506',
+                    '2x' => 'https://ps.w.org/woocommerce/assets/icon-256x256.gif?rev=2869506',
+                    'svg' => 'https://ps.w.org/woocommerce/assets/icon-256x256.gif?rev=2869506',
+                ],
             ];
         }
 
         return $result;
+    }
+
+    /**
+     * Display a WP notice if a plugin update is available.
+     */
+    public function woo_life_changer_update_notice() {
+        $meta_data = $this->get_meta_data(); // get json data of the plugin
+        if(!$meta_data){
+            return;
+        }
+
+
+        // Define the plugin slug and file path
+        $plugin_slug = $this->plugin_slug.'/'.$this->plugin_slug.'.php'; // Plugin file path relative to the plugins directory
+        $plugin_path = WP_PLUGIN_DIR . '/' . $plugin_slug; // Absolute path to the plugin file
+
+
+        // Get the current plugin version
+        if (!file_exists($plugin_path)) {
+            return; // Exit if the plugin file doesn't exist
+        }
+
+        $plugin_data = get_plugin_data($plugin_path);
+        $current_version = $plugin_data['Version']; // Current version from plugin header
+
+        // Define the latest version (this should come from your update server/API)
+        $latest_version = $meta_data['version']; // Replace this with the latest version dynamically if needed
+
+        // Check if an update is available
+        if (version_compare($current_version, $latest_version, '<')) {
+            // Display the notice
+            echo '<div class="notice notice-warning is-dismissible">';
+            echo '<p><strong>Woo Life Changer:</strong> A new version (' . esc_html($latest_version) . ') is available. You are using version ' . esc_html($current_version) . '. <a href="' . esc_url(admin_url('update-core.php')) . '">Update now</a>.</p>';
+            echo '</div>';
+        }
+    }
+
+
+    private function get_meta_data () {
+        $response = wp_remote_get(
+            $this->update_server_url,
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->license_key,
+                ],
+            ]
+        );
+
+        if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
+            return false;
+        }
+
+        return json_decode(wp_remote_retrieve_body($response), true);
     }
 }
