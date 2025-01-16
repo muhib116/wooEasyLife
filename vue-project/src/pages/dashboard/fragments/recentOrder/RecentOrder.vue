@@ -13,7 +13,7 @@
             <OrderDetails v-if="activeOrder" />
             <MessageBox
                 v-if="!recentOrders?.length && !isLoading"
-                title="No records found for the top-selling product!"
+                title="No records found for the Recent Orders!"
                 type="info"
             />
             <Table.Table v-else-if="!isLoading && !activeOrder">

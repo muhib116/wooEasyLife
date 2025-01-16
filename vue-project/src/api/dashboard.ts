@@ -53,3 +53,9 @@ export const getOrderCycleTimeData = async (date: {start_date: string, end_date:
     })
     return data
 }
+
+
+export const getSalesTarget = async (date) => {
+    // const { data } = await axios.get(`${localApiBaseURL}/order-cycle-time`)
+    // return data
+}

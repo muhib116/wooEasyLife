@@ -12,7 +12,7 @@
         <div class="h-[320px] overflow-auto">
             <MessageBox
                 v-if="!topSellingProducts?.length && !isLoading"
-                title="No records found for the top-selling product!"
+                title="No records found for the Top Selling Product!"
                 type="info"
             />
             <Table.Table v-else-if="!isLoading">

@@ -8,6 +8,12 @@
             class="absolute inset-x-1/2 top-[200px] -translate-x-1/2 z-20"
         />
 
+        <MessageBox
+            v-if="!orderStatuses?.length && !isLoading"
+            title="No data found!"
+            type="info"
+        />
+
         <div
             class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4  3xl:grid-cols-5 gap-3 md:gap-4 xl:gap-6 !text-white relative"
             v-if="orderStatuses?.length && Object.keys(orderStatistics)?.length"

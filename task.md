@@ -56,4 +56,5 @@ Dashboard:
 👉🏻 request a feature
 👉🏻 Cash management (Low priority) from funnel liner
 👉🏻 Marketing Tools (Low priority) from funnel liner
+Microsoft Clarity
 👉🏻 Audio notification sound for new order

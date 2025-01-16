@@ -32,6 +32,7 @@
         @close="toggleModal = false"
         title="Set your sales target"
         class="max-w-[550px] w-full"
+        hideFooter
     >
         <SalesTargetForm />
     </Modal>
@@ -49,7 +50,7 @@
     import SalesTargetForm from './SalesTargetForm.vue'
     import Card from './Card.vue'
 
-    const toggleModal = ref(false)
+    const toggleModal = ref(true)
     // import { useCourier } from './UseCourier'
 
     // const {
