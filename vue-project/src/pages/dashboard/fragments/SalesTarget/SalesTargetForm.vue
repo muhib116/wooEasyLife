@@ -33,7 +33,10 @@
             />
             <Button.Primary 
                 class="ml-auto"
-                @onClick="saveSalesTarget"
+                @onClick="async (btn) => {
+                    await saveSalesTarget(btn)
+                    $emit('close')
+                }"
             >
                 Save
             </Button.Primary>

@@ -2,15 +2,18 @@
     <Layout>
         <Container>
             <div class="grid gap-4 md:gap-6 lg:gap-8 font-light">
-                <SalesTarget />
-                <Courier />
+                
                 <SalesSummary />
-                <OrderStatistics />
-
+                
                 <div class="grid lg:grid-cols-2 gap-5 w-full">
                     <OrderProgress />
                     <SalesProgress />
                 </div>
+                
+                <OrderStatistics />
+
+                <SalesTarget />
+                <Courier />
                 
                 <div class="grid lg:grid-cols-2 gap-5 w-full">
                     <OrderSource />

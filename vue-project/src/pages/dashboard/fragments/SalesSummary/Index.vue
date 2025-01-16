@@ -14,35 +14,35 @@
                 subtitle="Total orders"
                 iconName="PhPackage"
                 iconWeight="duotone"
-                class="bg-[#ffa332]"
+                class="!bg-[#ffa332]"
             />
             <Card.Stylist
                 :title="salesSummaryData?.average_order_value || 0"
                 subtitle="Average order value"
                 iconName="PhMoney"
                 iconWeight="duotone"
-                class="bg-[#243642]"
+                class="!bg-[#243642]"
             />
             <Card.Stylist
                 :title="salesSummaryData?.total_sale_amount || 0"
                 subtitle="Total sale amount"
                 iconName="PhCashRegister"
                 iconWeight="duotone"
-                class="bg-[#433878]"
+                class="!bg-[#433878]"
             />
             <Card.Stylist
                 :title="salesSummaryData?.total_discount_amount || 0"
                 subtitle="Total discount amount"
                 iconName="PhSealPercent"
                 iconWeight="duotone"
-                class="bg-[#180161]"
+                class="!bg-[#180161]"
             />
             <Card.Stylist
                 :title="salesSummaryData?.total_shipping_cost || 0"
                 subtitle="Total shipping"
                 iconName="PhTruck"
                 iconWeight="duotone"
-                class="bg-[#d82d58]"
+                class="!bg-[#d82d58]"
             />
         </div>
     </DashboardCard>

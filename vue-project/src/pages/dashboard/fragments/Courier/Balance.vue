@@ -12,28 +12,29 @@
             <Card.Stylist
                 title="50000tk"
                 subtitle="Total Balance"
-                class="bg-[#693d84]"
+                class="!bg-[#693d84]"
             />
 
             <div class="grid grid-cols-2 gap-6">
                 <Card.Stylist
                     title="500tk"
                     subtitle="Steadfast"
+                    class="!bg-[#02b795]"
                 />
                 <Card.Stylist
                     title="350tk"
                     subtitle="Paperfly"
-                    class="bg-[#017cef]"
+                    class="!bg-[#0066c5]"
                 />
                 <Card.Stylist
                     title="5345tk"
                     subtitle="Redx"
-                    class="bg-[#eb2128]"
+                    class="!bg-[#eb2128]"
                 />
                 <Card.Stylist
                     title="534tk"
                     subtitle="Pathao"
-                    class="bg-[#e83335]"
+                    class="!bg-[#fb4347]"
                 />
             </div>
         </div>

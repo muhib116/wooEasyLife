@@ -29,6 +29,7 @@ Dashboard:
 ✅ courier entry er somoy courier part nar select kore jawar option dite hobe
 ✅ courier part nar er logo use korte hobe
 ✅ check page a form fillup obostay OTP enabled thaklew kuno input field a cursor rekhe inter dile form submit hoye jay.
+✅ Sales target
 
 
 
@@ -37,7 +38,6 @@ Dashboard:
 => Available Courier balance
 => fraud check korar somoy db update hobe
 => Courier Delivery Report
-=> Sales target
 => courier config a error handle korte hobe
 => Courier status update check korar option single/bulk
 => wp cach clear function call after any changes

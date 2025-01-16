@@ -9,7 +9,6 @@ export const useSalesTarget = () => {
     title: "",
     type: "info",
   });
-
   const defaultData: {
     monthly_target_amount: number | null;
     daily_target_amount: number | null;
@@ -83,17 +82,19 @@ export const useSalesTarget = () => {
 
   const saveSalesTarget = async (btn) => {
     try {
-      btn.isLoading = true;
-      isLoading.value = true;
-      salesTargetData.value.data.daily_target_amount =
+        btn.isLoading = true;
+        isLoading.value = true;
+        salesTargetData.value.data.daily_target_amount =
         dailyTargetAmount.value || 0;
-      salesTargetData.value.data.end_date = endDate.value;
-      await createOrUpdateWPOption(salesTargetData.value);
+        salesTargetData.value.data.end_date = endDate.value;
+      
+        await createOrUpdateWPOption(salesTargetData.value);
+        await loadSalesTargetData();
 
-      alertMessage.value = {
-        title: "Sales target saved!",
-        type: "success",
-      };
+        alertMessage.value = {
+            title: "Sales target saved!",
+            type: "success",
+        };
     } finally {
       btn.isLoading = false;
       isLoading.value = false;
@@ -141,7 +142,7 @@ export const useSalesTarget = () => {
 
       if (categories && series?.length) {
         chartData.value.dateWise = merge({}, chartPreset, {
-          type: "line",
+          type: "bar",
           options: {
             xaxis: {
               categories: categories,
@@ -152,15 +153,12 @@ export const useSalesTarget = () => {
             {
               name: "Target Sale Amount",
               data: new Array(series[0]?.data?.length || 0).fill(
-                _data?.monthly_target_amount / series[0]?.data?.length || 1
+                _data?.monthly_target_amount / 30
               ),
             },
           ],
         });
       }
-      console.log({
-        ...chartData.value,
-      });
     } finally {
       isLoading.value = false;
     }

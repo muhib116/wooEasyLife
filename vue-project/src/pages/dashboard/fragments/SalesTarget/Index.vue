@@ -32,7 +32,9 @@
     class="max-w-[550px] w-full"
     hideFooter
   >
-    <SalesTargetForm />
+    <SalesTargetForm
+        @close="toggleModal = false"
+    />
   </Modal>
 </template>
 
