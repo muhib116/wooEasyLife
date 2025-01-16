@@ -63,6 +63,12 @@ class OrderStatisticsAPI extends WP_REST_Controller
                 'permission_callback' => api_permission_check(),
             ],
         ]);
+
+        register_rest_route(__API_NAMESPACE, '/sales-progress-by-date', [
+            'methods'             => 'GET',
+            'callback'            => [$this, 'get_sales_progress_by_date'],
+            'permission_callback' => api_permission_check(),
+        ]);
     }
 
     /**
@@ -572,4 +578,89 @@ class OrderStatisticsAPI extends WP_REST_Controller
             ],
         ], 200);
     }
+
+
+    /**
+     * Get sales progress according to a provided date range and status.
+     */
+    public function get_sales_progress_by_date(WP_REST_Request $request)
+    {
+        // Retrieve the start_date and end_date from the request
+        $start_date = $request->get_param('start_date') ?? date('Y-m-d', strtotime('-6 days'));
+        $end_date = $request->get_param('end_date') ?? date('Y-m-d');
+
+        // Validate the date format
+        if (!strtotime($start_date) || !strtotime($end_date)) {
+            return new \WP_REST_Response([
+                'status'  => 'error',
+                'message' => 'Invalid date format. Use YYYY-MM-DD.',
+            ], 400);
+        }
+
+        // Ensure the end_date is not greater than today's date
+        $today = date('Y-m-d');
+        if (strtotime($end_date) > strtotime($today)) {
+            $end_date = $today;
+        }
+
+        $args = [
+            'status'       => ['wc-completed'], // Only completed orders
+            'limit'        => -1, // Retrieve all orders
+            'orderby'      => 'date',
+            'order'        => 'DESC', // Descending order
+            'return'       => 'objects', // Return full order objects
+            'type'         => 'shop_order',
+            'date_created' => $start_date . '...' . $end_date, // Date range
+        ];
+
+        // Fetch orders using wc_get_orders
+        $orders = wc_get_orders($args);
+
+        // Initialize variables for calculations
+        $total_sales = 0;
+        $sales_by_date = [];
+        $today_sales = 0;
+
+        foreach ($orders as $order) {
+            $date = $order->get_date_created() ? $order->get_date_created()->date('Y-m-d') : null;
+
+            if ($date === $today) {
+                $today_sales += $order->get_total(); // Calculate today's sales
+            }
+
+            if (!isset($sales_by_date[$date])) {
+                $sales_by_date[$date] = 0;
+            }
+
+            $sales_by_date[$date] += $order->get_total(); // Add order total to the date's sales
+            $total_sales += $order->get_total(); // Increment total sales
+        }
+
+        // Format the response for ApexCharts only if the end_date is not greater than today
+        $categories = [];
+        $series_data = [];
+
+        if (strtotime($end_date) <= strtotime($today)) {
+            $current_date = strtotime($start_date);
+            $end_date_timestamp = strtotime($end_date);
+
+            while ($current_date <= $end_date_timestamp) {
+                $date = date('Y-m-d', $current_date);
+                $categories[] = $date;
+                $series_data[] = isset($sales_by_date[$date]) ? $sales_by_date[$date] : 0;
+                $current_date = strtotime('+1 day', $current_date);
+            }
+        }
+
+        return new \WP_REST_Response([
+            'status' => 'success',
+            'data'   => [
+                'total_sales' => $total_sales, // Total sales amount
+                'today_sales' => $today_sales, // Today's total sales
+                'series'      => [['name' => 'Total Sale Amount', 'data' => $series_data]],
+                'categories'  => $categories, // Dates
+            ],
+        ], 200);
+    }
+
 }

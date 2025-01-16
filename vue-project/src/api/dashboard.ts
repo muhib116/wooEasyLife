@@ -55,7 +55,12 @@ export const getOrderCycleTimeData = async (date: {start_date: string, end_date:
 }
 
 
-export const getSalesTarget = async (date) => {
-    // const { data } = await axios.get(`${localApiBaseURL}/order-cycle-time`)
-    // return data
+export const getSalesProgressForTarget = async (payload: {
+    start_date: string | Date
+    end_date: string | Date
+}) => {
+    const { data } = await axios.get(`${localApiBaseURL}/sales-progress-by-date`, {
+        params: payload
+    })
+    return data
 }
