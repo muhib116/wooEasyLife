@@ -88,13 +88,14 @@ class UpdatePlugin
 
         $plugin_info = json_decode(wp_remote_retrieve_body($response), true);
 
+
         if (isset($plugin_info['name'])) {
             $result = (object) [
                 'name'          => $plugin_info['name'],
                 'slug'          => $this->plugin_slug,
                 'version'       => $plugin_info['version'],
                 'author'        => $plugin_info['author'],
-                'homepage'      => $plugin_info['homepage'],
+                'homepage'      => $plugin_info['homepage'] ?? '',
                 'download_link' => $plugin_info['download_url'],
                 'requires'      => $plugin_info['requires'] ?? '',
                 'tested'        => $plugin_info['tested'] ?? '',
@@ -110,6 +111,15 @@ class UpdatePlugin
                 ],
             ];
         }
+
+
+        if ($action === 'plugin_information' && $args->slug === $this->plugin_slug) {
+            $result->banners = array(
+                'high' => 'https://images.unsplash.com/photo-1485113771930-4e8b61c60d64?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmFubmVyfGVufDB8fDB8fHww',
+                'low' => 'https://images.unsplash.com/photo-1485113771930-4e8b61c60d64?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+            );
+        }
+
 
         return $result;
     }
