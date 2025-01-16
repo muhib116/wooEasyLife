@@ -3,7 +3,7 @@
         class="border shadow-md p-6 rounded-sm"
     >
         <Heading
-            title="Daily"
+            :title="title"
             titleClass="!text-base"
         />
         <hr class="my-2" />
@@ -32,6 +32,11 @@
 <script setup lang='ts'>
     import { Heading, Chart } from '@components'
     import { computed } from 'vue'
+
+    defineProps<{
+        title: string,
+        item: object
+    }>()
 
     const chartData = computed(() => {
         return {

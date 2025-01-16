@@ -21,9 +21,14 @@
             class="bg-white/90 rounded-full p-[2px] absolute inset-1/2 -translate-x-1/2"
         />
         <div class="grid grid-cols-3 gap-4">
-            <Card />
-            <Card />
-            <Card />
+            <Card
+                title="Daily"
+                item=""
+            />
+            <Card
+                title="Monthly"
+                item=""
+            />
         </div>
     </DashboardCard>
 
@@ -46,16 +51,21 @@
         Modal
     } from '@components'
     import DashboardCard from '../DashboardCard.vue'
-    import { ref } from 'vue'
+    import { provide, ref } from 'vue'
     import SalesTargetForm from './SalesTargetForm.vue'
     import Card from './Card.vue'
+    import { useSalesTarget } from './useSalesTarget'
 
-    const toggleModal = ref(true)
-    // import { useCourier } from './UseCourier'
+    const _useSalesTarget = useSalesTarget()
+    const {
+        isLoading,
+        endDate,
+        salesTargetData,
+        dailyTargetAmount,
+        saveSalesTarget,
+        loadSalesTargetData
+    } = _useSalesTarget
 
-    // const {
-    //     isLoading,
-    //     courierData,
-    //     loadCourierData
-    // } = useCourier()
+    const toggleModal = ref(false)
+    provide('useSalesTarget', _useSalesTarget)
 </script>

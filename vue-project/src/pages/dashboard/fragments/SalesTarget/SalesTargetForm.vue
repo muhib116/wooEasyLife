@@ -43,18 +43,13 @@
 
 <script setup lang="ts">
     import { Input, Button, MessageBox, Loader } from '@components'
-    import { useSalesTarget } from './useSalesTarget'
-    import { provide } from 'vue'
+    import { inject } from 'vue'
 
-    const _useSalesTarget = useSalesTarget()
     const {
         isLoading,
         endDate,
         salesTargetData,
         dailyTargetAmount,
-        saveSalesTarget,
-        loadSalesTargetData
-    } = _useSalesTarget
-
-    provide('useSalesTarget', _useSalesTarget)
+        saveSalesTarget
+    } = inject('useSalesTarget')
 </script>
