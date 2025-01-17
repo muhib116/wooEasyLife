@@ -1,3 +1,0 @@
-<template>
-    SMS Dashboard
-</template>

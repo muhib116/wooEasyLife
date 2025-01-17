@@ -32,6 +32,25 @@ Dashboard:
 ✅ Sales target
 
 
+/**
+api/get-user -> GET // will return authenticate user object
+api/validate-token -> GET // will return true if valid.
+api/steadfast/check-balance -> POST
+checkCourierBalance
+--------
+/api/steadfast/check-status -> POST
+/api/steadfast/bulk-check-status -> POST
+
+{
+"consignment_ids": ["111015996"]
+}
+
+অথবা 
+
+{
+"invoice_ids": ["111015996"]
+}
+ */
 
 
 

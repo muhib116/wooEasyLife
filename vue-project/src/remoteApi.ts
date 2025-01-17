@@ -83,3 +83,12 @@ export const sendSMS = async (payload: {
   return data
 }
 // sms integration end
+
+
+
+export const checkCourierBalance = async (partnerName: string, consignmentId: string) => {
+  const { data } = await axios.post(`${remoteApiBaseURL}/${partnerName.toLowerCase()}/check-status`, {
+    consignment_id: consignmentId
+  })
+  return data
+}

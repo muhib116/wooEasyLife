@@ -54,7 +54,7 @@
                 <li>
                     <RouterLink
                         :to="{
-                            name: 'config'
+                            name: 'license'
                         }"
                         class="text-gray-400 hover:text-orange-500 py-4 inline-flex"
                         exact-active-class="text-orange-500"

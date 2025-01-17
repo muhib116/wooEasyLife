@@ -3,8 +3,9 @@
         <Container>
             <div class="grid gap-4 md:gap-6 lg:gap-8 font-light">
                 
+                <Courier />
                 <SalesSummary />
-                
+
                 <div class="grid lg:grid-cols-2 gap-5 w-full">
                     <OrderProgress />
                     <SalesProgress />

@@ -106,9 +106,9 @@ class UpdatePlugin
                     'author'   => 'Muhibbullah author...',
                 ],
                 'icons' => [
-                    '1x' => 'https://ps.w.org/woocommerce/assets/icon-256x256.gif?rev=2869506',
-                    '2x' => 'https://ps.w.org/woocommerce/assets/icon-256x256.gif?rev=2869506',
-                    'svg' => 'https://ps.w.org/woocommerce/assets/icon-256x256.gif?rev=2869506',
+                    '1x' => $plugin_info['icons']['1x'] ?? '',
+                    '2x' => $plugin_info['icons']['2x'] ?? '',
+                    'svg' => $plugin_info['icons']['svg'] ?? '',
                 ],
             ];
         }
@@ -116,11 +116,10 @@ class UpdatePlugin
 
         if ($action === 'plugin_information' && $args->slug === $this->plugin_slug) {
             $result->banners = array(
-                'high' => 'https://images.unsplash.com/photo-1485113771930-4e8b61c60d64?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmFubmVyfGVufDB8fDB8fHww',
-                'low' => 'https://images.unsplash.com/photo-1485113771930-4e8b61c60d64?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                'high' => 'https://wpsalehub.com/wp-content/uploads/2025/01/Plugin-banner-heigh.webp',
+                'low' => 'https://wpsalehub.com/wp-content/uploads/2025/01/Plugin-banner-low.webp'
             );
         }
-
 
         return $result;
     }
