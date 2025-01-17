@@ -30,6 +30,7 @@ Dashboard:
 ✅ courier part nar er logo use korte hobe
 ✅ check page a form fillup obostay OTP enabled thaklew kuno input field a cursor rekhe inter dile form submit hoye jay.
 ✅ Sales target
+✅ Available Courier balance
 
 
 /**
@@ -55,7 +56,6 @@ license activation alert
 
 
 
-=> Available Courier balance
 => fraud check korar somoy db update hobe
 => Courier Delivery Report
 => courier config a error handle korte hobe

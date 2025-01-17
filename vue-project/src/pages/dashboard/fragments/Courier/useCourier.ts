@@ -1,3 +1,4 @@
+import { checkCourierBalance } from "@/remoteApi"
 import { ref } from "vue"
 
 export const useCourier = () => {
@@ -9,6 +10,15 @@ export const useCourier = () => {
             isLoading.value = true
             const data = ''
             courierData.value = data
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    const loadCourierBalance = async () => {
+        try {
+            isLoading.value = true
+            const { data } = await checkCourierBalance()
         } finally {
             isLoading.value = false
         }

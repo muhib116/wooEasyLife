@@ -14,7 +14,7 @@
       </Button.Outline>
     </template>
 
-    <div class="grid grid-cols-[3fr_3fr_4fr] gap-4">
+    <div class="grid md:grid-cols-2 xl:grid-cols-[3fr_3fr_3fr] 2xl:grid-cols-[3fr_3fr_4fr] gap-6">
       <Card title="Daily" :chartData="chartData.daily" />
       <Card title="Monthly" :chartData="chartData.monthly" />
       <Card

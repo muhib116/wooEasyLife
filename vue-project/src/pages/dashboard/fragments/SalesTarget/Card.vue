@@ -1,5 +1,5 @@
 <template>
-  <div class="border shadow-md p-6 rounded-sm relative">
+  <div class="border p-6 rounded-sm relative">
     <Loader
       :active="isLoading"
       class="bg-white/90 rounded-full p-[2px] absolute inset-1/2 -translate-x-1/2"

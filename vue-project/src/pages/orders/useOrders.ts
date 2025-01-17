@@ -88,19 +88,20 @@ export const useOrders = () => {
     }
 
     const getOrders = async (shouldClear:boolean = true) => {
-        isLoading.value = true
-        if (orderFilter.value.page == 0) {
-            orderFilter.value.page = 1
+        try {
+            isLoading.value = true
+            if (orderFilter.value.page == 0) {
+                orderFilter.value.page = 1
+            }
+            const { data, total } = await getOrderList(orderFilter.value)
+            orders.value = data
+            totalRecords.value = total
+            if(shouldClear){
+                selectedOrders.value.clear()
+            }
+        } finally {
+            isLoading.value = false
         }
-        const { data, total } = await getOrderList(orderFilter.value)
-        orders.value = data
-        totalRecords.value = total
-        if(shouldClear){
-            selectedOrders.value.clear()
-        }
-        console.log({shouldClear}, selectedOrders.value);
-
-        isLoading.value = false
     }
 
     const loadAllStatuses = async () => {

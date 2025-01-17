@@ -3,6 +3,8 @@
         <Container>
             <div class="grid gap-4 md:gap-6 lg:gap-8 font-light">
                 
+                <Courier />
+                
                 <SalesSummary />
 
                 <div class="grid lg:grid-cols-2 gap-5 w-full">
@@ -15,7 +17,7 @@
                 <SalesTarget />
                 <Courier />
                 
-                <div class="grid lg:grid-cols-2 gap-5 w-full">
+                <!-- <div class="grid lg:grid-cols-2 gap-5 w-full">
                     <OrderSource />
                     <OrderCycleTime />
                 </div>
@@ -24,9 +26,8 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full">
                     <RecentOrder />
                     <TopSellingProduct />
-                </div>
+                </div> -->
                 
-                <Courier />
             </div>
         </Container>
     </Layout>

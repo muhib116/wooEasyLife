@@ -19,7 +19,6 @@ if (! defined('ABSPATH')) {
 
 define('__PREFIX', 'woo_easy_life_');
 define('__API_NAMESPACE', 'wooeasylife/v1');
-define('__wpsalehub_api_key__', '');
 
 $config_data;
 $license_key;

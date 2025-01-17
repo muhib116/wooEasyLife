@@ -86,9 +86,15 @@ export const sendSMS = async (payload: {
 
 
 
-export const checkCourierBalance = async (partnerName: string, consignmentId: string) => {
+export const checkCourierStatus = async (partnerName: string, consignmentId: string) => {
   const { data } = await axios.post(`${remoteApiBaseURL}/${partnerName.toLowerCase()}/check-status`, {
     consignment_id: consignmentId
-  })
+  }, headers.value)
+  return data
+}
+
+
+export const checkCourierBalance = async () => {
+  const { data } = await axios.get(`${remoteApiBaseURL}/check-courier-balance`, headers.value)
   return data
 }
