@@ -87,6 +87,11 @@ class AddCustomColumnInOrderList {
             if ($fraud_data && isset($fraud_data['report'])) {
                 // Decode the JSON report
                 $report = json_decode($fraud_data['report'], true);
+                if(empty($report)) {
+                    echo 'n/a';
+                    return;
+                }
+
                 $success_rate = $report[0]['report']['success_rate'];
                 $report = $report[0]['report'];
                 

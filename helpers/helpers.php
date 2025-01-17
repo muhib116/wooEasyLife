@@ -115,14 +115,15 @@ function send_sms($phone_number, $message)
     ];
 }
 
-function getCustomerFraudData($phone_number) {
+function getCustomerFraudData($phone_number) 
+{
+    global $license_key;
     if (empty($phone_number) || !is_string($phone_number)) {
         return new WP_Error('missing_data', 'Phone data is required in the correct format.', ['status' => 400]);
     }
     // External API URL and headers
     $api_url = 'https://api.wpsalehub.com/api/fraud-check';
-    $api_key = __wpsalehub_api_key__; // Replace with your actual API key
-
+    
     $payload = [
         'phone' => [
             [
@@ -136,7 +137,7 @@ function getCustomerFraudData($phone_number) {
         'body'    => json_encode($payload),
         'headers' => [
             'Content-Type'  => 'application/json',
-            'Authorization' => 'Bearer ' . $api_key,
+            'Authorization' => 'Bearer ' . $license_key,
         ],
         'timeout' => 45,
     ];

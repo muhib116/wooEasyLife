@@ -3,7 +3,7 @@
  * Plugin Name: WooEasyLife
  * Plugin URI: https://example.com/wooeasylife
  * Description: **WooEasyLife is a custom plugin for enhancing WooCommerce functionality.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Muhibbullah Ansary
  * Author URI: https://example.com
  * License: GPL-2.0+
