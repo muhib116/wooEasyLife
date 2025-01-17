@@ -37,6 +37,7 @@ api/get-user -> GET // will return authenticate user object
 api/validate-token -> GET // will return true if valid.
 api/steadfast/check-balance -> POST
 checkCourierBalance
+license activation alert
 --------
 /api/steadfast/check-status -> POST
 /api/steadfast/bulk-check-status -> POST
