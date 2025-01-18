@@ -13,9 +13,16 @@ class ShowCustomerFraudDataToOrderDetailsPage {
 
         // Output the custom heading
         $fraud_payload = [
-            'phone' => [$billing_phone],
+            "data" => [
+                [
+                    'id' => 1,
+                    'phone' => $billing_phone
+                ]
+            ]
         ];
+
         $fraud_data = getCustomerFraudData($fraud_payload);
+        $fraud_data = $fraud_data[0];
 
         if (is_wp_error($fraud_data)) {
             echo '<p>Error: ' . esc_html($fraud_data->get_error_message()) . '</p>';
@@ -137,15 +144,15 @@ class ShowCustomerFraudDataToOrderDetailsPage {
             <div class="fraud-history-container">
                 <h2 class="fraud-history-title">
                     <?php
-                        if($fraud_data[0]['report']['success_rate'] == '100%'){
+                        if($fraud_data['report']['success_rate'] == '100%'){
                             echo '🎉 The number has no fraud history! ✅';
                         }
                     ?>
                 </h2>
 
             <?php 
-                if($fraud_data && $fraud_data[0]['report']['total_order'] > 0) { 
-                    $success_rate = isset($fraud_data[0]['report']['success_rate']) ? htmlspecialchars($fraud_data[0]['report']['success_rate'], ENT_QUOTES, 'UTF-8') : 0;
+                if($fraud_data && $fraud_data['report']['total_order'] > 0) { 
+                    $success_rate = isset($fraud_data['report']['success_rate']) ? htmlspecialchars($fraud_data['report']['success_rate'], ENT_QUOTES, 'UTF-8') : 0;
                 //------
             ?>
                     <table class="fraud-history-table">
@@ -158,7 +165,7 @@ class ShowCustomerFraudDataToOrderDetailsPage {
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($fraud_data[0]['report']['courier'] as $item) { ?>
+                            <?php foreach ($fraud_data['report']['courier'] as $item) { ?>
                                 <tr>
                                     <td><?php echo htmlspecialchars($item['title'], ENT_QUOTES, 'UTF-8'); ?></td>
                                     <td class="text-center" style="background: #dcfce7;">
@@ -177,10 +184,10 @@ class ShowCustomerFraudDataToOrderDetailsPage {
                             <tr class="total-row table_footer" style="font-weight: bold;">
                                 <td class="text-center" style="background: #374151; color: #fff;">Total</td>
                                 <td class="text-center" style="background: #22c55d; color: #fff;">
-                                    <?php echo isset($fraud_data[0]['report']['confirmed']) ? htmlspecialchars($fraud_data[0]['report']['confirmed'], ENT_QUOTES, 'UTF-8') : 0; ?>
+                                    <?php echo isset($fraud_data['report']['confirmed']) ? htmlspecialchars($fraud_data['report']['confirmed'], ENT_QUOTES, 'UTF-8') : 0; ?>
                                 </td>
                                 <td class="text-center" style="background: #ef4444; color: #fff;">
-                                    <?php echo $fraud_data[0]['report']['cancel']; ?>
+                                    <?php echo $fraud_data['report']['cancel']; ?>
                                 </td>
                                 <td class="text-center" style="background: #0ca5e9; color: #fff;">
                                     <?php echo $success_rate; ?>
@@ -204,7 +211,7 @@ class ShowCustomerFraudDataToOrderDetailsPage {
                     </div>
                 <?php } ?>
 
-                <?php if($fraud_data && $fraud_data[0]['report']['total_order'] == 0) { ?>
+                <?php if($fraud_data && $fraud_data['report']['total_order'] == 0) { ?>
                     <div>
                         <h3 style="font-weight:bold; font-size: 20px; margin-bottom: 16px; text-align: center;">
                             🎉 The number has no data! ✅

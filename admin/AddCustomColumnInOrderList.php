@@ -52,7 +52,6 @@ class AddCustomColumnInOrderList {
                 return;
             }
 
-
             $total_order_per_customer_for_current_order_status = get_total_orders_by_billing_phone_and_status($order);
             if($total_order_per_customer_for_current_order_status>1)
             {
@@ -75,7 +74,6 @@ class AddCustomColumnInOrderList {
                     </button>
                 ";
             }
-
     
             // Fetch fraud data from the custom table
             $table_name = $wpdb->prefix . __PREFIX.'fraud_customers';
@@ -87,13 +85,14 @@ class AddCustomColumnInOrderList {
             if ($fraud_data && isset($fraud_data['report'])) {
                 // Decode the JSON report
                 $report = json_decode($fraud_data['report'], true);
+
                 if(empty($report)) {
                     echo 'n/a';
                     return;
                 }
 
-                $success_rate = $report[0]['report']['success_rate'];
-                $report = $report[0]['report'];
+                $report = $report['report'];
+                $success_rate = $report['success_rate'];
                 
                 $progress_bar = '
                     <style>
