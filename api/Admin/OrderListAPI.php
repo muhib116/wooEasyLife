@@ -74,6 +74,16 @@ class OrderListAPI
                 'args'     => $this->get_status_change_schema(), // Optional validation
             ]
         );
+        register_rest_route(
+            __API_NAMESPACE, 
+            '/check-fraud-customer',
+            [
+                'methods'  => 'POST',
+                'callback' => [$this, 'check_fraud_customer'], // Ensure this function exists and is callable
+                'permission_callback' => api_permission_check(),
+                'args'     => $this->get_check_fraud_customer_schema(), // Optional validation
+            ]
+        );
     }
 
     /**
@@ -204,7 +214,7 @@ class OrderListAPI
                     'country'    => $order->get_shipping_country(),
                     'customer_note' => $order->get_customer_note()
                 ],
-                'customer_report' => $fraud_data ? json_decode($fraud_data['report'], true)[0]['report'] : null
+                'customer_report' => $fraud_data ? @json_decode($fraud_data['report'], true)['report'] : null
             ];
         }
     
@@ -390,6 +400,25 @@ class OrderListAPI
         ], 200);
     }
 
+    public function check_fraud_customer(\WP_REST_Request $request) {
+        // Get the payload from the request
+        $payload = $request->get_json_params();
+
+        // Validate the payload
+        if (empty($payload) || !is_array($payload)) {
+            return new \WP_REST_Response([
+                'status'  => 'error',
+                'message' => 'Invalid or empty payload.',
+            ], 400);
+        }
+    
+        return new \WP_REST_Response([
+            'status'  => 'success',
+            'message' => 'Success',
+            'data' => getCustomerFraudData($payload)
+        ], 200);
+    }
+
     /**
      * Schema for status change input validation
      */
@@ -398,6 +427,35 @@ class OrderListAPI
             'type'       => 'array',
             'required'   => true,
             'description' => 'Array of orders with their new statuses.',
+            'items'      => [
+                'type'       => 'object',
+                'properties' => [
+                    'order_id' => [
+                        'required'    => true,
+                        'type'        => 'integer',
+                        'description' => 'ID of the order to update.',
+                    ],
+                    'new_status' => [
+                        'required'    => true,
+                        'type'        => 'string',
+                        'description' => 'New status for the order.',
+                        'enum'        => array_map(function ($status) {
+                            return str_replace('wc-', '', $status);
+                        }, array_keys(wc_get_order_statuses())),
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Schema for fraud customer check
+     */
+    public function get_check_fraud_customer_schema() {
+        return [
+            'type'       => 'array',
+            'required'   => true,
+            'description' => 'Array of customer data with their .',
             'items'      => [
                 'type'       => 'object',
                 'properties' => [

@@ -4,12 +4,11 @@ import {
     getOrderList,
     getOrderStatusListWithCounts,
     getWoocomerceStatuses,
-    ip_or_phone_block_bulk_entry
-} from '@/api'
-import {
+    ip_or_phone_block_bulk_entry,
     checkFraudCustomer
-} from '@/remoteApi'
+} from '@/api'
 import { manageCourier } from "./useHandleCourierEntry"
+import { normalizePhoneNumber } from "@/helper"
 
 export const useOrders = () => {
     const orders = ref([])
@@ -63,18 +62,27 @@ export const useOrders = () => {
         const _selectedOrders = [...selectedOrders.value]
         try {
             button.isLoading = true
+            /**
+             * payload = {
+             * data: [
+             * id: '',
+             * phone: ''
+             * ]
+             * }
+             */
             const payload = {
-                phone: _selectedOrders.map(item => {
+                data: _selectedOrders.map(item => {
                     return {
-                        id: item.id,
-                        phone: item.billing_address.phone
+                        id: item.id, // this id using for showing report data in order list
+                        phone: normalizePhoneNumber(item.billing_address.phone)
                     }
                 }),
             }
 
-            const data = await checkFraudCustomer(payload)
+            const { data } = await checkFraudCustomer(payload)
             if (data.length) {
                 data.forEach(item => {
+                    console.log(item);
                     _selectedOrders.forEach(_item => {
                         if (item.id == _item.id) {
                             _item.customer_report = item.report

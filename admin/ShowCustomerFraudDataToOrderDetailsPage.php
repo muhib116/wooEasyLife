@@ -12,7 +12,10 @@ class ShowCustomerFraudDataToOrderDetailsPage {
         if(empty($billing_phone)) return;
 
         // Output the custom heading
-        $fraud_data = getCustomerFraudData($billing_phone);
+        $fraud_payload = [
+            'phone' => [$billing_phone],
+        ];
+        $fraud_data = getCustomerFraudData($fraud_payload);
 
         if (is_wp_error($fraud_data)) {
             echo '<p>Error: ' . esc_html($fraud_data->get_error_message()) . '</p>';

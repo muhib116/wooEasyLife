@@ -20,7 +20,7 @@ export const useNotification = () => {
                     hasNewOrder.value = false
                 }, 4000)
             }
-        }, 10000)
+        }, 30000)
     })
 
     return {

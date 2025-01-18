@@ -15,15 +15,6 @@ export const useCourier = () => {
         }
     }
 
-    const loadCourierBalance = async () => {
-        try {
-            isLoading.value = true
-            const { data } = await checkCourierBalance()
-        } finally {
-            isLoading.value = false
-        }
-    }
-
     return {
         isLoading,
         courierData,

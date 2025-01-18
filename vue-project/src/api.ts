@@ -231,4 +231,10 @@ export const createOrder = async (payload) => {
     const { data } = await axios.post(`${localApiBaseURL}/create-custom-order`, payload)
     return data
 }
+export const checkFraudCustomer = async (payload: {
+    phone: string[]
+}) => {
+    const { data } = await axios.post(`${localApiBaseURL}/check-fraud-customer`, payload)
+    return data
+}
 // custom order end

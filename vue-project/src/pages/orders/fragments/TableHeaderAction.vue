@@ -17,14 +17,15 @@
                     <div class="relative">
                         <Button.Native
                             v-if="item.active"
+                            :title="item.title"
                             class="py-1 px-2 border shadow rounded-sm"
                             :style="{
                                 backgroundColor: item.bg,
                                 color: item.color   
                             }"
-                            @onClick="item?.isCourier ? 
-                                        toggleCourierDropdown = !toggleCourierDropdown 
-                                        : item.method"
+                            @onClick="btn => item?.isCourier 
+                                            ? toggleCourierDropdown = !toggleCourierDropdown 
+                                            : item.method(btn)"
                         >
                             <Icon
                                 :name="item.icon"

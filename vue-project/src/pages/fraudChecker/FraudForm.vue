@@ -9,7 +9,7 @@
         <Button.Primary
             @onClick="(btn) => $emit('onSubmit', btn)"
             class="bg-orange-500 !text-sm !font-medium"
-            :class="modelValue.length == 11 ? '' : 'opacity-80 pointer-events-none'"
+            :class="normalizePhoneNumber(modelValue).length == 11 ? '' : 'opacity-80 pointer-events-none'"
         >
             Check Now
         </Button.Primary>
@@ -18,6 +18,7 @@
 
 <script setup lang="ts">
     import { Input, Button } from '@components'
+    import { normalizePhoneNumber } from '@/helper'
 
     const modelValue = defineModel()
 </script>

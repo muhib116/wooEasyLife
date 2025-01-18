@@ -115,23 +115,21 @@ function send_sms($phone_number, $message)
     ];
 }
 
-function getCustomerFraudData($phone_number) 
+
+/**
+ * payload formate
+    [
+        'phone' => ['phone_1', 'phone_2', ...],
+    ]
+    */
+function getCustomerFraudData($payload) 
 {
     global $license_key;
-    if (empty($phone_number) || !is_string($phone_number)) {
+    if (empty($payload) || !is_array($payload)) {
         return new WP_Error('missing_data', 'Phone data is required in the correct format.', ['status' => 400]);
     }
     // External API URL and headers
     $api_url = 'https://api.wpsalehub.com/api/fraud-check';
-    
-    $payload = [
-        'phone' => [
-            [
-                'id'    => 1,
-                'phone' => $phone_number,
-            ],
-        ],
-    ];
 
     $args = [
         'body'    => json_encode($payload),
@@ -163,7 +161,20 @@ function getCustomerFraudData($phone_number)
         ];
     }
 
-    return json_decode($response_body, true);
+    $fraud_data = json_decode($response_body, true);
+    try {
+        foreach ($fraud_data['data'] as $data) {
+            _storeFraudData([
+                "customer_id" => $data['phone'],
+                "report" => $data
+            ]);
+        }
+    } catch (\Exception $e) {
+        error_log('Error in FraudCustomerTable::create: ' . $e->getMessage());
+        return; // Bail if fraud data storage fails
+    }
+
+    return $fraud_data['data'];
 }
 
 function getCustomerSuccessRate($billing_phone) {
@@ -241,19 +252,17 @@ function storeFraudDataWhenPlaceOrder($order_id)
     // Extract order details
     $billing_phone = $order->get_billing_phone();
 
-    // Handle fraud data
-    $fraud_data = getCustomerFraudData($billing_phone);
+    $fraud_payload = [
+        "data" => [
+            [
+                'id' => 1, // this id using for showing report data in order list, in this case the id is fake
+                'phone' => $billing_phone,
+            ]
+        ]
+    ];
 
-    try {
-        _storeFraudData([
-            "customer_id" => $billing_phone,
-            "report" => $fraud_data
-        ]);
-        // $customer_success_rate = $fraud_data[0]['report']['success_rate'] ?? 'n/a';
-    } catch (\Exception $e) {
-        error_log('Error in FraudCustomerTable::create: ' . $e->getMessage());
-        return; // Bail if fraud data storage fails
-    }
+    // Handle fraud data
+    getCustomerFraudData($fraud_payload);
 }
 
 function _storeFraudData($fraud_data)
