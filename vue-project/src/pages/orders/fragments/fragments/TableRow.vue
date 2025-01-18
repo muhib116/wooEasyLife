@@ -146,7 +146,7 @@
         >
             <div 
                 v-if="Object.keys(order?.courier_data)?.length"
-                class="grid"
+                class="grid relative"
             >
                 <div title="Delivery partner" class="mb-1">
                     <img
@@ -170,8 +170,12 @@
                 <span title="Consignment Id">
                     🆔 {{ order?.courier_data?.consignment_id }}
                 </span>
-                <span class="font-medium text-sky-500" title="Courier Status">
-                    📦 {{ order?.courier_data?.status }}
+                
+                <span 
+                    class="font-medium text-sky-500" 
+                    title="Courier status"
+                >
+                    📦 {{ order?.courier_data?.status || 'n/a' }}
                 </span>
             </div>
             <div v-else>n/a</div>

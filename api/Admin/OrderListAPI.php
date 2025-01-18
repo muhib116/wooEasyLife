@@ -84,6 +84,15 @@ class OrderListAPI
                 'args'     => $this->get_check_fraud_customer_schema(), // Optional validation
             ]
         );
+        register_rest_route(
+            __API_NAMESPACE, 
+            '/update-courier-data',
+            [
+                'methods'  => 'POST',
+                'callback' => [$this, 'update_courier_data'], // Ensure this function exists and is callable
+                'permission_callback' => api_permission_check(),
+            ]
+        );
     }
 
     /**
@@ -419,6 +428,28 @@ class OrderListAPI
         ], 200);
     }
 
+    public function update_courier_data(\WP_REST_Request $request) {
+        // Get the payload from the request
+        $data = $request->get_json_params();
+        $order_id = $data['order_id'];
+        $courier_data = $data['courier_data'];
+        
+        if (!empty($courier_data)) {
+            $response = update_courier_data_for_order($order_id, $courier_data);
+
+            if($response){
+                return new \WP_REST_Response([
+                    'status'  => 'success',
+                    'message' => 'Success',
+                    'data' => [
+                        "order_id" => $order_id,
+                        "courier_data" => $courier_data
+                    ]
+                ], 200);
+            }
+        }
+    }
+
     /**
      * Schema for status change input validation
      */
@@ -476,6 +507,7 @@ class OrderListAPI
             ],
         ];
     }
+    
 }
 
 

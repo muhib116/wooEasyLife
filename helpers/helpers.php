@@ -311,11 +311,49 @@ function get_courier_data_from_order($order) {
     ));
 
     if (empty($result)) {
-        return [];
+        return new stdClass();
     }
 
     // Unserialize the data to return it in array format
     $courier_data = maybe_unserialize($result);
+
+    return $courier_data;
+}
+
+function update_courier_data_for_order($order_id, $courier_data) {
+    global $wpdb;
+
+    // Serialize the courier data if it is an array
+    if (is_array($courier_data)) {
+        $courier_data = maybe_serialize($courier_data);
+    }
+    
+    // Update courier data in wp_wc_orders_meta table
+    $table_name = $wpdb->prefix . 'wc_orders_meta';
+    $exists = $wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(*) FROM {$table_name} WHERE order_id = %d AND meta_key = '_courier_data'",
+        $order_id
+    ));
+
+    if ($exists) {
+        $updated = $wpdb->update(
+            $table_name,
+            ['meta_value' => $courier_data],
+            ['order_id' => $order_id, 'meta_key' => '_courier_data'],
+            ['%s'],
+            ['%d', '%s']
+        );
+    } else {
+        $updated = $wpdb->insert(
+            $table_name,
+            ['order_id' => $order_id, 'meta_key' => '_courier_data', 'meta_value' => $courier_data],
+            ['%d', '%s', '%s']
+        );
+    }
+
+    if ($updated === false) {
+        return new WP_Error('db_error', 'Failed to update courier data.');
+    }
 
     return $courier_data;
 }

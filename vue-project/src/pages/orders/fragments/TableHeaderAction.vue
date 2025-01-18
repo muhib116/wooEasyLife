@@ -57,6 +57,18 @@
                         </div>
                     </div>
                 </template>
+
+                <Button.Native
+                    class="opacity-100 w-fit text-white bg-sky-500 shadow rounded-sm px-1 py-1"
+                    title="Refresh CourierData"
+                    @onClick="refreshBulkCourierData"
+                >
+                    <Icon
+                        name="PhArrowsClockwise"
+                        size="16"
+                        weight="bold"
+                    />
+                </Button.Native>
             </div>
         </div>
         <slot></slot>
@@ -93,6 +105,7 @@
         courierConfigs
     } = inject('useCourierConfig')
 
+
     const { 
         handleFraudCheck, 
         handleCourierEntry,
@@ -101,6 +114,7 @@
         selectedOrders,
         showInvoices,
         toggleNewOrder,
+        refreshBulkCourierData
     } = inject('useOrders')
 
     const actionBtns = computed(() => [

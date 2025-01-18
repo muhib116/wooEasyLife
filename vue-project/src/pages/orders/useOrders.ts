@@ -5,10 +5,13 @@ import {
     getOrderStatusListWithCounts,
     getWoocomerceStatuses,
     ip_or_phone_block_bulk_entry,
-    checkFraudCustomer
+    checkFraudCustomer,
+    updateCourierData
 } from '@/api'
 import { manageCourier } from "./useHandleCourierEntry"
 import { normalizePhoneNumber } from "@/helper"
+import { steadfastBulkStatusCheck } from "@/remoteApi"
+import { isEmpty } from 'lodash'
 
 export const useOrders = () => {
     const orders = ref([])
@@ -82,7 +85,6 @@ export const useOrders = () => {
             const { data } = await checkFraudCustomer(payload)
             if (data.length) {
                 data.forEach(item => {
-                    console.log(item);
                     _selectedOrders.forEach(_item => {
                         if (item.id == _item.id) {
                             _item.customer_report = item.report
@@ -239,12 +241,61 @@ export const useOrders = () => {
         }
     }
 
+    const refreshBulkCourierData = async (btn) => {
+        if (![...selectedOrders.value].length) {
+            alert('Please select at least on item.')
+            return
+        }
+        
+        try {
+            btn.isLoading = true
+            let courierData = [...selectedOrders.value]
+            courierData = courierData.filter(item => !isEmpty(item.courier_data))
+            
+            const consignment_ids = courierData.map(item => item.courier_data.consignment_id)
+            const payload = {
+                consignment_ids: consignment_ids
+            }
+            
+            // status: {consignment_id: string}
+            const { data: statuses } = await steadfastBulkStatusCheck(payload)
+
+            orders.value.forEach(async (order) => {
+                let orderConsignmentId = order.courier_data.consignment_id
+                let courierUpdatedStatus = statuses[orderConsignmentId]
+
+                if(courierUpdatedStatus){
+                    order.courier_data.status = courierUpdatedStatus
+    
+                    const { data } = await updateCourierData({
+                        order_id: order.id,
+                        courier_data: order.courier_data
+                    })
+                }
+            })
+
+            alertMessage.value = {
+                type: 'success',
+                title: 'Courier data refresh done.'
+            }
+        } finally {
+            btn.isLoading = false
+
+            setTimeout(() => {
+                alertMessage.value = {
+                    title: '',
+                    type: ''
+                }
+            }, 5000)
+        }
+    }
 
     watch(() => selectedOrders, (newVal) => {
         selectAll.value = selectedOrders.value.size === orders.value.length
     }, {
         deep: true
     })
+ 
     onMounted(() => {
         loadOrderStatusList()
         loadAllStatuses()
@@ -275,5 +326,6 @@ export const useOrders = () => {
         handleCourierEntry,
         loadOrderStatusList,
         handlePhoneNumberBlock,
+        refreshBulkCourierData,
     }
 }

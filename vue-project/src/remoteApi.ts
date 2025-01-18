@@ -88,6 +88,28 @@ export const steadfastBulkOrderCreate = async (payload: {
   );
   return data;
 };
+
+export const steadfastStatusCheck = async (payload: {
+  consignment_ids: string
+}) => {
+  const { data } = await axios.post(
+    `${remoteApiBaseURL}/steadfast/check-status`,
+    payload,
+    headers.value
+  )
+  return data
+}
+
+export const steadfastBulkStatusCheck = async (payload: {
+  consignment_ids: string[]
+}) => {
+  const { data } = await axios.post(
+    `${remoteApiBaseURL}/steadfast/bulk-check-status`,
+    payload,
+    headers.value
+  )
+  return data
+}
 // courier end
 
 // sms integration start

@@ -64,11 +64,17 @@ export const saveOrderNote = async (payload: {
     invoice_note: string
 }) => {
     const { data } = await axios.post(`${localApiBaseURL}/save-order-notes`, payload)
-
-    console.log(data)
+    return data
 }
 // functions for order list
 
+export const updateCourierData = async (payload: {
+    order_id: string | number
+    courier_data: {}
+}) => {
+    const { data } = await axios.post(`${localApiBaseURL}/update-courier-data`, payload)
+    return data
+}
 
 
 

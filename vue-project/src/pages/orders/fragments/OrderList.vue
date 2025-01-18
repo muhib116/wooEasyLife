@@ -49,6 +49,7 @@
                         :order="order"
                     />
                 </Table.TBody>
+                <TableHeader />
             </Table.Table>
 
             <MessageBox

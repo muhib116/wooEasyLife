@@ -31,6 +31,10 @@ Dashboard:
 ✅ check page a form fillup obostay OTP enabled thaklew kuno input field a cursor rekhe inter dile form submit hoye jay.
 ✅ Sales target
 ✅ Available Courier balance
+✅ fraud check korar somoy db update hobe
+🍠 one click Courier entry
+✅ plugins update
+✅ Audio notification sound for new order
 
 
 /**
@@ -56,25 +60,22 @@ license activation alert
 
 
 
-=> fraud check korar somoy db update hobe
 => Courier Delivery Report
 => courier config a error handle korte hobe
 => Courier status update check korar option single/bulk
-=> wp cach clear function call after any changes
 => code snippet (header, footer)
 
 👉🏻 bearar token validation from remote server
 👉🏻 alertBox position fixed kore dekhate hobe
-🍠 one click Courier entry
 👉🏻 cost management
 👉🏻 kun kun user otp dise ar kun kun user otp dey nai tar akta list dekhate hobe phone number soho
 
 👉🏻 make the system responsive
-👉🏻 plugins update
 👉🏻 tutorial
 👉🏻 help center
 👉🏻 request a feature
 👉🏻 Cash management (Low priority) from funnel liner
 👉🏻 Marketing Tools (Low priority) from funnel liner
-Microsoft Clarity
-👉🏻 Audio notification sound for new order
+👉🏻 Microsoft Clarity
+👉🏻 License add na kora thakle alert dekhate hobe (license key add na kora thakle sob somoy license add er page a redirect kore dibe)
+
