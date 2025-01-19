@@ -244,3 +244,11 @@ export const checkFraudCustomer = async (payload: {
     return data
 }
 // custom order end
+
+
+// abandoned order start
+export const getAbandonedOrders = async () => {
+    const { data } = await axios.get(`${localApiBaseURL}/abandoned-orders`)
+    return data
+}
+// abandoned order start

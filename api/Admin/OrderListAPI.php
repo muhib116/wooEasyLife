@@ -618,14 +618,19 @@ function is_repeat_customer_by_id($order_id) {
     }
 
     // Get the billing phone from the order
-    $billing_phone = $order->get_billing_phone();
+    $billing_phone = normalize_phone_number($order->get_billing_phone());
     if (empty($billing_phone)) {
         return false; // No billing phone provided, cannot determine repeat status
     }
 
     // Query WooCommerce for all completed orders with the same billing phone
     $args = [
-        'billing_phone' => $billing_phone,
+        [
+            'key'     => 'billing_phone',
+            'value'   => $billing_phone, // Match any phone number containing the input
+            'compare' => 'LIKE',
+        ],
+        
         'status'        => 'wc-completed',
         'type'          => 'shop_order',
         'limit'         => -1,

@@ -35,6 +35,7 @@ Dashboard:
 🍠 one click Courier entry
 ✅ plugins update
 ✅ Audio notification sound for new order
+✅ Courier status update check korar option bulk
 
 
 /**
@@ -44,25 +45,11 @@ api/steadfast/check-balance -> POST
 checkCourierBalance
 license activation alert
 --------
-/api/steadfast/check-status -> POST
-/api/steadfast/bulk-check-status -> POST
-
-{
-"consignment_ids": ["111015996"]
-}
-
-অথবা 
-
-{
-"invoice_ids": ["111015996"]
-}
- */
 
 
-
+=> Popular product koyta dekhabe ta dropdown theke chinai dite parbe
 => Courier Delivery Report
 => courier config a error handle korte hobe
-=> Courier status update check korar option single/bulk
 => code snippet (header, footer)
 
 👉🏻 bearar token validation from remote server

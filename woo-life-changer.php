@@ -31,6 +31,12 @@ if (!class_exists('WooEasyLife')) :
         public $handleDBTable;
         public function __construct()
         {
+            add_action('woocommerce_init', function () {
+                if (WC()->session) {
+                    WC()->session->set_customer_session_cookie(true);
+                }
+            });
+
             register_activation_hook(__FILE__, [$this, 'woo_easy_life_activation_hook']);
             register_deactivation_hook(__FILE__, [$this, 'woo_easy_life_deactivation_hook']);
 
@@ -46,7 +52,7 @@ if (!class_exists('WooEasyLife')) :
         private function get_license_key() {
             global $license_key;
             $license_key = get_option(__PREFIX . 'license');
-            $license_key = is_string($license_key) ? json_decode($license_key, true) : $config_data;
+            $license_key = is_string($license_key) ? json_decode($license_key, true) : $license_key;
             $license_key = $license_key['key'];
         }
         private function get_and_set_config_data()

@@ -233,7 +233,11 @@ function get_total_orders_by_billing_phone_and_status($order) {
         'status'    => $order_status, // Specific order status
         'return'    => 'objects', // Fetch full order objects
         'type'     => 'shop_order',
-        'billing_phone' => $billing_phone
+        [
+            'key'     => 'billing_phone',
+            'value'   => $billing_phone, // Match any phone number containing the input
+            'compare' => 'LIKE',
+        ],
     ];
 
     $orders = wc_get_orders($args);

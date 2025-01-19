@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import HomeView from '@/pages/dashboard/Index.vue'
 import OrdersView from '@/pages/orders/Index.vue'
+import MissingOrderView from '@/pages/missingOrder/Index.vue'
 import FraudCheckerView from '@/pages/fraudChecker/Index.vue'
 import ConfigView from '@/pages/config/Index.vue'
 import SMSConfigView from '@/pages/config/smsConfig/Index.vue'
@@ -25,6 +26,11 @@ const router = createRouter({
       path: '/orders',
       name: 'orders',
       component: OrdersView,
+    },
+    {
+      path: '/missing-orders',
+      name: 'missing-orders',
+      component: MissingOrderView
     },
     {
       path: '/fraud-check',

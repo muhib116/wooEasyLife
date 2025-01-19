@@ -1,6 +1,7 @@
 <?php
 namespace WooEasyLife\API;
 
+use WooEasyLife\API\Admin\AbandonedOrderAPI;
 use WooEasyLife\API\Admin\NewOrderNotificationAPI;
 
 class API_Register {
@@ -75,5 +76,6 @@ class API_Register {
         new \WooEasyLife\API\Admin\CustomOrderHandleAPI();
         new \WooEasyLife\API\Admin\CourierHandleAPI();
         new \WooEasyLife\API\Admin\NewOrderNotificationAPI();
+        new \WooEasyLife\API\Admin\AbandonedOrderAPI();
     }
 }

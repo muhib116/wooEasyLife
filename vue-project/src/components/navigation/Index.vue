@@ -108,6 +108,13 @@ const menus = [
     visible: true
   },
   {
+    title: "Missing Orders",
+    to: {
+        name: "missing-orders",
+    },
+    visible: true
+  },
+  {
     title: "Black List",
     to: {
         name: "customBlackList",

@@ -1,7 +1,7 @@
 <template>
     <div class="grid gap-5 w-full">
         <Balance />
-        <DeliveryReport />
+        <!-- <DeliveryReport /> -->
     </div>
 </template>
 
