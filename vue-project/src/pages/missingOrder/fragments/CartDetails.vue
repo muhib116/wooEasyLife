@@ -39,6 +39,7 @@
             >
                 <Table.Td>
                     <img 
+                        v-if="item.image"
                         :src="item.image" 
                         alt="product image"
                         style="
@@ -47,6 +48,11 @@
                             object-fit: cover;
                             object-position: center;
                         "
+                    />
+                    <Icon
+                        v-else
+                        name="PhImageBroken"
+                        size="60"
                     />
                 </Table.Td>
                 <Table.Td>
@@ -73,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-    import { Table } from '@components'
+    import { Table, Icon } from '@components'
     import { inject } from 'vue'
 
     defineProps<{

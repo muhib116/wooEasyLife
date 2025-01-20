@@ -11,11 +11,11 @@
                     :type="alertMessage.type"
                 />
 
-                <div class="flex gap-4 mb-4">
+                <div class="flex gap-4 mb-5 -ml-6 -mr-6 -mt-6 rounded-t-md border-b px-6 py-3 bg-sky-100">
                     <Button.Native
                         v-for="item in filter"
                         @onClick="btn => handleFilter(item, btn)"
-                        class="font-light hover:text-orange-500"
+                        class="font-medium hover:text-orange-500"
                         :class="selectedFilter == item.slug ? 'text-orange-500' : ''"
                     >
                         {{ item.title }}

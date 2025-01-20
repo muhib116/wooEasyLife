@@ -247,8 +247,8 @@ export const checkFraudCustomer = async (payload: {
 
 
 // abandoned order start
-export const getAbandonedOrders = async () => {
-    const { data } = await axios.get(`${localApiBaseURL}/abandoned-orders`)
+export const getAbandonedOrders = async (date?: {start_date: string, end_date: string}) => {
+    const { data } = await axios.post(`${localApiBaseURL}/abandoned-orders`, date)
     return data
 }
 export const updateAbandonedOrderStatus = async (id: string, payload: {

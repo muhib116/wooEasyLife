@@ -5,27 +5,6 @@ export const useMissingOrder = () => {
     const selectedFilter = ref('dashboard')
     const isLoading = ref()
     const abandonOrders = ref([])
-    const filteredAbandonOrders = computed(() => {
-        let filteredOrders = []
-        switch(selectedFilter.value){
-            case 'all': filteredOrders = abandonOrders.value
-            break;
-
-            case 'registered-user': filteredOrders = abandonOrders.value.filter(item => item.status == 'abandoned' && item.is_repeat_customer == 1)
-            break;
-            
-            case 'guest-user': filteredOrders = abandonOrders.value.filter(item => item.status == 'abandoned' && item.is_repeat_customer == 0)
-            break;
-            
-            case 'recovered-order': filteredOrders = abandonOrders.value.filter(item => item.status == 'recovered')
-            break;
-
-            case 'carts-without-customer-details': filteredOrders = abandonOrders.value.map((item) => item.customer_phone)
-            break;
-
-        }
-        return filteredOrders
-    })
     const alertMessage = ref({
         title: '',
         type: ''
@@ -53,14 +32,58 @@ export const useMissingOrder = () => {
         }
     ]
 
+    const filteredAbandonOrders = computed(() => {
+        let filteredOrders = []
+        switch(selectedFilter.value){
+            case 'all': filteredOrders = abandonOrders.value
+            break;
+
+            case 'registered-user': filteredOrders = abandonOrders.value.filter(item => item.status == 'abandoned' && item.is_repeat_customer == 1)
+            break;
+            
+            case 'guest-user': filteredOrders = abandonOrders.value.filter(item => item.status == 'abandoned' && item.is_repeat_customer == 0)
+            break;
+            
+            case 'recovered-order': filteredOrders = abandonOrders.value.filter(item => item.status == 'recovered')
+            break;
+
+            case 'carts-without-customer-details': filteredOrders = abandonOrders.value.map((item) => item.customer_phone)
+            break;
+
+        }
+        return filteredOrders
+    })
+
+    const getDashboardData = computed(() => {
+        const data = {
+            loosedAmount: 0,
+            totalAbandonedOrder: 0,
+            totalRecoveredOrder: 0,
+            recoveredAmount: 0,
+        }
+
+        abandonOrders.value.forEach(item => {
+            if(item.status == 'recovered'){
+                data.totalRecoveredOrder += 1
+                data.recoveredAmount +=  +item.total_value
+            }
+            if(item.status == 'abandoned'){
+                data.totalAbandonedOrder += 1
+                data.loosedAmount +=  +item.total_value
+            }
+        })
+
+        return data
+    })
+
     const handleFilter = (item) => {
         selectedFilter.value = item.slug
     }
 
-    const loadAbandonedOrder = async () => {
+    const loadAbandonedOrder = async (date?: {start_date: string, end_date: string}) => {
         try {
             isLoading.value = true
-            const { data } = await getAbandonedOrders()
+            const { data } = await getAbandonedOrders(date)
             abandonOrders.value = data
         } finally {
             isLoading.value = false
@@ -117,10 +140,12 @@ export const useMissingOrder = () => {
         isLoading,
         alertMessage,
         abandonOrders,
-        filteredAbandonOrders,
         selectedFilter,
+        getDashboardData,
+        filteredAbandonOrders,
         handleFilter,
         markAsRecovered,
-        markAsAbandoned
+        markAsAbandoned,
+        loadAbandonedOrder,
     }
 }

@@ -22,7 +22,7 @@ class AbandonedOrderAPI extends WP_REST_Controller {
     public function register_routes() {
         register_rest_route(__API_NAMESPACE, '/abandoned-orders', [
             [
-                'methods'             => 'GET',
+                'methods'             => 'POST',
                 'callback'            => [$this, 'get_all_abandoned_orders'],
                 'permission_callback' => api_permission_check(),
             ],
@@ -57,7 +57,7 @@ class AbandonedOrderAPI extends WP_REST_Controller {
     /**
      * check for abandoned able carts and make it abandon
      */
-    public function mark_abandoned_carts() {
+    private function mark_abandoned_carts() {
         global $wpdb;
     
         $cutoff_time = strtotime('-5 minutes'); // 15 minutes ago
@@ -82,18 +82,44 @@ class AbandonedOrderAPI extends WP_REST_Controller {
     /**
      * Get all abandoned orders
      */
-    public function get_all_abandoned_orders() {
+    public function get_all_abandoned_orders(WP_REST_Request $request) {
         global $wpdb;
         $this->mark_abandoned_carts();
-
+    
+        // Initialize query condition
+        $query_conditions = "status != %s";
+        $query_params = ['active'];
+    
+        // Add date range condition if start_date and end_date are defined
+        $start_date = $request->get_param('start_date');
+        $end_date = $request->get_param('end_date');
+    
+        if ($start_date && $end_date) {
+            $start_date = sanitize_text_field($start_date);
+            $end_date = sanitize_text_field($end_date);
+    
+            // Validate date format
+            if (!strtotime($start_date) || !strtotime($end_date)) {
+                return new WP_REST_Response([
+                    'status'  => 'error',
+                    'message' => 'Invalid date format. Use YYYY-MM-DD.',
+                ], 400);
+            }
+    
+            $query_conditions .= " AND abandoned_at BETWEEN %s AND %s";
+            $query_params[] = $start_date . ' 00:00:00';
+            $query_params[] = $end_date . ' 23:59:59';
+        }
+    
+        // Query the database
         $results = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT * FROM {$this->table_name} WHERE status != %s",
-                'active'
+                "SELECT * FROM {$this->table_name} WHERE $query_conditions",
+                ...$query_params
             ),
             ARRAY_A
         );
-
+    
         if (empty($results)) {
             return new WP_REST_Response([
                 'status'  => 'success',
@@ -101,20 +127,21 @@ class AbandonedOrderAPI extends WP_REST_Controller {
                 'data'    => [],
             ], 200);
         }
-
+    
         // Deserialize cart_contents for each result
         foreach ($results as &$result) {
             if (isset($result['cart_contents'])) {
                 $result['cart_contents'] = maybe_unserialize($result['cart_contents']);
             }
         }
-
+    
         return new WP_REST_Response([
             'status'  => 'success',
             'message' => 'Abandoned orders retrieved successfully.',
             'data'    => $results,
         ], 200);
     }
+
 
     /**
      * Create a new abandoned order

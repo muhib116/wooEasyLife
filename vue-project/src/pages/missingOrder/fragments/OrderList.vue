@@ -17,7 +17,7 @@
                 />
             </template>
             <Table.Tr v-else>
-                <Table.Td colspan="4" class="text-center text-gray-600 text-lg">
+                <Table.Td colspan="6" class="text-center text-gray-400 text-lg">
                     No result found!
                 </Table.Td>
             </Table.Tr>
@@ -31,7 +31,6 @@
     import TableRow from './TableRow.vue'
 
     const {
-        selectedFilter,
         filteredAbandonOrders
     } = inject('useMissingOrder')
 </script>

@@ -1,97 +1,95 @@
 <template>
-    <div class="relative">
-        <Card.Native>
-            <div v-if="showCustomDateInput" class="w-full text-sm flex items-end mb-2 gap-3">
-                <div class="flex-1 grid grid-cols-2 gap-3">
-                    <div class="grid">
-                        Start date
-                        <label class="font-light border px-3 py-1 rounded-sm">
-                            <input
-                                class="outline-none bg-transparent w-full !border-none focus:outline-none"
-                                type="date"
-                                v-model="customDates.start_date"
-                            />
-                        </label>
-                    </div>
-        
-                    <div class="grid">
-                        End date
-                        <label class="font-light border px-3 py-1 rounded-sm">
-                            <input
-                                class="outline-none bg-transparent w-full !border-none focus:outline-none"
-                                type="date"
-                                v-model="customDates.end_date"
-                            />
-                        </label>
-                    </div>
+    <Card.Native>
+        <div v-if="showCustomDateInput" class="w-full text-sm flex items-end mb-2 gap-3">
+            <div class="flex-1 grid grid-cols-2 gap-3">
+                <div class="grid">
+                    Start date
+                    <label class="font-light border px-3 py-1 rounded-sm">
+                        <input
+                            class="outline-none bg-transparent w-full !border-none focus:outline-none"
+                            type="date"
+                            v-model="customDates.start_date"
+                        />
+                    </label>
                 </div>
     
-                <Button.Primary
-                    class="ml-auto w-[118px] text-center justify-center !py-[6px]"
-                    @click="() => {
-                        $emit('dateChange', customDates, selectedStatusOption)
-                    }"
-                >
-                    Apply Now
-                </Button.Primary>
-            </div>
-
-            <div class="flex justify-between items-end mb-4">
-                <Heading
-                    :title="title"
-                    :subtitle="subtitle"
-                />
-
-                <div class="flex gap-2 relative">
-                    <slot name="before-filter"></slot>
-                    <Loader
-                        :active="showStatusFilter && isLoading"
-                        class="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2"
-                    />
-                    <label
-                        v-if="showStatusFilter" 
-                        class="font-light border px-2 py-1 rounded-sm"
-                    >
-                        <select 
+                <div class="grid">
+                    End date
+                    <label class="font-light border px-3 py-1 rounded-sm">
+                        <input
                             class="outline-none bg-transparent w-full !border-none focus:outline-none"
-                            v-model="selectedStatusOption"
-                            @change="handleLoadData()"
-                        >
-                            <option>Select status</option>
-                            <option
-                                v-for="(option, index) in orderStatuses"
-                                :key="index"
-                                :value="option.slug"
-                            >
-                                {{ option.title }}
-                            </option>
-                        </select>
+                            type="date"
+                            v-model="customDates.end_date"
+                        />
                     </label>
-
-                    <label
-                        v-if="showDateFilter"
-                        class="font-light border px-2 py-1 rounded-sm"
-                    >
-                        <select 
-                            class="outline-none bg-transparent w-full !border-none focus:outline-none"
-                            v-model="selectedFilterOption"
-                            @change="handleLoadData()"
-                        >
-                            <option
-                                v-for="(option, index) in filterOptions"
-                                :key="index"
-                                :value="option.id"
-                            >
-                                {{ option.title }}
-                            </option>
-                        </select>
-                    </label>
-                    <slot name="after-filter"></slot>
                 </div>
             </div>
-            <slot></slot>
-        </Card.Native>
-    </div>
+
+            <Button.Primary
+                class="ml-auto w-[118px] text-center justify-center !py-[6px]"
+                @click="() => {
+                    $emit('dateChange', customDates, selectedStatusOption)
+                }"
+            >
+                Apply Now
+            </Button.Primary>
+        </div>
+
+        <div class="flex justify-between items-end mb-4">
+            <Heading
+                :title="title"
+                :subtitle="subtitle"
+            />
+
+            <div class="flex gap-2 relative">
+                <slot name="before-filter"></slot>
+                <Loader
+                    :active="showStatusFilter && isLoading"
+                    class="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2"
+                />
+                <label
+                    v-if="showStatusFilter" 
+                    class="font-light border px-2 py-1 rounded-sm"
+                >
+                    <select 
+                        class="outline-none bg-transparent w-full !border-none focus:outline-none"
+                        v-model="selectedStatusOption"
+                        @change="handleLoadData()"
+                    >
+                        <option>Select status</option>
+                        <option
+                            v-for="(option, index) in orderStatuses"
+                            :key="index"
+                            :value="option.slug"
+                        >
+                            {{ option.title }}
+                        </option>
+                    </select>
+                </label>
+
+                <label
+                    v-if="showDateFilter"
+                    class="font-light border px-2 py-1 rounded-sm"
+                >
+                    <select 
+                        class="outline-none bg-transparent w-full !border-none focus:outline-none"
+                        v-model="selectedFilterOption"
+                        @change="handleLoadData()"
+                    >
+                        <option
+                            v-for="(option, index) in filterOptions"
+                            :key="index"
+                            :value="option.id"
+                        >
+                            {{ option.title }}
+                        </option>
+                    </select>
+                </label>
+                <slot name="after-filter"></slot>
+            </div>
+        </div>
+        <slot></slot>
+    </Card.Native>
 </template>
 
 <script setup lang="ts">

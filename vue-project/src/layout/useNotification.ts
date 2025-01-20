@@ -7,21 +7,23 @@ export const useNotification = () => {
     const audio = new Audio('/notification-sound.wav'); // Use relative path
     
 
-    onMounted(() => {
-        setInterval(async () => {
-            const { data } = await checkHasNewOrder()
-            if(data.has_new_orders){
-                hasNewOrder.value = true
-                audio.play();
-                loadOrderStatusList();
-                getOrders(false);
-    
-                setTimeout(() => {
-                    hasNewOrder.value = false
-                }, 4000)
-            }
-        }, 30000)
-    })
+    const checkNewOrderStatus = async () => {
+        const { data } = await checkHasNewOrder()
+        if(data.has_new_orders){
+            hasNewOrder.value = true
+            audio.play();
+            loadOrderStatusList();
+            getOrders(false);
+
+            setTimeout(() => {
+                hasNewOrder.value = false
+                setTimeout(checkNewOrderStatus, 8000)
+            }, 4000)
+        }else {
+            setTimeout(checkNewOrderStatus, 8000)
+        }
+    }
+    onMounted(checkNewOrderStatus)
 
     return {
         hasNewOrder
