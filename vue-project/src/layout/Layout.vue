@@ -34,16 +34,19 @@
     import { loadLicenseKey } from '@/remoteApi'
     import { useCourier } from '@/pages/config/courier/useCourier.ts'
     import { useNotification } from './useNotification.ts'
+    import { useLayout } from './useLayout'
 
     const isDevelopmentMode =  import.meta.env.DEV
-    const configData = ref()
     const _useCourierConfig = useCourier()
     const { loadCourierConfigData } = _useCourierConfig
 
-    const loadConfig = async () => {
-        const { data } = await getWPOption({ option_name: 'config' })
-        configData.value = data
-    }
+    const _useLayout = useLayout()
+    const {
+        configData,
+        loadConfig
+    } = _useLayout
+
+
 
     onBeforeMount(async () => {
         await loadLicenseKey()

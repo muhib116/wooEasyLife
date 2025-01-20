@@ -36,6 +36,12 @@ Dashboard:
 ✅ plugins update
 ✅ Audio notification sound for new order
 ✅ Courier status update check korar option bulk
+✅ Popular product koyta dekhabe ta dropdown theke chinai dite parbe
+✅ kun kun user otp dise ar kun kun user otp dey nai tar akta list dekhate hobe phone number soho
+✅ abandoned order
+
+👉🏻 License add na kora thakle alert dekhate hobe (license key add na kora thakle sob somoy license add er page a redirect kore dibe)
+
 
 
 /**
@@ -47,7 +53,6 @@ license activation alert
 --------
 
 
-=> Popular product koyta dekhabe ta dropdown theke chinai dite parbe
 => Courier Delivery Report
 => courier config a error handle korte hobe
 => code snippet (header, footer)
@@ -55,7 +60,6 @@ license activation alert
 👉🏻 bearar token validation from remote server
 👉🏻 alertBox position fixed kore dekhate hobe
 👉🏻 cost management
-👉🏻 kun kun user otp dise ar kun kun user otp dey nai tar akta list dekhate hobe phone number soho
 
 👉🏻 make the system responsive
 👉🏻 tutorial
@@ -64,5 +68,3 @@ license activation alert
 👉🏻 Cash management (Low priority) from funnel liner
 👉🏻 Marketing Tools (Low priority) from funnel liner
 👉🏻 Microsoft Clarity
-👉🏻 License add na kora thakle alert dekhate hobe (license key add na kora thakle sob somoy license add er page a redirect kore dibe)
-
