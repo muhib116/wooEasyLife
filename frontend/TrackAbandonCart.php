@@ -4,6 +4,15 @@ namespace WooEasyLife\Frontend;
 class TrackAbandonCart {
     public function __construct()
     {
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_my_ajax_script'] );    
+        
+        // AJAX handler for logged-in users
+        add_action( 'wp_ajax_update_abandoned_data', [$this, 'update_wc_session_for_abandoned_order'] );
+
+        // AJAX handler for non-logged-in users
+        add_action( 'wp_ajax_nopriv_update_abandoned_data', [$this, 'update_wc_session_for_abandoned_order'] );
+
+
         // work when change checkout page data
         add_action('woocommerce_cart_updated', [$this, 'store_abandoned_cart_data']);
         
@@ -13,9 +22,53 @@ class TrackAbandonCart {
         add_action('woocommerce_thankyou', [$this, 'mark_abandoned_cart_as_recovered'], 10, 1);
     }
 
+    public function enqueue_my_ajax_script() {
+        wp_enqueue_script( 
+            'woo-easy-life-ajax-script', 
+            plugins_url('includes/checkoutPage/AbandonedOrder.js', __DIR__), 
+            [], 
+            null, 
+            true 
+        );
+    
+        // Localize script to pass the AJAX URL
+        wp_localize_script( 'woo-easy-life-ajax-script', 'woo_easy_life_ajax_obj', array(
+            'ajax_url' => admin_url( 'admin-ajax.php' ),
+            'wc_session_id' => WC()->session->get_customer_id()
+        ));
+    }
+
+
+    public function update_wc_session_for_abandoned_order() {
+        if ( ! class_exists( 'WC_Session_Handler' ) ) {
+            wp_send_json_error( 'WooCommerce session handler not available.' );
+            return;
+        }
+    
+        // Retrieve data sent via AJAX
+        $billing_first_name = isset( $_POST['billing_first_name'] ) ? sanitize_text_field( $_POST['billing_first_name'] ) : '';
+        $billing_last_name = isset( $_POST['billing_last_name'] ) ? sanitize_text_field( $_POST['billing_last_name'] ) : '';
+        $billing_phone = isset( $_POST['billing_phone'] ) ? sanitize_text_field( $_POST['billing_phone'] ) : '';
+        $billing_email = isset( $_POST['billing_email'] ) ? sanitize_text_field( $_POST['billing_email'] ) : '';
+    
+        // Update the WooCommerce session
+        WC()->session->set( 'billing_first_name', $billing_first_name );
+        WC()->session->set( 'billing_last_name', $billing_last_name );
+        WC()->session->set( 'billing_phone', $billing_phone );
+        WC()->session->set( 'billing_email', $billing_email );
+    
+        $this->store_abandoned_cart_data();
+        // Respond with session ID and any custom data received
+        // wp_send_json_success( array( 
+        //     'session_id' => 'response 1 goes here',
+        //     'login_id' => 'response 2 goes here'
+        // ));
+    }
+    
+
     public function store_abandoned_cart_data() {
         global $wpdb;
-    
+
         // Define the table name
         $table_name = $wpdb->prefix . __PREFIX .'abandon_cart';
     
@@ -29,9 +82,14 @@ class TrackAbandonCart {
 
     
         // Get customer details
-        $customer_email = WC()->customer->get_email();
-        $customer_name = WC()->customer->get_billing_first_name() . ' ' . WC()->customer->get_billing_last_name();
-        $customer_phone = normalize_phone_number(WC()->customer->get_billing_phone());
+        $customer_name = WC()->session->get('billing_first_name') . ' ' . WC()->session->get('billing_last_name');
+        $customer_email = WC()->session->get('billing_email');
+        $customer_phone = normalize_phone_number(WC()->session->get('billing_phone'));
+
+        if(empty($customer_phone) && empty($customer_email)) {
+            return false;
+        }
+
         $billing_address = WC()->customer->get_billing_address_1() . ', ' . WC()->customer->get_billing_city() . ', ' . WC()->customer->get_billing_state() . ', ' . WC()->customer->get_billing_postcode();
         $shipping_address = WC()->customer->get_shipping_address_1() . ', ' . WC()->customer->get_shipping_city() . ', ' . WC()->customer->get_shipping_state() . ', ' . WC()->customer->get_shipping_postcode();
      
