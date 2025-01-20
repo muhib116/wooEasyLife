@@ -1,21 +1,24 @@
 <template>
     <Table.Table>
         <Table.THead>
-            <Table.Th>ID</Table.Th>
-            <Table.Th>Date</Table.Th>
-            <Table.Th>Name</Table.Th>
-            <Table.Th>Phone</Table.Th>
-            <Table.Th>Email</Table.Th>
-            <Table.Th>Address</Table.Th>
+            <Table.Th>Customer Info</Table.Th>
+            <Table.Th>Contact Info</Table.Th>
             <Table.Th>Status Of Cart</Table.Th>
             <Table.Th>Order Details</Table.Th>
         </Table.THead>
         <Table.TBody>
-            <TableRow
-                v-for="item in abandonOrders || []"
-                :key="item.id"
-                :item="item"
-            />
+            <template v-if="filteredAbandonOrders?.length">
+                <TableRow
+                    v-for="item in filteredAbandonOrders || []"
+                    :key="item.id"
+                    :item="item"
+                />
+            </template>
+            <Table.Tr v-else>
+                <Table.Td colspan="4" class="text-center text-gray-600 text-lg">
+                    No result found!
+                </Table.Td>
+            </Table.Tr>
         </Table.TBody>
     </Table.Table>
 </template>
@@ -26,6 +29,7 @@
     import TableRow from './TableRow.vue'
 
     const {
-        abandonOrders
+        selectedFilter,
+        filteredAbandonOrders
     } = inject('useMissingOrder')
 </script>

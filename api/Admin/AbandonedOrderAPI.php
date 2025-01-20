@@ -12,7 +12,7 @@ class AbandonedOrderAPI extends WP_REST_Controller {
     public function __construct() {
         global $wpdb;
         $this->table_name = $wpdb->prefix . __PREFIX . 'abandon_cart';
-
+        
         add_action('rest_api_init', [$this, 'register_routes']);
     }
 
@@ -55,12 +55,44 @@ class AbandonedOrderAPI extends WP_REST_Controller {
     }
 
     /**
+     * check for abandoned able carts and make it abandon
+     */
+    public function mark_abandoned_carts() {
+        global $wpdb;
+    
+        $cutoff_time = strtotime('-5 minutes'); // 15 minutes ago
+        $cutoff_date = date('Y-m-d H:i:s', $cutoff_time);
+    
+        $query = $wpdb->prepare(
+            "UPDATE {$this->table_name} 
+            SET 
+                status = 'abandoned', 
+                abandoned_at = NOW(), 
+                updated_at = NOW() 
+            WHERE 
+                status = 'active' 
+                AND created_at < %s",
+            $cutoff_date
+        );
+    
+        $wpdb->query($query);
+    }
+
+
+    /**
      * Get all abandoned orders
      */
     public function get_all_abandoned_orders() {
         global $wpdb;
+        $this->mark_abandoned_carts();
 
-        $results = $wpdb->get_results("SELECT * FROM {$this->table_name}", ARRAY_A);
+        $results = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM {$this->table_name} WHERE status != %s",
+                'active'
+            ),
+            ARRAY_A
+        );
 
         if (empty($results)) {
             return new WP_REST_Response([

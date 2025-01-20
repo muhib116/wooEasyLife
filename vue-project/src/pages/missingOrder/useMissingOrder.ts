@@ -1,14 +1,36 @@
 import { getAbandonedOrders } from "@/api"
-import { onMounted, ref } from "vue"
+import { computed, onMounted, ref } from "vue"
 
 export const useMissingOrder = () => {
+    const selectedFilter = ref('all')
     const isLoading = ref()
     const abandonOrders = ref([])
+    const filteredAbandonOrders = computed(() => {
+        let filteredOrders = []
+        switch(selectedFilter.value){
+            case 'all': filteredOrders = abandonOrders.value
+            break;
+
+            case 'registered-user': filteredOrders = abandonOrders.value.filter(item => item.status == 'abandoned' && item.is_repeat_customer == 1)
+            break;
+            
+            case 'guest-user': filteredOrders = abandonOrders.value.filter(item => item.status == 'abandoned' && item.is_repeat_customer == 0)
+            break;
+            
+            case 'recovered-order': filteredOrders = abandonOrders.value.filter(item => item.status == 'recovered')
+            break;
+
+            case 'carts-without-customer-details': filteredOrders = abandonOrders.value
+            break;
+
+        }
+        console.log(filteredOrders)
+        return filteredOrders
+    })
     const alertMessage = ref({
         title: '',
         type: ''
     })
-    const selectedFilter = ref('all')
     const filter = [
         {
             slug: "all",
@@ -21,6 +43,10 @@ export const useMissingOrder = () => {
         {
             slug: "guest-user",
             title: "Guest User"
+        },
+        {
+            slug: "recovered-order",
+            title: "Recovered order"
         },
         {
             slug: "carts-without-customer-details",
@@ -38,7 +64,7 @@ export const useMissingOrder = () => {
             const { data } = await getAbandonedOrders()
             abandonOrders.value = data
         } finally {
-            isLoading.value = true
+            isLoading.value = false
 
         }
     }
@@ -52,6 +78,7 @@ export const useMissingOrder = () => {
         isLoading,
         alertMessage,
         abandonOrders,
+        filteredAbandonOrders,
         selectedFilter,
         handleFilter
     }

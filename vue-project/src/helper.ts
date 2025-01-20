@@ -59,7 +59,7 @@ export const validateBDPhoneNumber = (phoneNumber: string) => {
 
 export const printDate = (dateString: string) => {
     const date = parseISO(dateString.replace(' ', 'T'))
-    const formattedDate = format(date, 'MMMM dd, yyyy hh:mm:ss a')
+    const formattedDate = format(date, 'MMMM dd, yyyy hh:mm a')
     return formattedDate
 }
 

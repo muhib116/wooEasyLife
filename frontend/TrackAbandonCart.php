@@ -20,6 +20,9 @@ class TrackAbandonCart {
         add_action('woocommerce_checkout_update_order_review', [$this, 'store_abandoned_cart_data']);
 
         add_action('woocommerce_thankyou', [$this, 'mark_abandoned_cart_as_recovered'], 10, 1);
+
+        // this function using to run cronJob to update status
+        $this->mark_abandoned_carts();
     }
 
     public function enqueue_my_ajax_script() {
@@ -117,8 +120,9 @@ class TrackAbandonCart {
             $wpdb->prepare(
                 "SELECT id FROM $table_name 
                 WHERE session_id = %s 
-                AND (status = 'active' 
-                OR (recovered_at IS NULL OR recovered_at < DATE_SUB(NOW(), INTERVAL 2 MINUTE)))",
+                AND (
+                    status = 'active' 
+                )",
                 $session_id
             )
         );
@@ -140,9 +144,9 @@ class TrackAbandonCart {
                     'updated_at'             => current_time('mysql'),
                 ],
                 ['id' => $existing_cart],
-                ['%s', '%s', '%s', '%s', '%f', '%s', '%s', '%d', '%d', '%s'],
+                ['%s', '%s', '%s', '%s', '%f', '%s', '%s', '%d', '%s', '%s'],
                 ['%d']
-            );
+            );                        
         } else {
             // Insert a new abandoned cart record
             $wpdb->insert(
@@ -157,13 +161,27 @@ class TrackAbandonCart {
                     'billing_address'        => $billing_address,
                     'shipping_address'       => $shipping_address,
                     'is_repeat_customer'     => $is_repeat_customer,
-                    'abandoned_at'           => current_time('mysql'),
+                    'abandoned_at'           => null, // Explicitly set as NULL
                     'status'                 => 'active', // Mark cart as active initially
                     'created_at'             => current_time('mysql'),
                     'updated_at'             => current_time('mysql'),
                 ],
-                ['%s', '%s', '%s', '%s', '%s', '%f', '%s', '%s', '%d', '%d', '%s', '%s', '%s']
-            );
+                [
+                    '%s', // session_id
+                    '%s', // customer_email
+                    '%s', // customer_name
+                    '%s', // customer_phone
+                    '%s', // cart_contents
+                    '%f', // total_value
+                    '%s', // billing_address
+                    '%s', // shipping_address
+                    '%d', // is_repeat_customer
+                    '%s', // abandoned_at (NULL is safely handled with %s)
+                    '%s', // status
+                    '%s', // created_at
+                    '%s', // updated_at
+                ]
+            );            
         }
     }
 
@@ -187,24 +205,40 @@ class TrackAbandonCart {
         return count($completed_orders) > 0;
     }
 
-
     public function mark_abandoned_cart_as_recovered($order_id) {
         global $wpdb;
-
+    
         // Get the WooCommerce order object
         $order = wc_get_order($order_id);
         if (!$order) {
             return; // Exit if the order object is not found
         }
-
+    
         // Define the abandoned cart table name
         $table_name = $wpdb->prefix . __PREFIX . 'abandon_cart';
-
+    
         // Retrieve customer data from the order
         $customer_email = $order->get_billing_email();
         $customer_phone = $order->get_billing_phone();
         $session_id     = WC()->session->get_customer_id();
-
+    
+        // Check for a record with session_id and status = 'active'
+        $active_cart_id = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT id FROM $table_name WHERE session_id = %s AND status = 'active'",
+                $session_id
+            )
+        );
+    
+        if ($active_cart_id) {
+            // Delete the record with session_id and status = 'active'
+            $wpdb->delete(
+                $table_name,
+                ['id' => $active_cart_id],
+                ['%d']
+            );
+        }
+    
         // Check if an abandoned cart exists for this customer
         $abandoned_cart_id = $wpdb->get_var(
             $wpdb->prepare(
@@ -214,7 +248,7 @@ class TrackAbandonCart {
                 $customer_phone
             )
         );
-
+    
         if ($abandoned_cart_id) {
             // Update the abandoned cart record to mark it as recovered
             $wpdb->update(
@@ -229,25 +263,9 @@ class TrackAbandonCart {
                 ['%d']
             );
         }
-    }
-
+    }    
 
     public function mark_abandoned_carts() {
-        global $wpdb;
-    
-        $cutoff_time = strtotime('-15 minutes'); // Example cut-off time: 15 minutes ago
-        $cutoff_date = date('Y-m-d H:i:s', $cutoff_time);
-    
-        $table_name = $wpdb->prefix . __PREFIX .'abandon_cart';
-    
-        $wpdb->query(
-            $wpdb->prepare(
-                "UPDATE $table_name 
-                SET status = 'abandoned' 
-                WHERE status = 'active' AND updated_at < %s",
-                $cutoff_date
-            )
-        );
+        new \WooEasyLife\Frontend\AbandonedCronJob();
     }
-    
 }
