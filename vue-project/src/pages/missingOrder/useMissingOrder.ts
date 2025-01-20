@@ -2,7 +2,7 @@ import { getAbandonedOrders, updateAbandonedOrderStatus } from "@/api"
 import { computed, onMounted, ref } from "vue"
 
 export const useMissingOrder = () => {
-    const selectedFilter = ref('all')
+    const selectedFilter = ref('dashboard')
     const isLoading = ref()
     const abandonOrders = ref([])
     const filteredAbandonOrders = computed(() => {
@@ -32,6 +32,10 @@ export const useMissingOrder = () => {
     })
     const filter = [
         {
+            slug: "dashboard",
+            title: "Dashboard"
+        },
+        {
             slug: "all",
             title: "All"
         },
@@ -46,11 +50,7 @@ export const useMissingOrder = () => {
         {
             slug: "recovered-order",
             title: "Recovered order"
-        },
-        {
-            slug: "carts-without-customer-details",
-            title: "Carts without customer details"
-        },
+        }
     ]
 
     const handleFilter = (item) => {

@@ -4,6 +4,7 @@
             <Table.Th class="truncate">Customer Info</Table.Th>
             <Table.Th class="truncate">Contact Info</Table.Th>
             <Table.Th class="truncate">Status Of Cart</Table.Th>
+            <Table.Th class="truncate">Abandon/Recover Date</Table.Th>
             <Table.Th class="truncate text-center">Order Details</Table.Th>
             <Table.Th class="truncate text-right">Action</Table.Th>
         </Table.THead>

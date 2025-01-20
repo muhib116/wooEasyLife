@@ -22,7 +22,9 @@
                     </Button.Native>
                 </div>
 
-                <OrderList />
+                <Dashboard v-if="selectedFilter == 'dashboard'" />
+                <OrderList v-else />
+
             </Card.Native>
         </Container>
     </Layout>
@@ -33,6 +35,7 @@
     import { Button, MessageBox, Card, Loader } from '@/components'
     import { useMissingOrder } from './useMissingOrder'
     import OrderList from './fragments/OrderList.vue'
+    import Dashboard from './fragments/Dashboard.vue'
     import { provide } from 'vue'
 
     const _useMissingOrder = useMissingOrder()

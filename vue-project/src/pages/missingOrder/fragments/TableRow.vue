@@ -33,7 +33,9 @@
         </div>
       </div>
 
-      <div>📅 {{ printDate(item.created_at) }}</div>
+      <div class="truncate">
+        📅 {{ printDate(item.created_at) }}
+      </div>
     </Table.Td>
     <Table.Td class="space-y-2">
       <div>
@@ -54,6 +56,23 @@
       >
         {{ item.status }}
       </span>
+    </Table.Td>
+    <Table.Td class="truncate">
+      <div v-if="item.abandoned_at">
+        <span class="font-semibold text-red-500">
+          Abandoned At: 
+        </span>
+        <br />
+        {{ printDate(item.abandoned_at) }}
+      </div>
+      <div v-if="item.recovered_at">
+        <span class="font-semibold text-green-500">
+          Recovered At: 
+        </span>
+        <br />
+        {{ printDate(item.recovered_at) }}
+      </div>
+
     </Table.Td>
     <Table.Td class="truncate">
         <Button.Primary
