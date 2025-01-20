@@ -1,4 +1,4 @@
-import { getAbandonedOrders } from "@/api"
+import { getAbandonedOrders, updateAbandonedOrderStatus } from "@/api"
 import { computed, onMounted, ref } from "vue"
 
 export const useMissingOrder = () => {
@@ -20,11 +20,10 @@ export const useMissingOrder = () => {
             case 'recovered-order': filteredOrders = abandonOrders.value.filter(item => item.status == 'recovered')
             break;
 
-            case 'carts-without-customer-details': filteredOrders = abandonOrders.value
+            case 'carts-without-customer-details': filteredOrders = abandonOrders.value.map((item) => item.customer_phone)
             break;
 
         }
-        console.log(filteredOrders)
         return filteredOrders
     })
     const alertMessage = ref({
@@ -54,7 +53,7 @@ export const useMissingOrder = () => {
         },
     ]
 
-    const handleFilter = (item, btn) => {
+    const handleFilter = (item) => {
         selectedFilter.value = item.slug
     }
 
@@ -69,6 +68,46 @@ export const useMissingOrder = () => {
         }
     }
 
+    const markAsRecovered = async (item, btn: { isLoading: boolean }) => {
+        if(!confirm('Are you sure to make it recovered!')) return
+        item.status = 'recovered'
+
+        handleUpdate(item, btn)
+    }
+    const markAsAbandoned = async (item, btn: { isLoading: boolean }) => {
+        if(!confirm('Are you sure to make it abandoned!')) return
+        item.status = 'abandoned'
+
+        handleUpdate(item, btn)
+    }
+
+    const handleUpdate = async (item, btn) => {
+        try {
+            isLoading.value = true
+            btn.isLoading = true
+            const { message, status } = await updateAbandonedOrderStatus(item.id, item)
+            alertMessage.value.type = status == 'success' ? 'success' : 'warning'
+            alertMessage.value.title = message
+
+            await loadAbandonedOrder()
+        } catch({response}) {
+            alertMessage.value = {
+                title: response?.data?.message,
+                type: 'danger'
+            }
+        } finally {
+            isLoading.value = false
+            btn.isLoading = false
+
+            setTimeout(() => {
+                alertMessage.value = {
+                    title: '',
+                    type: ''
+                }
+            }, 5000)
+        }
+    }
+
     onMounted(() => {
         loadAbandonedOrder()
     })
@@ -80,6 +119,8 @@ export const useMissingOrder = () => {
         abandonOrders,
         filteredAbandonOrders,
         selectedFilter,
-        handleFilter
+        handleFilter,
+        markAsRecovered,
+        markAsAbandoned
     }
 }

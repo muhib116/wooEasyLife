@@ -27,7 +27,7 @@
                 </h4>
                 <h4>
                     <span style="font-weight: bold;"> Email: </span> 
-                    {{ orders[0].billing_address.email }}
+                    {{ orders[0].billing_address.email || 'n/a' }}
                 </h4>
                 <h4>
                     <span style="font-weight: bold;"> Address: </span> 

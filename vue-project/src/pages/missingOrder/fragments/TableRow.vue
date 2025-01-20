@@ -1,70 +1,108 @@
 <template>
-    <Table.Tr>
-        <Table.Td>
-            <div class="flex gap-2 truncate">
-                <span 
-                    class="px-1 bg-gray-500 text-white capitalize rounded-sm text" 
-                    title="Order Id"
-                >
-                    #{{ item.id }}
-                </span>
-                <span 
-                    v-if="item.is_repeat_customer"
-                    class="px-1 bg-sky-500 text-white capitalize rounded-sm text" 
-                    title="Repeat customer"
-                >
-                    Repeat
-                </span>
-            </div>
-            <div class="flex gap-1 font-semibold" title="Customer name">
-                {{ item.customer_name }}
-            </div>
-            📅 {{ printDate(item.created_at) }}
-        </Table.Td>
-        <Table.Td class="space-y-2">
-            <div>
-                <span class="font-semibold text-[#02b795]">
-                    📞 Phone:
-                </span> 
-                {{ item.customer_phone }}
-            </div>
+  <Table.Tr>
+    <Table.Td class="space-y-1">
+      <div class="flex gap-2 truncate">
+        <span
+          class="px-1 bg-gray-500 text-white capitalize rounded-sm text"
+          title="Order Id"
+        >
+          #{{ item.id }}
+        </span>
+        <span
+          v-if="item.is_repeat_customer"
+          class="px-1 bg-sky-500 text-white capitalize rounded-sm text"
+          title="Repeat customer"
+        >
+          Repeat
+        </span>
+      </div>
 
-            <div v-if="item.customer_email">
-                <span class="font-semibold text-orange-500">
-                    Email:
-                </span> 
-                {{ item.customer_email }}
-            </div>
-            
+      <div class="flex gap-1 font-semibold" title="Customer name">
+        {{ item.customer_name }}
+      </div>
 
-            <div>
-                🏠 <span class="font-semibold text-sky-500">Billing address:</span> 
-                {{ item.billing_address }}
-            </div>
+      <div>
+        <div v-if="item.customer_phone">
+          <span class="font-semibold text-[#02b795]"> 📞 Phone: </span>
+          {{ item.customer_phone }}
+        </div>
 
-            <div>
-                📍 <span class="font-semibold text-red-500">Shipping address:</span> 
-                {{ item.shipping_address }}
-            </div>
-        </Table.Td>
-        <Table.Td class="capitalize">
-            <span 
-                class="text-white px-2 py-1 rounded-sm"
-                :class="item.status == 'abandoned' ? 'bg-red-500' : 'bg-green-500'"
-            >
-                {{ item.status }}
-            </span>
-        </Table.Td>
-    </Table.Tr>
+        <div v-if="item.customer_email">
+          <span class="font-semibold text-orange-500"> 📨 Email: </span>
+          {{ item.customer_email }}
+        </div>
+      </div>
+
+      <div>📅 {{ printDate(item.created_at) }}</div>
+    </Table.Td>
+    <Table.Td class="space-y-2">
+      <div>
+        🏠 <span class="font-semibold text-sky-500">Billing address:</span>
+        <br />
+        {{ item.billing_address }}
+      </div>
+
+      <div>
+        📍 <span class="font-semibold text-red-500">Shipping address:</span>
+        <br />
+        {{ item.shipping_address }}
+      </div>
+    </Table.Td>
+    <Table.Td class="capitalize">
+      <span
+        :class="item.status == 'abandoned' ? 'text-red-500' : 'text-green-500'"
+      >
+        {{ item.status }}
+      </span>
+    </Table.Td>
+    <Table.Td class="truncate">
+        <Button.Primary
+            class="mx-auto"
+            @click="toggleModal=true"
+            icon="PhEye"
+        >
+            Cart Info
+        </Button.Primary>
+    </Table.Td>
+    <Table.Td class="truncate">
+      <Button.Primary
+        v-if="item.status == 'abandoned'"
+        class="!bg-green-500 ml-auto"
+        @onClick="(btn) => markAsRecovered(item, btn)"
+      >
+        Mark as recovered
+      </Button.Primary>
+      <Button.Primary
+        v-else
+        class="!bg-red-500 ml-auto"
+        @onClick="(btn) => markAsAbandoned(item, btn)"
+      >
+        Mark as abandoned
+      </Button.Primary>
+    </Table.Td>
+  </Table.Tr>
+
+  <Modal
+    v-model="toggleModal"
+    @close="toggleModal = false"
+    title="Cart Details"
+    class="max-w-[50%] w-full"
+    hideFooter
+  >
+    <CartDetails :order="item" />
+  </Modal>
 </template>
 
 <script setup lang="ts">
-    import { printDate } from '@/helper'
-    import {
-        Table
-    } from '@components'
+import { printDate } from "@/helper";
+import { Table, Button, Modal } from "@components";
+import { inject, ref } from "vue";
+import CartDetails from "./CartDetails.vue";
 
-    defineProps<{
-        item: object
-    }>()
+defineProps<{
+  item: object;
+}>();
+
+const toggleModal = ref(false);
+const { markAsRecovered, markAsAbandoned } = inject("useMissingOrder");
 </script>

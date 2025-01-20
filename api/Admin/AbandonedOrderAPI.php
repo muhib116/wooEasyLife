@@ -204,38 +204,44 @@ class AbandonedOrderAPI extends WP_REST_Controller {
      */
     public function update_abandoned_order(WP_REST_Request $request) {
         global $wpdb;
-
+    
         $id             = $request->get_param('id');
-        $customer_email = sanitize_email($request->get_param('customer_email'));
+        $customer_email = sanitize_email($request->get_param('customer_email')) ?? '';
         $cart_contents  = maybe_serialize($request->get_param('cart_contents'));
         $total_value    = floatval($request->get_param('total_value'));
+        $status         = sanitize_text_field($request->get_param('status')); // Get status from request
         $updated_at     = current_time('mysql');
-
+        $recovered_at   = ($status === 'recovered') ? current_time('mysql') : null; // Set recovered_at for "recovered" status
+    
         $updated = $wpdb->update(
             $this->table_name,
             [
                 'customer_email' => $customer_email,
                 'cart_contents'  => $cart_contents,
                 'total_value'    => $total_value,
+                'status'         => $status, // Update status
+                'recovered_at'   => $recovered_at, // Update recovered_at
                 'updated_at'     => $updated_at,
             ],
             ['id' => $id],
             [
-                '%s',
-                '%s',
-                '%f',
-                '%s',
+                '%s', // customer_email
+                '%s', // cart_contents
+                '%f', // total_value
+                '%s', // status
+                '%s', // recovered_at (NULL or datetime)
+                '%s', // updated_at
             ],
-            ['%d']
+            ['%d'] // ID
         );
-
+    
         if ($updated === false) {
             return new WP_REST_Response([
                 'status'  => 'error',
                 'message' => 'Failed to update abandoned order.',
             ], 500);
         }
-
+    
         return new WP_REST_Response([
             'status'  => 'success',
             'message' => 'Abandoned order updated successfully.',
@@ -244,10 +250,13 @@ class AbandonedOrderAPI extends WP_REST_Controller {
                 'customer_email' => $customer_email,
                 'cart_contents'  => maybe_unserialize($cart_contents),
                 'total_value'    => $total_value,
+                'status'         => $status,
+                'recovered_at'   => $recovered_at,
                 'updated_at'     => $updated_at,
             ],
         ], 200);
     }
+    
 
     /**
      * Delete an abandoned order by ID
@@ -279,24 +288,7 @@ class AbandonedOrderAPI extends WP_REST_Controller {
      * Schema for abandoned order input validation
      */
     private function get_abandoned_order_schema($require_id = false) {
-        $schema = [
-            'customer_email' => [
-                'required'    => true,
-                'type'        => 'string',
-                'format'      => 'email',
-                'description' => 'Customer email address.',
-            ],
-            'cart_contents' => [
-                'required'    => true,
-                'type'        => 'array',
-                'description' => 'Contents of the abandoned cart.',
-            ],
-            'total_value' => [
-                'required'    => true,
-                'type'        => 'number',
-                'description' => 'Total value of the abandoned cart.',
-            ],
-        ];
+        $schema = [];
 
         if ($require_id) {
             $schema['id'] = [

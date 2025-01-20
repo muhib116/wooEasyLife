@@ -2,7 +2,7 @@
     <Layout>
         <Container>
             <Loader
-                class="absolute inset-1/2 -translate-x-1/2"
+                class="absolute inset-1/2 -translate-x-1/2 bg-white rounded-full shadow"
                 :active="isLoading"
             />
             <Card.Native>

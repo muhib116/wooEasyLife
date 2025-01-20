@@ -21,8 +21,7 @@ class TrackAbandonCart {
 
         add_action('woocommerce_thankyou', [$this, 'mark_abandoned_cart_as_recovered'], 10, 1);
 
-        // this function using to run cronJob to update status
-        $this->mark_abandoned_carts();
+        // abandoned marked from abandonedOrderAPI.php
     }
 
     public function enqueue_my_ajax_script() {
@@ -71,31 +70,30 @@ class TrackAbandonCart {
 
     public function store_abandoned_cart_data() {
         global $wpdb;
-
-        // Define the table name
-        $table_name = $wpdb->prefix . __PREFIX .'abandon_cart';
     
+        // Define the table name
+        $table_name = $wpdb->prefix . __PREFIX . 'abandon_cart';
+        
         // Get WooCommerce session data
         $session = WC()->session;
         $cart = WC()->cart->get_cart();
-    
+        
         if (empty($cart)) {
             return; // Exit if the cart is empty
         }
-
     
         // Get customer details
         $customer_name = WC()->session->get('billing_first_name') . ' ' . WC()->session->get('billing_last_name');
         $customer_email = WC()->session->get('billing_email');
         $customer_phone = normalize_phone_number(WC()->session->get('billing_phone'));
-
-        if(empty($customer_phone) && empty($customer_email)) {
+    
+        if (empty($customer_phone) && empty($customer_email)) {
             return false;
         }
-
+    
         $billing_address = WC()->customer->get_billing_address_1() . ', ' . WC()->customer->get_billing_city() . ', ' . WC()->customer->get_billing_state() . ', ' . WC()->customer->get_billing_postcode();
         $shipping_address = WC()->customer->get_shipping_address_1() . ', ' . WC()->customer->get_shipping_city() . ', ' . WC()->customer->get_shipping_state() . ', ' . WC()->customer->get_shipping_postcode();
-     
+    
         // Determine if the customer is a repeat customer (check WooCommerce orders)
         $is_repeat_customer = $this->is_repeat_customer_by_billing_phone($customer_phone);
     
@@ -104,10 +102,14 @@ class TrackAbandonCart {
         $total_value = 0;
     
         foreach ($cart as $cart_item) {
+            $product = $cart_item['data']; // WC_Product object
+    
             $cart_contents[] = [
-                'name'     => $cart_item['data']->get_name(),
-                'quantity' => $cart_item['quantity'],
-                'price'    => $cart_item['line_total'],
+                'name'        => $product->get_name(),
+                'image'       => wp_get_attachment_url($product->get_image_id()),
+                'product_url' => get_permalink($product->get_id()),
+                'quantity'    => $cart_item['quantity'],
+                'price'       => $cart_item['line_total'],
             ];
             $total_value += $cart_item['line_total'];
         }
@@ -127,7 +129,6 @@ class TrackAbandonCart {
             )
         );
     
-
         if ($existing_cart) {
             // Update the existing abandoned cart record
             $wpdb->update(
@@ -144,9 +145,9 @@ class TrackAbandonCart {
                     'updated_at'             => current_time('mysql'),
                 ],
                 ['id' => $existing_cart],
-                ['%s', '%s', '%s', '%s', '%f', '%s', '%s', '%d', '%s', '%s'],
+                ['%s', '%s', '%s', '%s', '%f', '%s', '%s', '%d', '%s'],
                 ['%d']
-            );                        
+            );
         } else {
             // Insert a new abandoned cart record
             $wpdb->insert(
@@ -181,9 +182,9 @@ class TrackAbandonCart {
                     '%s', // created_at
                     '%s', // updated_at
                 ]
-            );            
+            );
         }
-    }
+    }    
 
     private function is_repeat_customer_by_billing_phone($billing_phone) {
         if (empty($billing_phone)) {
@@ -263,9 +264,5 @@ class TrackAbandonCart {
                 ['%d']
             );
         }
-    }    
-
-    public function mark_abandoned_carts() {
-        new \WooEasyLife\Frontend\AbandonedCronJob();
     }
 }

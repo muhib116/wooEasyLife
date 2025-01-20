@@ -1,10 +1,11 @@
 <template>
     <Table.Table>
         <Table.THead>
-            <Table.Th>Customer Info</Table.Th>
-            <Table.Th>Contact Info</Table.Th>
-            <Table.Th>Status Of Cart</Table.Th>
-            <Table.Th>Order Details</Table.Th>
+            <Table.Th class="truncate">Customer Info</Table.Th>
+            <Table.Th class="truncate">Contact Info</Table.Th>
+            <Table.Th class="truncate">Status Of Cart</Table.Th>
+            <Table.Th class="truncate text-center">Order Details</Table.Th>
+            <Table.Th class="truncate text-right">Action</Table.Th>
         </Table.THead>
         <Table.TBody>
             <template v-if="filteredAbandonOrders?.length">

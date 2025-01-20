@@ -251,4 +251,10 @@ export const getAbandonedOrders = async () => {
     const { data } = await axios.get(`${localApiBaseURL}/abandoned-orders`)
     return data
 }
+export const updateAbandonedOrderStatus = async (id: string, payload: {
+    status: string
+}) => {
+    const { data } = await axios.put(`${localApiBaseURL}/abandoned-orders/${id}`, payload)
+    return data
+}
 // abandoned order start
