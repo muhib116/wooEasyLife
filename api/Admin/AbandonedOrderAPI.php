@@ -114,7 +114,7 @@ class AbandonedOrderAPI extends WP_REST_Controller {
         // Query the database
         $results = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT * FROM {$this->table_name} WHERE $query_conditions",
+                "SELECT * FROM {$this->table_name} WHERE $query_conditions ORDER BY abandoned_at DESC",
                 ...$query_params
             ),
             ARRAY_A

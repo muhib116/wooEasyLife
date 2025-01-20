@@ -16,7 +16,7 @@
                     :item="item"
                 />
             </template>
-            <Table.Tr v-else>
+            <Table.Tr v-else-if="!isLoading">
                 <Table.Td colspan="6" class="text-center text-gray-400 text-lg">
                     No result found!
                 </Table.Td>
@@ -31,6 +31,7 @@
     import TableRow from './TableRow.vue'
 
     const {
+        isLoading,
         filteredAbandonOrders
     } = inject('useMissingOrder')
 </script>

@@ -33,26 +33,44 @@ export const useMissingOrder = () => {
     ]
 
     const filteredAbandonOrders = computed(() => {
-        let filteredOrders = []
-        switch(selectedFilter.value){
-            case 'all': filteredOrders = abandonOrders.value
-            break;
-
-            case 'registered-user': filteredOrders = abandonOrders.value.filter(item => item.status == 'abandoned' && item.is_repeat_customer == 1)
-            break;
-            
-            case 'guest-user': filteredOrders = abandonOrders.value.filter(item => item.status == 'abandoned' && item.is_repeat_customer == 0)
-            break;
-            
-            case 'recovered-order': filteredOrders = abandonOrders.value.filter(item => item.status == 'recovered')
-            break;
-
-            case 'carts-without-customer-details': filteredOrders = abandonOrders.value.map((item) => item.customer_phone)
-            break;
-
-        }
-        return filteredOrders
+        let filteredOrders = [];
+    
+        switch (selectedFilter.value) {
+            case 'all':
+                filteredOrders = abandonOrders.value;
+                break;
+    
+            case 'registered-user':
+                filteredOrders = abandonOrders.value.filter(
+                    (item) => item.status === 'abandoned' && item.is_repeat_customer >= 1
+                );
+                break;
+    
+            case 'guest-user':
+                filteredOrders = abandonOrders.value.filter(
+                    (item) => item.status === 'abandoned' && item.is_repeat_customer == 0
+                );
+                break;
+    
+            case 'recovered-order':
+                filteredOrders = abandonOrders.value.filter(
+                    (item) => item.status === 'recovered'
+                );
+                break;
+    
+            case 'carts-without-customer-details':
+                filteredOrders = abandonOrders.value.filter(
+                    (item) => !item.customer_phone && !item.customer_email
+                );
+                break;
+    
+            default:
+                filteredOrders = abandonOrders.value; // Fallback to all orders
+                break;
+        }    
+        return filteredOrders;
     })
+    
 
     const getDashboardData = computed(() => {
         const data = {
@@ -78,6 +96,7 @@ export const useMissingOrder = () => {
 
     const handleFilter = (item) => {
         selectedFilter.value = item.slug
+        loadAbandonedOrder()
     }
 
     const loadAbandonedOrder = async (date?: {start_date: string, end_date: string}) => {

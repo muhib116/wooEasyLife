@@ -109,8 +109,10 @@ class TrackAbandonCart {
                 'image'       => wp_get_attachment_url($product->get_image_id()),
                 'product_url' => get_permalink($product->get_id()),
                 'quantity'    => $cart_item['quantity'],
-                'price'       => $cart_item['line_total'],
+                'price'       => $product->get_price(), // Unit price of the product
+                'total_price' => $cart_item['line_total'], // Total price for the quantity of this item
             ];
+            
             $total_value += $cart_item['line_total'];
         }
     
