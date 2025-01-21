@@ -40,16 +40,9 @@ Dashboard:
 ✅ kun kun user otp dise ar kun kun user otp dey nai tar akta list dekhate hobe phone number soho
 ✅ abandoned order
 
-👉🏻 License add na kora thakle alert dekhate hobe (license key add na kora thakle sob somoy license add er page a redirect kore dibe)
+✅ License add na kora thakle alert dekhate hobe (license key add na kora thakle sob somoy license add er page a redirect kore dibe)
 
 
-
-/**
-api/get-user -> GET // will return authenticate user object
-api/validate-token -> GET // will return true if valid.
-api/steadfast/check-balance -> POST
-checkCourierBalance
-license activation alert
 --------
 
 

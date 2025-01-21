@@ -1,6 +1,6 @@
 import { createOrUpdateWPOptionItem, getWPOptionItem } from "@/api"
 import { getUser } from "@/remoteApi"
-import { onMounted, ref, watchEffect } from "vue"
+import { onMounted, ref } from "vue"
 import { useRouter } from 'vue-router'
 
 const licenseKey = ref('')
@@ -76,17 +76,6 @@ export const useLicense = (mountable: boolean = true) => {
                 type: ''
             }
         }, 4000)
-    }
-
-
-    if(licenseKey.value) {
-        watchEffect(() => {
-            if(!isValidLicenseKey.value){
-                router.push({
-                    name: 'license'
-                })
-            }
-        })
     }
 
     if(mountable){

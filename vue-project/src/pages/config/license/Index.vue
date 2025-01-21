@@ -39,9 +39,6 @@
                 class="ml-auto"
                 :class="isValidLicenseKey ? '!bg-green-500' : '!bg-red-500'"
                 @onClick="(btn) => {
-                    if(isValidLicenseKey){
-                        licenseKey = ''
-                    }
                     ActivateLicense(btn)
                 }"
             >
