@@ -41,6 +41,7 @@ Dashboard:
 ✅ abandoned order
 
 ✅ License add na kora thakle alert dekhate hobe (license key add na kora thakle sob somoy license add er page a redirect kore dibe)
+✅ bearar token validation from remote server
 
 
 --------
@@ -50,7 +51,6 @@ Dashboard:
 => courier config a error handle korte hobe
 => code snippet (header, footer)
 
-👉🏻 bearar token validation from remote server
 👉🏻 alertBox position fixed kore dekhate hobe
 👉🏻 cost management
 
@@ -59,5 +59,9 @@ Dashboard:
 👉🏻 help center
 👉🏻 request a feature
 👉🏻 Cash management (Low priority) from funnel liner
+
+
 👉🏻 Marketing Tools (Low priority) from funnel liner
-👉🏻 Microsoft Clarity
+   1. Microsoft Clarity
+   2. Pixel
+   3. GTag manager
