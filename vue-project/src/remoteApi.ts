@@ -2,15 +2,9 @@ import axios from "axios";
 import { createSMSHistory, getWPOption } from "./api";
 import { computed, ref } from "vue";
 import { normalizePhoneNumber } from "./helper";
+import { useLicense } from "@/pages/config/license/UseLicense";
 
-export const licenseKey = ref("");
-
-// load license key start--------
-export const loadLicenseKey = async () => {
-  const { data } = await getWPOption({ option_name: "license" });
-  licenseKey.value = data.key;
-};
-// load license key end----------
+const { licenseKey, isValidLicenseKey } = useLicense(false);
 
 export const remoteApiBaseURL = "https://api.wpsalehub.com/api";
 const headers = computed(() => ({
@@ -24,28 +18,36 @@ export const checkFraudCustomer = async (payload: {
   phone?: string;
   data?: { id: number; phone: string }[];
 }) => {
-  const _payload = {
-    data: payload?.data?.map((item) => ({
-      id: item.id,
-      phone: normalizePhoneNumber(item.phone),
-    })),
-  };
-  const { data } = await axios.post(
-    `${remoteApiBaseURL}/fraud-check`,
-    _payload,
-    headers.value
-  );
-  return data;
+  try {
+    const _payload = {
+      data: payload?.data?.map((item) => ({
+        id: item.id,
+        phone: normalizePhoneNumber(item.phone),
+      })),
+    };
+    const { data } = await axios.post(
+      `${remoteApiBaseURL}/fraud-check`,
+      _payload,
+      headers.value
+    );
+    return data;
+  } catch (err) {
+    isValidLicenseKey.value = err.status != 401;
+  }
 };
 
 // courier start
 export const getCourierCompanies = async () => {
-  const { data } = await axios.post(
-    `${remoteApiBaseURL}/courier/list`,
-    null,
-    headers.value
-  );
-  return data;
+  try {
+    const { data } = await axios.post(
+      `${remoteApiBaseURL}/courier/list`,
+      null,
+      headers.value
+    );
+    return data;
+  } catch (err) {
+    isValidLicenseKey.value = err.status != 401;
+  }
 };
 
 export const saveCourierConfig = async (payload: {
@@ -55,21 +57,29 @@ export const saveCourierConfig = async (payload: {
   secret_key: "string";
   is_active: boolean;
 }) => {
-  const { data } = await axios.post(
-    `${remoteApiBaseURL}/courier/save-configuration`,
-    payload,
-    headers.value
-  );
-  return data;
+  try {
+    const { data } = await axios.post(
+      `${remoteApiBaseURL}/courier/save-configuration`,
+      payload,
+      headers.value
+    );
+    return data;
+  } catch (err) {
+    isValidLicenseKey.value = err.status != 401;
+  }
 };
 
 export const getCourierConfig = async () => {
-  const { data } = await axios.post(
-    `${remoteApiBaseURL}/courier/get-configuration`,
-    null,
-    headers.value
-  );
-  return data;
+  try {
+    const { data } = await axios.post(
+      `${remoteApiBaseURL}/courier/get-configuration`,
+      null,
+      headers.value
+    );
+    return data;
+  } catch (err) {
+    isValidLicenseKey.value = err.status != 401;
+  }
 };
 
 export const steadfastBulkOrderCreate = async (payload: {
@@ -81,35 +91,47 @@ export const steadfastBulkOrderCreate = async (payload: {
     cod_amount: number | string;
   }[];
 }) => {
-  const { data } = await axios.post(
-    `${remoteApiBaseURL}/steadfast/create-bulk-order`,
-    payload,
-    headers.value
-  );
-  return data;
+  try {
+    const { data } = await axios.post(
+      `${remoteApiBaseURL}/steadfast/create-bulk-order`,
+      payload,
+      headers.value
+    );
+    return data;
+  } catch (err) {
+    isValidLicenseKey.value = err.status != 401;
+  }
 };
 
 export const steadfastStatusCheck = async (payload: {
-  consignment_ids: string
+  consignment_ids: string;
 }) => {
-  const { data } = await axios.post(
-    `${remoteApiBaseURL}/steadfast/check-status`,
-    payload,
-    headers.value
-  )
-  return data
-}
+  try {
+    const { data } = await axios.post(
+      `${remoteApiBaseURL}/steadfast/check-status`,
+      payload,
+      headers.value
+    );
+    return data;
+  } catch (err) {
+    isValidLicenseKey.value = err.status != 401;
+  }
+};
 
 export const steadfastBulkStatusCheck = async (payload: {
-  consignment_ids: string[]
+  consignment_ids: string[];
 }) => {
-  const { data } = await axios.post(
-    `${remoteApiBaseURL}/steadfast/bulk-check-status`,
-    payload,
-    headers.value
-  )
-  return data
-}
+  try {
+    const { data } = await axios.post(
+      `${remoteApiBaseURL}/steadfast/bulk-check-status`,
+      payload,
+      headers.value
+    );
+    return data;
+  } catch (err) {
+    isValidLicenseKey.value = err.status != 401;
+  }
+};
 // courier end
 
 // sms integration start
@@ -118,18 +140,22 @@ export const sendSMS = async (payload: {
   content: string;
   status?: string;
 }) => {
-  const { data } = await axios.post(
-    `${remoteApiBaseURL}/sms/send`,
-    payload,
-    headers.value
-  );
-  await createSMSHistory({
-    phone_number: payload.phone,
-    message: payload.content,
-    status: data.data.response_code == 202 ? payload.status || "" : "failed",
-    error_message: data.data.error_message,
-  });
-  return data;
+  try {
+    const { data } = await axios.post(
+      `${remoteApiBaseURL}/sms/send`,
+      payload,
+      headers.value
+    );
+    await createSMSHistory({
+      phone_number: payload.phone,
+      message: payload.content,
+      status: data.data.response_code == 202 ? payload.status || "" : "failed",
+      error_message: data.data.error_message,
+    });
+    return data;
+  } catch (err) {
+    isValidLicenseKey.value = err.status != 401;
+  }
 };
 // sms integration end
 
@@ -137,20 +163,41 @@ export const checkCourierStatus = async (
   partnerName: string,
   consignmentId: string
 ) => {
-  const { data } = await axios.post(
-    `${remoteApiBaseURL}/${partnerName.toLowerCase()}/check-status`,
-    {
-      consignment_id: consignmentId,
-    },
-    headers.value
-  );
-  return data;
+  try {
+    const { data } = await axios.post(
+      `${remoteApiBaseURL}/${partnerName.toLowerCase()}/check-status`,
+      {
+        consignment_id: consignmentId,
+      },
+      headers.value
+    );
+    return data;
+  } catch (err) {
+    isValidLicenseKey.value = err.status != 401;
+  }
 };
 
 export const checkCourierBalance = async () => {
-  const { data } = await axios.get(
-    `${remoteApiBaseURL}/check-courier-balance`,
-    headers.value
-  );
-  return data;
+  try {
+    const { data } = await axios.get(
+      `${remoteApiBaseURL}/check-courier-balance`,
+      headers.value
+    );
+    return data;
+  } catch (err) {
+    isValidLicenseKey.value = err.status != 401;
+  }
+};
+
+export const getUser = async () => {
+  try {
+    const { data } = await axios.get(
+      `${remoteApiBaseURL}/get-user`,
+      headers.value
+    );
+    isValidLicenseKey.value = true
+    return data;
+  } catch (err) {
+    isValidLicenseKey.value = err.status != 401;
+  }
 };

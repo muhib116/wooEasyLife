@@ -40,24 +40,26 @@
                 </template>
             </Pagination>
 
-            <Table.Table v-if="orders.length">
-                <TableHeader />
-                <Table.TBody>
-                    <TableRow 
-                        v-for="(order, index) in orders"
-                        :key="index"
-                        :order="order"
-                    />
-                </Table.TBody>
-                <TableHeader />
-            </Table.Table>
+            <div class="min-h-[300px]">
+                <Table.Table v-if="orders?.length">
+                    <TableHeader />
+                    <Table.TBody>
+                        <TableRow 
+                            v-for="(order, index) in orders"
+                            :key="index"
+                            :order="order"
+                        />
+                    </Table.TBody>
+                    <TableHeader />
+                </Table.Table>
+                <MessageBox
+                    v-else-if="!isLoading"
+                    title="No record found!"
+                    type="info"
+                    class="mx-4"
+                />
+            </div>
 
-            <MessageBox
-                v-else-if="!isLoading"
-                title="No record found!"
-                type="info"
-                class="mx-4"
-            />
 
             <TableHeaderAction class="items-center">
                 <Pagination

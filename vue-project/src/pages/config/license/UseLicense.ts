@@ -1,8 +1,13 @@
-import { createOrUpdateWPOption, createOrUpdateWPOptionItem, getWPOption, getWPOptionItem } from "@/api"
-import { onMounted, ref } from "vue"
+import { createOrUpdateWPOptionItem, getWPOptionItem } from "@/api"
+import { getUser } from "@/remoteApi"
+import { onMounted, ref, watchEffect } from "vue"
+import { useRouter } from 'vue-router'
 
-export const useLicense = () => {
-    const licenseKey = ref('')
+const licenseKey = ref('')
+const isValidLicenseKey = ref(true)
+
+export const useLicense = (mountable: boolean = true) => {
+    const router = useRouter()
     const isLoading = ref(false)
     const alertMessage = ref({
         message: '',
@@ -12,6 +17,10 @@ export const useLicense = () => {
     const loadLicenseKey = async () => {
         const { data } = await getWPOptionItem({option_name: 'license', key: 'key'})
         licenseKey.value = data.value
+
+        await getUser() //this function calling to check authentication, read inside the code
+
+        return licenseKey.value
     }
 
     const ActivateLicense = async (btn) => {
@@ -23,6 +32,8 @@ export const useLicense = () => {
                 key: 'key',
                 value: licenseKey.value
             })
+            await loadLicenseKey()
+
             alertMessage.value = {
                 message: 'Your license successfully activated!',
                 type: 'success'
@@ -67,20 +78,35 @@ export const useLicense = () => {
         }, 4000)
     }
 
-    onMounted(async () => {
-        try {
-            isLoading.value = true
-            await loadLicenseKey()
-        } finally {
-            isLoading.value = false
-        }
-    })
+
+    if(licenseKey.value) {
+        watchEffect(() => {
+            if(!isValidLicenseKey.value){
+                router.push({
+                    name: 'license'
+                })
+            }
+        })
+    }
+
+    if(mountable){
+        onMounted(async () => {
+            if(!licenseKey.value) return
+            try {
+                isLoading.value = true
+                await loadLicenseKey()
+            } finally {
+                isLoading.value = false
+            }
+        })
+    }
     return {
         isLoading,
         licenseKey,
+        alertMessage,
+        isValidLicenseKey,
         loadLicenseKey,
-        deactivateLicense,
         ActivateLicense,
-        alertMessage
+        deactivateLicense,
     }
 }

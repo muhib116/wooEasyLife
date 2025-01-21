@@ -13,6 +13,7 @@ import CourierView from '@/pages/config/courier/Index.vue'
 import CustomStatusView from '@/pages/config/customStatus/Index.vue'
 import CustomBlackList from '@/pages/config/customBlackList/Index.vue'
 import MarketingTools from '@/pages/config/marketing-tools/Index.vue'
+import middleware from './middleware'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -92,4 +93,4 @@ const router = createRouter({
   ],
 })
 
-export default router
+export default middleware(router)

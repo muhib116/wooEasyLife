@@ -14,9 +14,10 @@
                     v-for="(item, index) in actionBtns"
                     :key="index"
                 >
-                    <div class="relative">
+                    <div class="relative"
+                        v-if="item.active"
+                    >
                         <Button.Native
-                            v-if="item.active"
                             :title="item.title"
                             class="py-1 px-2 border shadow rounded-sm"
                             :style="{

@@ -6,6 +6,8 @@
         class="fixed z-[999999] inset-x-0"
     />
 
+    =={{ String(isValidLicenseKey) }}++
+
     <div
         v-if="configData"
         class="print:bg-transparent bg-gray-100 min-h-screen print:pb-0 pb-10 text-gray-600"
@@ -29,12 +31,11 @@
 
 <script setup lang="ts">
     import { Navigation, Loader, MessageBox } from '@components'
-    import { onBeforeMount, provide, ref } from 'vue'
-    import { getWPOption } from '@/api'
-    import { loadLicenseKey } from '@/remoteApi'
-    import { useCourier } from '@/pages/config/courier/useCourier.ts'
-    import { useNotification } from './useNotification.ts'
+    import { onBeforeMount, provide } from 'vue'
+    import { useCourier } from '@/pages/config/courier/useCourier'
+    import { useNotification } from './useNotification'
     import { useLayout } from './useLayout'
+    import { useLicense } from '@/pages/config/license/UseLicense'
 
     const isDevelopmentMode =  import.meta.env.DEV
     const _useCourierConfig = useCourier()
@@ -46,12 +47,13 @@
         loadConfig
     } = _useLayout
 
+    const { isValidLicenseKey } = useLicense()
 
 
     onBeforeMount(async () => {
-        await loadLicenseKey()
+        // await loadLicenseKey()
         await loadConfig()
-        await loadCourierConfigData()
+        // await loadCourierConfigData()
     })
     
     const _useNotification = useNotification()
