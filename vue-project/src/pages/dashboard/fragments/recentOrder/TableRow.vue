@@ -281,7 +281,7 @@
 </template>
 
 <script setup lang="ts">
-    import { Table, Icon, Badge, Modal, Button } from '@components'
+    import { Table, Icon, Modal } from '@components'
     import { inject, ref } from 'vue'
     import Address from '@/pages/orders/fragments/fragments/address/Index.vue'
     import { baseUrl } from '@/api'
@@ -296,8 +296,7 @@
 
     const {
         setActiveOrder,
-        setSelectedOrder,
-        selectedOrders
+        setSelectedOrder
     } = inject('useOrders', {})
 
     const toggleModel = ref(false)
