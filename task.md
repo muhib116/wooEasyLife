@@ -59,6 +59,7 @@ Dashboard:
 👉🏻 help center
 👉🏻 request a feature
 👉🏻 Cash management (Low priority) from funnel liner
+👉🏻 bangladeshi payment method
 
 
 👉🏻 Marketing Tools (Low priority) from funnel liner

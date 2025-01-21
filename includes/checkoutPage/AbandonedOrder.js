@@ -68,9 +68,9 @@ const updateAbandonedData = async (payload) => {
 
       // Check if the request was successful
       if (result.success) {
-        console.log("Session ID:", result.data.session_id);
+        // console.log("Session ID:", result?.data?.session_id);
       } else {
-        console.error("Error:", result.data);
+        // console.error("Error:", result?.data);
       }
     } catch (error) {
       console.error("Fetch error:", error);

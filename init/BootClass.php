@@ -28,12 +28,12 @@ class BootClass {
     public function wel_add_menu() {
         add_menu_page(
             'WEL',
-            'Woo Life Changer',
+            'WooLifeChanger',
             'manage_options',
             'woo-life-changer',
             [$this, 'wel_render_admin_page'],
-            'dashicons-smiley',
-            100
+            'dashicons-admin-site-alt',
+            6
         );
     }
 

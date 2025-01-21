@@ -1,16 +1,15 @@
 <?php
 /**
- * Plugin Name: WooEasyLife
- * Plugin URI: https://example.com/wooeasylife
- * Description: **WooEasyLife is a custom plugin for enhancing WooCommerce functionality.
- * Version: 1.0.1
+ * Plugin Name: Woo Life Changer
+ * Plugin URI: https://wpsalehub.com
+ * Description: "Woo Life Changer" is a custom plugin designed to enhance WooCommerce functionality with features like bulk SMS, fraud detection, OTP validation, and much more.
+ * Version: 1.1.0
  * Author: Muhibbullah Ansary
- * Author URI: https://example.com
- * License: GPL-2.0+
- * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain: wooeasylife
+ * Author URI: https://wpsalehub.com
+ * Text Domain: woo-life-changer
  * Domain Path: /languages
  */
+
 
 // Exit if accessed directly.
 if (! defined('ABSPATH')) {

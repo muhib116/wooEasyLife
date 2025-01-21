@@ -4,6 +4,7 @@
         class="group"
         :class="`status-${order.status}`"
     >
+        <Table.Td>{{ index+1 }}</Table.Td>
         <Table.Td
             @click="setSelectedOrder(order)"  
         >
@@ -289,6 +290,7 @@
     import Notes from '@/pages/orders/fragments/fragments/notes/Index.vue'
 
     defineProps<{
+        index: number
         order: object
     }>()
 

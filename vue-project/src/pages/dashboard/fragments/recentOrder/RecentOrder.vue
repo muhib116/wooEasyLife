@@ -1,9 +1,29 @@
 <template>
     <Card.Native class="relative">
-        <Heading
-            title="Recent Orders"
-            class="mb-2"
-        />
+        <div class="flex justify-between gap-4 mb-2">
+            <Heading
+                title="Recent Orders"
+            />
+
+            <!-- loadTopSellingProduct -->
+            <label class="font-light border px-2 py-1 rounded-sm">
+                <select 
+                    class="outline-none bg-transparent !border-none focus:outline-none w-14"
+                    v-model="orderLimit"
+                    @change="loadRecentOrders(orderLimit)"
+                >
+                    <option>Select limit</option>
+                    <option
+                        v-for="(option, index) in orderLimitOptions"
+                        :key="index"
+                        :value="option.id"
+                    >
+                        {{ option.title }}
+                    </option>
+                </select>
+            </label>
+        </div>
+
         <Loader
             class="absolute left-1/2 -translate-x-1/2 top-[200px] z-40"
             :active="isLoading"
@@ -18,6 +38,7 @@
             />
             <Table.Table v-else-if="!isLoading && !activeOrder">
                 <Table.THead class="whitespace-nowrap">
+                    <Table.Th>#SL</Table.Th>
                     <Table.Th>Order Info</Table.Th>
                     <Table.Th>Delivery History</Table.Th>
                     <Table.Th>Delivery Partner</Table.Th>
@@ -30,9 +51,10 @@
                 </Table.THead>
                 <Table.TBody>
                     <TableRow 
-                        v-for="order in recentOrders"
+                        v-for="(order, index) in recentOrders"
                         :key="order.id"
                         :order="order"
+                        :index="index"
                     />
                 </Table.TBody>
             </Table.Table>
@@ -50,7 +72,10 @@
 
     const {
         isLoading,
-        recentOrders
+        recentOrders,
+        orderLimit,
+        loadRecentOrders,
+        orderLimitOptions
     } = useRecentOrder()
     const _useOrders = useOrders()
     const {
