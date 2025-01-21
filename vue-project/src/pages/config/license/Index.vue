@@ -1,23 +1,42 @@
 <template>
-    <MessageBox
-        :title="alertMessage.message"
-        :type="alertMessage.type"
-    />
-    <h3 class="text-xl font-semibold text-gray-900 mb-3">
-        Configure your license
-    </h3>
     <Card.Native class="relative min-h-[200px] !py-10">
+        <MessageBox
+            class="absolute z-50 inset-x-0 top-0"
+            :title="alertMessage.message"
+            :type="alertMessage.type"
+        />
+
+        <MessageBox
+            v-if="!isValidLicenseKey"
+            class="!text-lg"
+            title="Don't have a license key? We're here to help! Contact us to get your key."
+            type="warning"
+        />
+
+
+        <Heading
+            title="Get Started with Your License Key Today"
+            subtitle="Activate Your License Key to Unlock Full Access"
+        />
+        
+        <br/>
+        <br/>
+
         <Loader
             :active="isLoading"
             class="absolute inset-x-1/2 -translate-x-1/2 z-20"
         />
-        <div class="flex gap-6 items-center mb-6">
-            <span class="font-bold">Enter License Key</span>
-            <Input.Native
-                class="border px-3 py-2 rounded-sm max-w-[300px] w-full bg-transparent"
+
+        <div 
+            class="grid gap-4 items-end mb-10 p-5 rounded"
+            :class="isValidLicenseKey ? 'bg-green-50 border border-green-400' : 'bg-red-50/50 border border-red-400'"
+        >
+            <Input.Primary
+                label="Enter License Key"
                 v-model="licenseKey"
             />
             <Button.Primary 
+                class="ml-auto"
                 :class="isValidLicenseKey ? '!bg-green-500' : '!bg-red-500'"
                 @onClick="(btn) => {
                     if(isValidLicenseKey){
@@ -29,39 +48,39 @@
                 {{ isValidLicenseKey ? 'Deactivate License' : 'Activate License' }}
             </Button.Primary>
         </div>
-
-        <p>If you don't have License key, please contact with us to get your license key.</p>
-        <div class="mt-4 space-y-1 flex gap-6">
-            <div class="flex items-center gap-3">
+        
+        <hr class="mt-10 mb-6" />
+        <div class="space-y-1 flex justify-center gap-6 -mb-2 text-lg">
+            <a
+                class="flex items-center gap-3"
+                href="tel:+8801789909958"
+            >
                 <Icon
-                    class="bg-blue-500 text-white p-1"
+                    class="bg-blue-500 text-white p-1 rounded-full shadow"
                     name="PhPhone"
-                    size="30"
+                    size="35"
                 />
-                01789-909958
-            </div>
+                +880 1789-909958
+            </a>
 
-            <div class="flex items-center gap-3">
+            <a 
+                class="flex items-center gap-3"
+                href="https://wa.me/+8801789909958"
+                target="_blank"
+            >
                 <Icon
-                    class="bg-green-500 text-white p-1"
+                    class="bg-green-500 text-white p-1 rounded-full shadow"
                     name="PhWhatsappLogo"
-                    size="30"
+                    size="35"
                 />
-                01789-909958
-            </div>
+                +880 1789-909958
+            </a>
         </div>
-        <!-- v-if="licenseKey && !isLoading" -->
-        <Button.Primary 
-            class="!bg-red-500 mt-6"
-            @onClick="deactivateLicense"
-        >
-            Deactivate License
-        </Button.Primary>
     </Card.Native>
 </template>
 
 <script setup lang="ts">
-    import { Card, Input, Icon, Loader, Button, MessageBox } from '@components'
+    import { Card, Input, Icon, Loader, Button, MessageBox, Heading } from '@components'
     import { useLicense } from './UseLicense'
 
     const {
