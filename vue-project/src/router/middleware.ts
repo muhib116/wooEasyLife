@@ -14,13 +14,6 @@ export default function (router)
         if(!licenseKey.value) {
             await loadLicenseKey()
         }
-
-        // Skip validation for the license page
-        if (to.name === 'license') {
-            return next();
-        }
-
-
         
         if (!isValidLicenseKey.value) {
             // Redirect to the license route if the key is invalid or missing

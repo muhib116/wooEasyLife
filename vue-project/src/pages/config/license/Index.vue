@@ -18,11 +18,15 @@
                 v-model="licenseKey"
             />
             <Button.Primary 
-                v-if="!isLoading"
-                class="!bg-green-500"
-                @onClick="ActivateLicense"
+                :class="isValidLicenseKey ? '!bg-green-500' : '!bg-red-500'"
+                @onClick="(btn) => {
+                    if(isValidLicenseKey){
+                        licenseKey = ''
+                    }
+                    ActivateLicense(btn)
+                }"
             >
-                Activate License
+                {{ isValidLicenseKey ? 'Deactivate License' : 'Activate License' }}
             </Button.Primary>
         </div>
 
@@ -65,6 +69,7 @@
         licenseKey,
         deactivateLicense,
         ActivateLicense,
-        alertMessage
+        alertMessage,
+        isValidLicenseKey
     } = useLicense()
 </script>

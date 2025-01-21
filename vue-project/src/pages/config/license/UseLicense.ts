@@ -30,13 +30,13 @@ export const useLicense = (mountable: boolean = true) => {
             await createOrUpdateWPOptionItem({
                 option_name: 'license',
                 key: 'key',
-                value: licenseKey.value
+                value: licenseKey.value.trim()
             })
             await loadLicenseKey()
 
             alertMessage.value = {
-                message: 'Your license successfully activated!',
-                type: 'success'
+                message: licenseKey.value.trim() != '' ? 'Your license activated!' : 'License removed!',
+                type: licenseKey.value.trim() != '' ? 'success' : 'danger'
             }
         } finally {
             isLoading.value = false
