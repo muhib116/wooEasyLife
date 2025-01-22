@@ -51,7 +51,6 @@ Dashboard:
 => courier config a error handle korte hobe
 => code snippet (header, footer)
 
-👉🏻 alertBox position fixed kore dekhate hobe
 👉🏻 cost management
 
 👉🏻 make the system responsive
@@ -62,6 +61,8 @@ Dashboard:
 👉🏻 bangladeshi payment method
 
 
+👉🏻 table clear korar somoy meta key jei gulu ase clean kore dite hobe jemon _courier_data
+👉🏻 Order list filter by courier partner
 👉🏻 Send message for abandoned order customer
 👉🏻 Marketing Tools (Low priority) from funnel liner
    1. Microsoft Clarity

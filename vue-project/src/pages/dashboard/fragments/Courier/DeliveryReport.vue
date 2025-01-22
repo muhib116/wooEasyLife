@@ -1,14 +1,14 @@
 <template>
     <DashboardCard
         title="Delivery Report"
-        @dateChange="loadCourierData"
+        @dateChange="loadCourierDeliveryData"
     >
         <Loader
             :active="isLoading"
             class="bg-white/90 rounded-full p-[2px] absolute inset-1/2 -translate-x-1/2"
         />
         <div class="h-[320px]">
-            Delivery Report
+            {{ courierDeliveryData }}
         </div>
     </DashboardCard>
 </template>
@@ -19,11 +19,11 @@
         Loader
     } from '@components'
     import DashboardCard from '../DashboardCard.vue'
-    import { useCourier } from './UseCourier'
+    import { useDeliveryReport } from './useDeliveryReport'
 
     const {
         isLoading,
-        courierData,
-        loadCourierData
-    } = useCourier()
+        courierDeliveryData,
+        loadCourierDeliveryData 
+    } = useDeliveryReport()
 </script>

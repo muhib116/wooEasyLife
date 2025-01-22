@@ -9,7 +9,6 @@ export const useBalance = () => {
         try {
             isLoading.value = true
             const { data } = await checkCourierBalance()
-            console.log(data)
             courierBalanceData.value = data
         } finally {
             isLoading.value = false

@@ -36,6 +36,7 @@
             </Card.Native>
 
             <Card.Native
+                v-if="false"
                 class="!bg-[#eb2128] text-white !pl-0 grid grid-cols-[40%_60%] gap-4 overflow-hidden border border-[#eb2128]"
             >
                 <div class="bg-white p-2 -mt-6 -mb-6 flex items-center">
@@ -56,6 +57,7 @@
             </Card.Native>
 
             <Card.Native
+                v-if="false"
                 class="!bg-[#0066c5] text-white !pl-0 grid grid-cols-[40%_60%] gap-4 overflow-hidden border border-[#0066c5]"
             >
                 <div class="bg-white p-2 -mt-6 -mb-6 flex items-center">
@@ -76,6 +78,7 @@
             </Card.Native>
 
             <Card.Native
+                v-if="false"
                 class="!bg-[#fb4347] text-white !pl-0 grid grid-cols-[40%_60%] gap-4 overflow-hidden border border-[#fb4347]"
             >
                 <div class="bg-white p-2 -mt-6 -mb-6 flex items-center">

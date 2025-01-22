@@ -64,3 +64,13 @@ export const getSalesProgressForTarget = async (payload: {
     })
     return data
 }
+
+export const getCourierDeliveryReport = async (payload: {
+    start_date: string | Date
+    end_date: string | Date
+}) => {
+    const { data } = await axios.get(`${localApiBaseURL}/orders-grouped-by-status`, {
+        params: payload
+    })
+    return data
+}

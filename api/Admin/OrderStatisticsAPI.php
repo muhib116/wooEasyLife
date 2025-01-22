@@ -64,10 +64,41 @@ class OrderStatisticsAPI extends WP_REST_Controller
             ],
         ]);
 
+
         register_rest_route(__API_NAMESPACE, '/sales-progress-by-date', [
             'methods'             => 'GET',
             'callback'            => [$this, 'get_sales_progress_by_date'],
             'permission_callback' => api_permission_check(),
+            'args' => [
+                'start_date' => [
+                    'required' => false,
+                    'type' => 'string',
+                    'description' => 'Start date in YYYY-MM-DD format.',
+                ],
+                'end_date' => [
+                    'required' => false,
+                    'type' => 'string',
+                    'description' => 'End date in YYYY-MM-DD format.',
+                ],
+            ]
+        ]);
+
+        register_rest_route(__API_NAMESPACE, '/orders-grouped-by-status', [
+            'methods' => 'GET',
+            'callback' => [$this, 'get_orders_grouped_by_status'],
+            'permission_callback' => api_permission_check(),
+            'args' => [
+                'start_date' => [
+                    'required' => false,
+                    'type' => 'string',
+                    'description' => 'Start date in YYYY-MM-DD format.',
+                ],
+                'end_date' => [
+                    'required' => false,
+                    'type' => 'string',
+                    'description' => 'End date in YYYY-MM-DD format.',
+                ],
+            ]
         ]);
     }
 
@@ -662,5 +693,105 @@ class OrderStatisticsAPI extends WP_REST_Controller
             ],
         ], 200);
     }
-
+ 
+    
+    public function get_orders_grouped_by_status(WP_REST_Request $request) {
+        global $wpdb;
+    
+        // Retrieve optional start_date and end_date from the request
+        $start_date = $request->get_param('start_date');
+        $end_date = $request->get_param('end_date');
+    
+        // Validate date format
+        if ($start_date && !strtotime($start_date)) {
+            return new WP_REST_Response([
+                'status'  => 'error',
+                'message' => 'Invalid start date format. Use YYYY-MM-DD.',
+            ], 400);
+        }
+    
+        if ($end_date && !strtotime($end_date)) {
+            return new WP_REST_Response([
+                'status'  => 'error',
+                'message' => 'Invalid end date format. Use YYYY-MM-DD.',
+            ], 400);
+        }
+    
+        // Define the table name and meta key
+        $table_name = $wpdb->prefix . 'wc_orders_meta';
+        $meta_key = '_courier_data';
+    
+        // Query all rows with the specified meta_key
+        $results = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT order_id, meta_value FROM {$table_name} WHERE meta_key = %s AND meta_value != ''",
+                $meta_key
+            ),
+            ARRAY_A
+        );
+    
+        if (empty($results)) {
+            return new WP_REST_Response([
+                'status'  => 'error',
+                'message' => 'No courier data found.',
+            ], 400);
+        }
+    
+        // Process results to group by status and filter by date range
+        $grouped_data = [];
+        foreach ($results as $row) {
+            $courier_data = maybe_unserialize($row['meta_value']);
+    
+            // Skip if unserialized data is empty or malformed
+            if (empty($courier_data) || !is_array($courier_data)) {
+                continue;
+            }
+    
+            // Extract relevant fields
+            $status = $courier_data['status'] ?? 'unknown';
+            $partner = strtolower($courier_data['partner'] ?? 'unknown');
+            $updated_at = $courier_data['updated_at'] ?? null;
+    
+            // Skip if updated_at is outside the date range
+            if (!empty($start_date) && !empty($end_date)) {
+                if (empty($updated_at) || $updated_at < $start_date . ' 00:00:00' || $updated_at > $end_date . ' 23:59:59') {
+                    continue;
+                }
+            }
+    
+            // Initialize the status group if not already present
+            if (!isset($grouped_data[$status])) {
+                $grouped_data[$status] = [
+                    'total_parcel' => 0,
+                    'partners'     => [],
+                ];
+            }
+    
+            // Increment total parcel count
+            $grouped_data[$status]['total_parcel']++;
+    
+            // Add unique partners, ignoring case sensitivity
+            if (!in_array($partner, $grouped_data[$status]['partners'], true)) {
+                $grouped_data[$status]['partners'][] = $partner;
+            }
+        }
+    
+        // Capitalize partner names before returning
+        foreach ($grouped_data as &$data) {
+            $data['partners'] = array_map('ucfirst', $data['partners']);
+        }
+    
+        if (empty($grouped_data)) {
+            return new WP_REST_Response([
+                'status'  => 'error',
+                'message' => 'No courier data found for the given date range.',
+            ], 400);
+        }
+    
+        return new WP_REST_Response([
+            'status'  => 'success',
+            'message' => 'Orders grouped by status retrieved successfully.',
+            'data'    => $grouped_data,
+        ], 200);
+    }    
 }
