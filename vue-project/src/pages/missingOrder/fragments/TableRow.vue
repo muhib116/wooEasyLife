@@ -27,9 +27,9 @@
           {{ item.customer_phone }}
         </div>
 
-        <div v-if="item.customer_email">
+        <div v-if="item.customer_email" class="truncate">
           <span class="font-semibold text-orange-500"> 📨 Email: </span>
-          {{ item.customer_email }}
+          {{ item.customer_email || 'n/a' }}
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 <template>
-    <p>
+    <p class="mb-4 font-medium text-blue-500 bg-blue-100/70 py-1 px-4">
         If the cart remains inactive for 25 minutes, it will be considered an abandoned order.
     </p>
     <Table.Table>
