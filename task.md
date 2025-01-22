@@ -62,6 +62,7 @@ Dashboard:
 👉🏻 bangladeshi payment method
 
 
+👉🏻 Send message for abandoned order customer
 👉🏻 Marketing Tools (Low priority) from funnel liner
    1. Microsoft Clarity
    2. Pixel

@@ -14,15 +14,16 @@
       </Button.Outline>
     </template>
 
-    <div class="grid md:grid-cols-2 xl:grid-cols-[3fr_3fr_3fr] 2xl:grid-cols-[3fr_3fr_4fr] gap-6">
+    <div class="grid md:grid-cols-2 2xl:grid-cols-[3fr_3fr_4fr] gap-6">
       <Card title="Daily" :chartData="chartData.daily" />
       <Card title="Monthly" :chartData="chartData.monthly" />
-      <Card
-        title="Date wise"
-        :chartData="chartData.dateWise"
-        hideTargetAchieve
-      />
     </div>
+    <br />
+    <Card
+      title="Date wise"
+      :chartData="chartData.dateWise"
+      hideTargetAchieve
+    />
   </DashboardCard>
 
   <Modal
@@ -39,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { Loader, Button, Icon, Modal } from "@components";
+import { Button, Icon, Modal } from "@components";
 import DashboardCard from "../DashboardCard.vue";
 import { provide, ref } from "vue";
 import SalesTargetForm from "./SalesTargetForm.vue";
@@ -48,13 +49,7 @@ import { useSalesTarget } from "./useSalesTarget";
 
 const _useSalesTarget = useSalesTarget();
 const {
-  isLoading,
-  endDate,
-  salesTargetData,
-  dailyTargetAmount,
   chartData,
-  saveSalesTarget,
-  loadSalesTargetData,
 } = _useSalesTarget;
 
 const toggleModal = ref(false);

@@ -1,4 +1,7 @@
 <template>
+    <p>
+        If the cart remains inactive for 25 minutes, it will be considered an abandoned order.
+    </p>
     <Table.Table>
         <Table.THead>
             <Table.Th class="truncate">Customer Info</Table.Th>

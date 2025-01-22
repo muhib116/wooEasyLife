@@ -15,7 +15,7 @@
                 class="!bg-[#693d84]"
             />
             <Card.Native
-                class="bg-[#02b795] text-white !pl-0 grid grid-cols-[40%_60%] gap-4 overflow-hidden border border-[#02b795]"
+                class="!bg-[#02b795] text-white !pl-0 grid grid-cols-[40%_60%] gap-4 overflow-hidden border border-[#02b795]"
             >
                 <div class="bg-white p-2 -mt-6 -mb-6 flex items-center">
                     <img
@@ -36,7 +36,7 @@
             </Card.Native>
 
             <Card.Native
-                class="bg-[#eb2128] text-white !pl-0 grid grid-cols-[40%_60%] gap-4 overflow-hidden border border-[#eb2128]"
+                class="!bg-[#eb2128] text-white !pl-0 grid grid-cols-[40%_60%] gap-4 overflow-hidden border border-[#eb2128]"
             >
                 <div class="bg-white p-2 -mt-6 -mb-6 flex items-center">
                     <img
@@ -56,7 +56,7 @@
             </Card.Native>
 
             <Card.Native
-                class="bg-[#0066c5] text-white !pl-0 grid grid-cols-[40%_60%] gap-4 overflow-hidden border border-[#0066c5]"
+                class="!bg-[#0066c5] text-white !pl-0 grid grid-cols-[40%_60%] gap-4 overflow-hidden border border-[#0066c5]"
             >
                 <div class="bg-white p-2 -mt-6 -mb-6 flex items-center">
                     <img
@@ -76,7 +76,7 @@
             </Card.Native>
 
             <Card.Native
-                class="bg-[#fb4347] text-white !pl-0 grid grid-cols-[40%_60%] gap-4 overflow-hidden border border-[#fb4347]"
+                class="!bg-[#fb4347] text-white !pl-0 grid grid-cols-[40%_60%] gap-4 overflow-hidden border border-[#fb4347]"
             >
                 <div class="bg-white p-2 -mt-6 -mb-6 flex items-center">
                     <img

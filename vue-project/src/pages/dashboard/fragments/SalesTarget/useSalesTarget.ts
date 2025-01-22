@@ -41,7 +41,6 @@ export const useSalesTarget = () => {
 
   const endDate = computed(() => {
     let startDate = salesTargetData.value.data?.start_date;
-    console.log({ startDate });
 
     if (typeof startDate === "string" && startDate) {
       startDate = parseISO(startDate); // Convert ISO string to Date object
@@ -111,13 +110,28 @@ export const useSalesTarget = () => {
         yaxis: {
           show: false,
         },
+        labels: ["Achieved", "Target"],
         colors: ["#02b795", "#eb2128"],
         legend: {
           show: false,
         },
         dataLabels: {
-          enabled: false,
+          enabled: true,
         },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: (tooltipItem: {
+                label: string
+                raw: string | number
+              }) => {
+                const label = tooltipItem.label || '';
+                const value = tooltipItem.raw;
+                return `${label}: ${value} items`; // Customize the tooltip here
+              },
+            },
+          }
+        }
       },
       series: [],
     };
@@ -142,10 +156,20 @@ export const useSalesTarget = () => {
 
       if (categories && series?.length) {
         chartData.value.dateWise = merge({}, chartPreset, {
-          type: "bar",
+          type: "area",
           options: {
             xaxis: {
               categories: categories,
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 0,
+                    inverseColors: true,
+                    opacityFrom: 1,
+                    opacityTo: 0.5,
+                    stops: [0, 0, 100]
+                },
             },
           },
           series: [
@@ -153,7 +177,7 @@ export const useSalesTarget = () => {
             {
               name: "Target Sale Amount",
               data: new Array(series[0]?.data?.length || 0).fill(
-                _data?.monthly_target_amount / 30
+                Math.round((_data?.monthly_target_amount / 30))
               ),
             },
           ],

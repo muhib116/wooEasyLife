@@ -31,6 +31,27 @@ const chartData = computed(() => {
         categories: orderSourceData.value?.categories || [],
       },
       colors: ["#39c1a0"],
+      legend: {
+        show: true,
+        formatter: function(seriesName, opts) {
+          // Access the labels using opts and print them
+          const labelIndex = opts.seriesIndex; // Get the current series index
+          const label = opts.w.globals.labels[labelIndex]; // Get the corresponding label
+          return label; // Print the label instead of seriesName
+        },
+      },
+      tooltip: {
+        enabled: true, // Ensure tooltips are enabled
+        custom: function({ series, seriesIndex, dataPointIndex, w }) {
+          // Access the relevant data
+          const label = w.globals.labels[seriesIndex]; // Get the corresponding label
+          const value = series[seriesIndex]; // Get the series value
+          // Return the HTML content for the tooltip
+          return `<div style="padding: 8px; background: #fff; border: 1px solid #ccc; color: black; border-radius: 4px;">
+                    <strong>${label.replace('-', ' ')}</strong>: ${value}
+                  </div>`;
+        },
+      },
     },
     series: orderSourceData.value?.series?.length
       ? orderSourceData.value?.series[0].data

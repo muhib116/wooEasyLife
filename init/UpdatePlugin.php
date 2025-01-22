@@ -101,9 +101,12 @@ class UpdatePlugin
                 'tested'        => $plugin_info['tested'] ?? '',
                 'requires_php'  => $plugin_info['requires_php'] ?? '',
                 'sections'      => [
-                    'description' => $plugin_info['sections']['description'] ?? '',
-                    'changelog'   => $plugin_info['sections']['changelog'] ?? '',
-                    'author'   => 'Muhibbullah author...',
+                    'description' => isset($plugin_info['sections']['description'])
+                                        ? wpautop(wp_kses_post($plugin_info['sections']['description']))
+                                        : '',
+                    'changelog'   => isset($plugin_info['sections']['changelog'])
+                                    ? wpautop(wp_kses_post($plugin_info['sections']['changelog']))
+                                    : '',
                 ],
                 'icons' => [
                     '1x' => $plugin_info['icons']['1x'] ?? '',

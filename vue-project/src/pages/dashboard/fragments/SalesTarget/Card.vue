@@ -7,19 +7,22 @@
 
     <Heading :title="title" titleClass="!text-base" />
     <hr class="my-2" />
-    <div class="items-center pt-4 gap-4">
+    <div 
+      class="items-center grid pt-4 gap-4"
+      :class="hideTargetAchieve ? '' : 'grid-cols-2'"
+    >
       <div
-        class="h-[200px]"
+        class="min-h-[200px] max-h-[300px]"
         :class="{ 'mb-4 flex w-full justify-center': !hideTargetAchieve }"
       >
         <Chart.Native
-          :width="hideTargetAchieve ? '100%' : '220'"
-          :height="hideTargetAchieve ? '280' : '180'"
+          :width="hideTargetAchieve ? '100%' : '250'"
+          :height="hideTargetAchieve ? '100%' : '250'"
           :chartData="chartData"
         />
       </div>
 
-      <div v-if="!hideTargetAchieve" class="grid grid-cols-2 gap-4 text-black">
+      <div v-if="!hideTargetAchieve" class="grid grid-cols-1 gap-4 text-black">
         <div class="bg-green-100 border-l-4 border-green-500 px-3 py-1">
           <h3>Achievement</h3>
           <h4 class="font-semibold">
@@ -39,7 +42,7 @@
 
 <script setup lang="ts">
 import { Heading, Chart, Loader } from "@components";
-import { inject } from "vue";
+import { computed, inject } from "vue";
 
 defineProps<{
   title: string;

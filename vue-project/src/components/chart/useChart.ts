@@ -35,7 +35,7 @@ export const useChart = () =>
                     shadeIntensity: 0,
                     inverseColors: true,
                     opacityFrom: 1,
-                    opacityTo: 0.9,
+                    opacityTo: 1,
                     stops: [0, 0, 100]
                 },
             },
