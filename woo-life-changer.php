@@ -78,6 +78,7 @@ if (!class_exists('WooEasyLife')) :
 
             // Save a flag to indicate the table was created
             if (empty(get_option(__PREFIX.'plugin_installed'))) update_option(__PREFIX.'plugin_installed', true);
+            
             $this->handleDBTable->create();
             $this->create_static_statuses();
             $this->save_default_config();

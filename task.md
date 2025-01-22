@@ -61,6 +61,7 @@ Dashboard:
 👉🏻 bangladeshi payment method
 
 
+*** steadfast chara baki courier config gulu apadoto commented thakbe
 👉🏻 table clear korar somoy meta key jei gulu ase clean kore dite hobe jemon _courier_data
 👉🏻 Order list filter by courier partner
 👉🏻 Send message for abandoned order customer

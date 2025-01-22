@@ -7,5 +7,9 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    function ({ addVariant }) {
+      addVariant('not-empty', '&:not(:empty)'); // Custom variant for not(:empty)
+    },
+  ],
 }

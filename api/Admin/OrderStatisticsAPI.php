@@ -783,9 +783,10 @@ class OrderStatisticsAPI extends WP_REST_Controller
     
         if (empty($grouped_data)) {
             return new WP_REST_Response([
-                'status'  => 'error',
-                'message' => 'No courier data found for the given date range.',
-            ], 400);
+                'status'  => 'success',
+                'message' => 'Orders grouped by status retrieved successfully.',
+                'data'    => new \stdClass()
+            ], 200);
         }
     
         return new WP_REST_Response([
