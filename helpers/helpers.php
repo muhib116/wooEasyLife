@@ -361,3 +361,19 @@ function update_courier_data_for_order($order_id, $courier_data) {
 
     return $courier_data;
 }
+
+
+function delete_wc_orders_meta_by_key($meta_key) {
+    global $wpdb;
+
+    // Table name
+    $table_name = $wpdb->prefix . 'wc_orders_meta';
+
+    // Execute the delete query
+    $wpdb->query(
+        $wpdb->prepare(
+            "DELETE FROM {$table_name} WHERE meta_key = %s",
+            $meta_key
+        )
+    );
+}

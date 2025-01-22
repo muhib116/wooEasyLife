@@ -78,7 +78,7 @@ if (!class_exists('WooEasyLife')) :
 
             // Save a flag to indicate the table was created
             if (empty(get_option(__PREFIX.'plugin_installed'))) update_option(__PREFIX.'plugin_installed', true);
-            
+
             $this->handleDBTable->create();
             $this->create_static_statuses();
             $this->save_default_config();
@@ -99,6 +99,8 @@ if (!class_exists('WooEasyLife')) :
                 if (get_option(__PREFIX.'plugin_installed') !== false) delete_option(__PREFIX.'plugin_installed');
                 if (get_option(__PREFIX.'custom_order_statuses') !== false) delete_option(__PREFIX.'custom_order_statuses');
                 $this->handleDBTable->delete();
+                delete_wc_orders_meta_by_key('_courier_data');
+                delete_wc_orders_meta_by_key('_status_history');
             }
         }
 
