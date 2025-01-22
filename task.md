@@ -42,17 +42,18 @@ Dashboard:
 
 ✅ License add na kora thakle alert dekhate hobe (license key add na kora thakle sob somoy license add er page a redirect kore dibe)
 ✅ bearar token validation from remote server
+✅ table clear korar somoy meta key jei gulu ase clean kore dite hobe jemon _courier_data
+✅ Courier Delivery Report
 
 
 --------
 
 
-=> Courier Delivery Report
 => courier config a error handle korte hobe
 => code snippet (header, footer)
 
 👉🏻 cost management
-
+👉🏻 Chatting module
 👉🏻 make the system responsive
 👉🏻 tutorial
 👉🏻 help center
@@ -62,7 +63,6 @@ Dashboard:
 
 
 *** steadfast chara baki courier config gulu apadoto commented thakbe
-👉🏻 table clear korar somoy meta key jei gulu ase clean kore dite hobe jemon _courier_data
 👉🏻 Order list filter by courier partner
 👉🏻 Send message for abandoned order customer
 👉🏻 Marketing Tools (Low priority) from funnel liner
