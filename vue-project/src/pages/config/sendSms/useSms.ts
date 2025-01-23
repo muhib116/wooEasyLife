@@ -8,6 +8,7 @@ import { ref } from "vue"
 import List from './List.vue'
 import Create from './Create.vue'
 import { sendSMS } from "@/remoteApi"
+import { normalizePhoneNumber } from "@/helper"
 
 export const useSms = () => {
     const isLoading = ref(false)
@@ -121,9 +122,9 @@ export const useSms = () => {
                 status: status
             })
 
-            const phoneNumbers = data.map(item => item.billing_address.phone)
+            const phoneNumbers = data.map(item => normalizePhoneNumber(item.billing_address.phone))
 
-            form.value.phone_numbers = [...new Set(phoneNumbers)].join(',')
+            form.value.phone_numbers = [...new Set(phoneNumbers)].join(',').replaceAll(',,', ',')
         } finally {
             isLoading.value = false
         }

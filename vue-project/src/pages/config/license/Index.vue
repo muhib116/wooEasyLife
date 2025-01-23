@@ -37,9 +37,9 @@
             />
             <Button.Primary 
                 class="ml-auto"
-                :class="isValidLicenseKey ? '!bg-green-500' : '!bg-red-500'"
+                :class="!isValidLicenseKey ? '!bg-green-500' : '!bg-red-500'"
                 @onClick="(btn) => {
-                    ActivateLicense(btn)
+                    ActivateLicense(btn, isValidLicenseKey)
                 }"
             >
                 {{ isValidLicenseKey ? 'Deactivate License' : 'Activate License' }}

@@ -23,8 +23,12 @@ export const useLicense = (mountable: boolean = true) => {
         return licenseKey.value
     }
 
-    const ActivateLicense = async (btn) => {
+    const ActivateLicense = async (btn: {isLoading: boolean}, shouldDisabled: boolean = false) => {
         try {
+            if(shouldDisabled){
+                licenseKey.value = ''
+            }
+
             isLoading.value = true
             btn.isLoading = true
             await createOrUpdateWPOptionItem({

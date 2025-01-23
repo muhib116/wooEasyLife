@@ -37,7 +37,7 @@
                 placeholder="Enter your phone numbers, separated by comma."
             />
             <p class="font-semibold -mt-3 text-[10px] text-sky-500">
-                Total phone number(s) - {{ form.phone_numbers.replace(/^,+|,+$/g, '').split(',')?.length || 0 }}
+                Total phone number(s): {{ form.phone_numbers.replace(/^,+|,+$/g, '').split(',')?.length || 0 }}
             </p>
 
             <Textarea.Native
