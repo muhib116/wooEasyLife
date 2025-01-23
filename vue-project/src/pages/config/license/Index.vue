@@ -6,13 +6,10 @@
             :type="alertMessage.type"
         />
 
-        <MessageBox
-            v-if="!isValidLicenseKey"
-            class="!text-lg"
-            title="Don't have a license key? We're here to help! Contact us to get your key."
-            type="warning"
+        <LicenseAlert
+            :isValidLicenseKey="isValidLicenseKey"
+            :licenseKey="licenseKey"
         />
-
 
         <Heading
             title="Get Started with Your License Key Today"
@@ -72,6 +69,19 @@
                 />
                 +880 1789-909958
             </a>
+
+            <a 
+                class="flex items-center gap-3"
+                href="https://www.facebook.com/profile.php?id=61571827960541"
+                target="_blank"
+            >
+                <Icon
+                    class="bg-[#0766ff] text-white p-1 rounded-full shadow"
+                    name="PhFacebookLogo"
+                    size="35"
+                />
+                Visit our facebook page
+            </a>
         </div>
     </Card.Native>
 </template>
@@ -79,6 +89,7 @@
 <script setup lang="ts">
     import { Card, Input, Icon, Loader, Button, MessageBox, Heading } from '@components'
     import { useLicense } from './UseLicense'
+    import LicenseAlert from './LicenseAlert.vue'
 
     const {
         isLoading,
