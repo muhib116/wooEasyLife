@@ -1,3 +1,3 @@
 <template>
-    Marketing Tools
+    Marketing Tools: Coming soon! 🎉
 </template>

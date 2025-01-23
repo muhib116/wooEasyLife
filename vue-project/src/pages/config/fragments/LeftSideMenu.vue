@@ -71,9 +71,9 @@
         },
         {
             to: {
-                name: "recharge"
+                name: "sms-recharge"
             },
-            title: 'Recharge',
+            title: 'SMS Recharge',
             iconName: 'PhCreditCard'
         },
         {

@@ -69,3 +69,20 @@ Dashboard:
    1. Microsoft Clarity
    2. Pixel
    3. GTag manager
+
+
+
+
+phone => string
+content => string // sms content
+
+endpoint: 
+/api/sms/send -> POST
+api/sms/recharge -> post
+{amount: 100}
+
+api/sms/balance -> get
+api/sms/recharge-history -> get
+api/sms/use-history -> get
+start_date?: string
+end_date?: string

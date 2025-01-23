@@ -8,7 +8,7 @@
             class="bg-white/90 rounded-full p-[2px] absolute inset-1/2 -translate-x-1/2"
         />
         <div 
-            v-if="Object.keys(courierDeliveryData).length"
+            v-if="courierDeliveryData && Object.keys(courierDeliveryData).length"
             class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 3xl:grid-cols-5 gap-3 md:gap-4 xl:gap-6 !text-white relative"
         >
             <Card.Stylist

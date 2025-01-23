@@ -44,47 +44,47 @@ const router = createRouter({
       component: ConfigView,
       children: [
         {
-          path: '/license',
+          path: 'license',
           name: 'license',
           component: LicenseView
         },
         {
-          path: '/sms-config',
+          path: 'sms-config',
           name: 'smsConfig',
           component: SMSConfigView
         },
         {
-          path: '/send-sms',
+          path: 'send-sms',
           name: 'sendSms',
           component: SendSmsView
         },
         {
-          path: '/recharge',
-          name: 'recharge',
+          path: 'sms-recharge',
+          name: 'sms-recharge',
           component: RechargeView
         },
         {
-          path: '/integration',
+          path: 'integration',
           name: 'integration',
           component: IntegrationView
         },
         {
-          path: '/courier',
+          path: 'courier',
           name: 'courier',
           component: CourierView
         },
         {
-          path: '/custom-status',
+          path: 'custom-status',
           name: 'customStatus',
           component: CustomStatusView
         },
         {
-          path: '/custom-black-list',
+          path: 'custom-black-list',
           name: 'customBlackList',
           component: CustomBlackList
         },
         {
-          path: '/marketing-tools',
+          path: 'marketing-tools',
           name: 'marketing-tools',
           component: MarketingTools
         },
