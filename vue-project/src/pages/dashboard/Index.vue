@@ -2,6 +2,7 @@
     <Layout>
         <Container>
             <div class="grid gap-4 md:gap-6 lg:gap-8 font-light">
+                <CustomerData />
                 <SalesSummary />
                 <OrderStatistics />
 
@@ -43,8 +44,9 @@
     import OrderCycleTime from './fragments/OrderCycleTime/Index.vue'
     import Courier from './fragments/Courier/Index.vue'
     import SalesTarget from './fragments/SalesTarget/Index.vue'
+    import CustomerData from './fragments/CustomerData/Index.vue'
 
-    const _useDashboard = useDashboard(true)
+    const _useDashboard = useDashboard()
 
     provide('useDashboard', _useDashboard)
 </script>

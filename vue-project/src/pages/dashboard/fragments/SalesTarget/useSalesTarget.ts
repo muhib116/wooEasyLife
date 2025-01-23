@@ -171,6 +171,9 @@ export const useSalesTarget = () => {
                     stops: [0, 0, 100]
                 },
             },
+            dataLabels: {
+                enabled: false
+            },
           },
           series: [
             series[0],

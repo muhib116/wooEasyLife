@@ -74,3 +74,13 @@ export const getCourierDeliveryReport = async (payload: {
     })
     return data
 }
+
+export const getCustomerData = async (payload: {
+    start_date: string | Date
+    end_date: string | Date
+}) => {
+    const { data } = await axios.get(`${localApiBaseURL}/customer-data`, {
+        params: payload
+    })
+    return data
+}

@@ -12,8 +12,6 @@ export const useDeliveryReport = () => {
         try {
             isLoading.value = true
             const { data } = await getCourierDeliveryReport(date)
-            console.log(data)
-
             courierDeliveryData.value = data
         } finally {
             isLoading.value = false

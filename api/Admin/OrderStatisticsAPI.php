@@ -100,6 +100,12 @@ class OrderStatisticsAPI extends WP_REST_Controller
                 ],
             ]
         ]);
+
+        register_rest_route(__API_NAMESPACE, '/customer-data', [
+            'methods'             => 'GET',
+            'callback'            => [$this, 'get_customer_data_by_type'],
+            'permission_callback' => api_permission_check()
+        ]);
     }
 
     /**
@@ -795,4 +801,115 @@ class OrderStatisticsAPI extends WP_REST_Controller
             'data'    => $grouped_data,
         ], 200);
     }    
+
+    public function get_customer_data_by_type(WP_REST_Request $request) {
+        // Retrieve date range parameters from the request
+        $start_date = $request->get_param('start_date');
+        $end_date = $request->get_param('end_date');
+    
+        // Validate and sanitize dates
+        if ($start_date && $end_date) {
+            $start_date = sanitize_text_field($start_date);
+            $end_date = sanitize_text_field($end_date);
+    
+            if (!strtotime($start_date) || !strtotime($end_date)) {
+                return new WP_REST_Response([
+                    'status'  => 'error',
+                    'message' => 'Invalid date format. Use YYYY-MM-DD.',
+                ], 400);
+            }
+        } else {
+            // Default date range (last 30 days)
+            $start_date = date('Y-m-d', strtotime('-30 days'));
+            $end_date = date('Y-m-d');
+        }
+    
+        // Initialize result arrays
+        $returning_series = [];
+        $new_series = [];
+        $categories = [];
+    
+        $total_returning_orders = 0;
+        $total_new_orders = 0;
+    
+        // Loop through dates and fetch order data
+        $current_date = strtotime($start_date);
+        $end_date_timestamp = strtotime($end_date);
+    
+        while ($current_date <= $end_date_timestamp) {
+            $date = date('Y-m-d', $current_date);
+            $categories[] = $date;
+    
+            // Fetch orders for this date
+            $args = [
+                'status'        => ['wc-completed', 'wc-processing'],
+                'date_created'  => $date . ' 00:00:00...' . $date . ' 23:59:59',
+                'return'        => 'ids',
+            ];
+            $orders = wc_get_orders($args);
+    
+            $returning_count = 0;
+            $new_count = 0;
+    
+            foreach ($orders as $order_id) {
+                $order = wc_get_order($order_id);
+                $customer_id = $order->get_customer_id();
+    
+                // Determine if the customer is new or returning
+                if ($customer_id > 0) {
+                    $previous_orders = wc_get_orders([
+                        'customer_id'  => $customer_id,
+                        'status'       => ['wc-completed', 'wc-processing'],
+                        'date_created' => '<' . $order->get_date_created()->date('Y-m-d H:i:s'),
+                        'return'       => 'ids',
+                    ]);
+    
+                    if (!empty($previous_orders)) {
+                        $returning_count++;
+                    } else {
+                        $new_count++;
+                    }
+                } else {
+                    // Guest orders are considered "new" customers
+                    $new_count++;
+                }
+            }
+    
+            $returning_series[] = $returning_count;
+            $new_series[] = $new_count;
+    
+            $total_returning_orders += $returning_count;
+            $total_new_orders += $new_count;
+    
+            $current_date = strtotime('+1 day', $current_date);
+        }
+    
+        $total_orders = $total_returning_orders + $total_new_orders;
+    
+        // Calculate percentages
+        $new_order_percentage = $total_orders > 0 ? ($total_new_orders / $total_orders) * 100 : 0;
+        $returning_order_percentage = $total_orders > 0 ? ($total_returning_orders / $total_orders) * 100 : 0;
+    
+        return new WP_REST_Response([
+            'status' => 'success',
+            'data'   => [
+                'total_order'                 => $total_orders,
+                'total_returning_customer_order' => $total_returning_orders,
+                'total_new_customer_order'       => $total_new_orders,
+                'new_order_percentage'        => round($new_order_percentage, 2),
+                'returning_order_percentage'  => round($returning_order_percentage, 2),
+                'series' => [
+                    [
+                        'name' => 'Returning order',
+                        'data'  => $returning_series,
+                    ],
+                    [
+                        'name' => 'New order',
+                        'data'  => $new_series,
+                    ],
+                ],
+                'categories' => $categories,
+            ],
+        ], 200);
+    }
 }

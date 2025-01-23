@@ -44,6 +44,7 @@ Dashboard:
 ✅ bearar token validation from remote server
 ✅ table clear korar somoy meta key jei gulu ase clean kore dite hobe jemon _courier_data
 ✅ Courier Delivery Report
+✅ How many orders came from returning customers?
 
 
 --------
@@ -51,6 +52,7 @@ Dashboard:
 
 => courier config a error handle korte hobe
 => code snippet (header, footer)
+=> Cart Abandonment Reasons: Collect insights on why customers abandoned their carts.
 
 
 👉🏻 cost management
@@ -71,6 +73,44 @@ Dashboard:
    1. Microsoft Clarity
    2. Pixel
    3. GTag manager
+
+
+=====new feature-=======================
+Order Tags: Add tags to orders for easier categorization (e.g., VIP, Urgent, Gift).
+Live Chat Support: Provide a chatbox for instant support or queries.
+
+2. Inventory Management-------
+Low Stock Alerts: Notify admins when stock levels reach a critical threshold.
+Batch Inventory Updates: Update stock quantities in bulk for efficiency.
+Inventory Aging Report: Identify products that are slow-moving or outdated.
+
+3. Automated Notifications
+SMS & Email Updates: Send customers updates for order status changes, shipping details, and more.
+Abandoned Cart Alerts: Notify customers who abandon their carts with discounts or reminders.
+Delivery Alerts: Notify customers when their order is out for delivery or delivered.
+
+4. Customer Management
+Customer Segmentation: Categorize customers based on purchase history, frequency, or spending.
+Customer Blacklist: Block problematic customers (based on phone, IP, etc.).
+Wishlist Integration: Allow customers to save products they want to buy later.
+Loyalty Program: Implement rewards or points for repeat customers.
+
+6. Analytics and Reporting
+Sales Dashboard: Display daily, weekly, and monthly sales with visual charts.
+Top Products Report: Identify best-selling products to focus marketing efforts.
+Customer Insights: Analyze repeat vs. new customers, purchase frequency, and average order value.
+Ad Performance: Track how ads (e.g., Google Ads or Facebook) impact sales.
+
+12. Staff Management
+Role-Based Permissions: Allow different levels of access for admins, staff, and other team members.
+Activity Logs: Track who performed specific actions on the platform.
+Task Assignment: Assign order fulfillment tasks to specific team members.
+
+
+
+
+
+
 
 
 
