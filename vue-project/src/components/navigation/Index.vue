@@ -4,7 +4,7 @@
       <div class="flex -mb-[2px]">
         <a href="#" class="flex items-center">
           <img
-            class="w-auto h-10"
+            class="w-auto max-w-[120px]"
             :src="`${remoteApiBaseURL}/app-logo`"
             alt=""
           />
