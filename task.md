@@ -52,6 +52,7 @@ Dashboard:
 => courier config a error handle korte hobe
 => code snippet (header, footer)
 
+
 👉🏻 cost management
 👉🏻 Chatting module
 👉🏻 make the system responsive
@@ -62,6 +63,7 @@ Dashboard:
 👉🏻 bangladeshi payment method
 
 
+👉🏻 jei sokol jay gay sms er option ahce sob jagay sms balance show korte hobe balance na thakle balance recharge er jonno button dite hobe and option hide kore dite hobe jate configur korte na pare
 *** steadfast chara baki courier config gulu apadoto commented thakbe
 👉🏻 Order list filter by courier partner
 👉🏻 Send message for abandoned order customer
