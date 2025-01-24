@@ -6,7 +6,7 @@ class Frontend_Class_Register{
     {
         new \WooEasyLife\Frontend\OTPValidatorForOrderPlace();
         new \WooEasyLife\Frontend\IP_block();
-        new \WooEasyLife\Frontend\Phone_number_block();
+        new \WooEasyLife\Frontend\OrderBlockForBlockedUser();
         new \WooEasyLife\Frontend\Order_limit();
         new \WooEasyLife\Frontend\TrackAbandonCart();
     }

@@ -4,7 +4,7 @@ namespace WooEasyLife\Frontend;
 class Order_limit {
     function __construct()
     {
-        add_action('woocommerce_checkout_order_processed', [$this, 'enforce_order_limit']);
+        add_action('woocommerce_after_checkout_validation', [$this, 'enforce_order_limit']);
     }
 
     public function enforce_order_limit() {
@@ -19,7 +19,7 @@ class Order_limit {
 
             // Query to count orders for the given email or phone number
             $args = [
-                'billing_phone' => $billing_phone,
+                'billing_phone' => normalize_phone_number($billing_phone),
                 'post_type'   => 'shop_order',
                 'post_status' => 'wc-processing', // You can also include other statuses if needed
                 'return'      => 'ids',
@@ -30,14 +30,6 @@ class Order_limit {
         
             // Check if the user has exceeded the order limit
             if ($order_count >= $order_limit) {
-                // wc_add_notice(
-                //     sprintf(
-                //         __('You have reached the order limit of %d orders. Please contact our support team for assistance.', 'your-text-domain'),
-                //         $order_limit
-                //     ),
-                //     'error'
-                // );
-        
                 // Prevent the order from being processed
                 throw new \Exception(
                     sprintf(

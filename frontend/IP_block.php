@@ -5,17 +5,13 @@ class IP_block {
     public function __construct()
     {
         add_action('init', [$this, 'block_non_bangladeshi_users']);
-        add_action('woocommerce_checkout_order_processed', [$this, 'ip_block']);
     }
 
     public function block_non_bangladeshi_users() {
         global $config_data;
 
-        if (
-            isset($config_data['only_bangladeshi_ip']) && 
-            $config_data['only_bangladeshi_ip'] && 
-            !current_user_can('manage_options')
-        ) {
+        if ($config_data['only_bangladeshi_ip']) {
+            
             // Get the user's IP address
             $user_ip = $_SERVER['REMOTE_ADDR'];
             $user_ip  = $user_ip == '::1' ? '23.106.249.37' : $user_ip; 
@@ -38,38 +34,6 @@ class IP_block {
                         array('response' => 403)
                     );
                 }
-            }
-        }
-    
-    }
-
-    public function ip_block() {
-        global $config_data;
-
-        if($config_data["ip_block"]){
-            // Get the customer's IP address
-            $customer_ip = sanitize_text_field($_SERVER['REMOTE_ADDR']);
-        
-            // Check if the IP is block-listed
-            $ip_block_listed = get_block_data_by_type($customer_ip, 'ip');
-        
-            if ($ip_block_listed) {
-                // Add an error notice for WooCommerce checkout
-                // wc_add_notice(
-                //     sprintf(
-                //         __('Your IP address <strong>%s</strong> is restricted and cannot be used to place an order. Please contact our support team for assistance.', 'your-text-domain'),
-                //         esc_html($customer_ip)
-                //     ),
-                //     'error'
-                // );
-        
-                // Stop the order processing by throwing an exception
-                throw new \Exception(
-                    sprintf(
-                        __('Your IP address <strong style="font-weight:bold;color: #508ef5;">%s</strong> is restricted and cannot be used to place an order. Please contact our support team for assistance.', 'your-text-domain'),
-                        esc_html($customer_ip)
-                    )
-                );
             }
         }
     }

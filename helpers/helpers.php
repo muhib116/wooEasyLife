@@ -197,25 +197,28 @@ function getCustomerSuccessRate($billing_phone) {
     return 'No data found.';
 }
 
+
 function get_block_data_by_type($value, $type = 'phone_number') {
     global $wpdb;
-    $table_name = $wpdb->prefix . __PREFIX . 'block_list';
+    $table_name = $wpdb->prefix . __PREFIX . 'block_list'; // Adjusted to match standard table prefix
 
     // Validate the type to prevent SQL injection
-    $allowed_types = ['phone_number', 'ip'];
+    $allowed_types = ['phone_number', 'ip', 'email'];
     if (!in_array($type, $allowed_types, true)) {
         return false; // Invalid type
     }
 
+    // Normalize the phone number if the type is 'phone_number'
+    $value = $type === 'phone_number' ? normalize_phone_number(trim($value)) : trim($value);
+
+    // Query to check if the value exists in the block list
     $query = $wpdb->prepare(
-        "SELECT * FROM {$table_name} WHERE type = %s AND REPLACE(REPLACE(REPLACE(ip_or_phone, '+880', '0'), '-', ''), ' ', '') = %s",
+        "SELECT 1 FROM {$table_name} WHERE type = %s AND REPLACE(REPLACE(REPLACE(ip_or_phone, '+880', '0'), '-', ''), ' ', '') = %s",
         $type,
         $value
     );
 
-    $result = $wpdb->get_row($query, ARRAY_A);
-
-    return $result ? true : false;
+    return (bool) $wpdb->get_var($query); // Return true if a match is found
 }
 
 
