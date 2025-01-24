@@ -111,6 +111,7 @@
         handleFraudCheck, 
         handleCourierEntry,
         handlePhoneNumberBlock, 
+        handleEmailBlock, 
         handleIPBlock,
         selectedOrders,
         showInvoices,
@@ -163,6 +164,14 @@
             bg: '#E82561',
             color: '#fff',
             method: handlePhoneNumberBlock
+        },
+        {
+            icon: 'PhEnvelopeSimple',
+            title: 'Block Email',
+            active: configData.value.email_block,
+            bg: '#444',
+            color: '#fff',
+            method: handleEmailBlock
         },
         {
             icon: 'PhUserList',

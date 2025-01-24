@@ -101,6 +101,7 @@
     import { getOrderList } from '@/api'
     import { Table, Button, Loader, Icon } from '@components'
     import OrderDetails from './OrderDetails.vue'
+    import { normalizePhoneNumber } from '@/helper'
 
     const props = defineProps<{
         item: object
@@ -112,7 +113,7 @@
     onMounted(async () => {
         const payload = {
             status: props.item.status,
-            billing_phone: props.item.billing_address.phone
+            billing_phone: normalizePhoneNumber(props.item.billing_address.phone)
         }
         const { data } = await getOrderList(payload)
         orders.value = data

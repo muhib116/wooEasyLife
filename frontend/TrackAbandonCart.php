@@ -195,7 +195,11 @@ class TrackAbandonCart {
 
         // Query WooCommerce for all completed orders with the same billing phone
         $args = [
-            'billing_phone' => $billing_phone,
+            [
+                'key'     => 'billing_phone',
+                'value'   => $billing_phone, // Match any phone number containing the input
+                'compare' => 'LIKE',
+            ],
             'status'        => 'wc-completed',
             'type'          => 'shop_order',
             'limit'         => -1,

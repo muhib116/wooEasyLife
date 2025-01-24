@@ -7,10 +7,9 @@
             :active="isLoading"
             class="bg-white/90 rounded-full p-[2px] absolute inset-1/2 -translate-x-1/2"
         />
-            
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             <Card.Stylist
-                title="50000tk"
+                :title="`${courierBalanceData.total}tk`"
                 subtitle="Total Balance"
                 class="!bg-[#693d84]"
             />
@@ -25,12 +24,11 @@
                 <div>
                     <h3 
                         class="font-black text-xl leading-6 truncate" 
-                        title="5345tk"
                     >
                         {{ courierBalanceData?.steadfast?.balance || 0 }} tk
                     </h3>
                     <h3 class="capitalize mt-1">
-                        Steadfast
+                        Steadfast balance
                     </h3>
                 </div>
             </Card.Native>

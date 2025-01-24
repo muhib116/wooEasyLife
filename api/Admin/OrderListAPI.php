@@ -114,7 +114,11 @@ class OrderListAPI
             'status'        => $status,
             'limit'         => $per_page,
             'page'          => $page,
-            'billing_phone' => $billing_phone,
+            [
+                'key'     => 'billing_phone',
+                'value'   => $billing_phone, // Match any phone number containing the input
+                'compare' => 'LIKE',
+            ],
             'type'          => 'shop_order',
             'paginate'      => true, // Enable pagination
             'orderby' => 'id',
@@ -152,6 +156,7 @@ class OrderListAPI
             // Fetch fraud data from the custom table
             $table_name = $wpdb->prefix . __PREFIX . 'fraud_customers';
             $_billing_phone = $order->get_billing_phone();
+            $_billing_email = $order->get_billing_email();
             $fraud_data = $wpdb->get_row(
                 $wpdb->prepare("SELECT report FROM $table_name WHERE customer_id = %s", normalize_phone_number($_billing_phone)),
                 ARRAY_A
@@ -159,6 +164,7 @@ class OrderListAPI
     
             $ip_block_listed = get_block_data_by_type($customer_ip, 'ip');
             $phone_block_listed = get_block_data_by_type(normalize_phone_number($_billing_phone), 'phone_number');
+            $email_block_listed = get_block_data_by_type($_billing_email, 'email');
             $discount_total = $order->get_discount_total(); // Total discount amount
             $discount_tax = $order->get_discount_tax(); // Discount tax, if any
             $applied_coupons = $order->get_coupon_codes(); // Array of coupon codes
@@ -180,6 +186,7 @@ class OrderListAPI
                 'created_via' => $created_via,
                 'customer_ip'   => $customer_ip,
                 'phone_block_listed' => $phone_block_listed,
+                'email_block_listed' => $email_block_listed,
                 'ip_block_listed' => $ip_block_listed,
                 'discount_total' => $discount_total,
                 'discount_tax' => $discount_tax,

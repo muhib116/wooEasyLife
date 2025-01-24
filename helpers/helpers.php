@@ -213,7 +213,7 @@ function get_block_data_by_type($value, $type = 'phone_number') {
 
     // Query to check if the value exists in the block list
     $query = $wpdb->prepare(
-        "SELECT 1 FROM {$table_name} WHERE type = %s AND REPLACE(REPLACE(REPLACE(ip_or_phone, '+880', '0'), '-', ''), ' ', '') = %s",
+        "SELECT 1 FROM {$table_name} WHERE type = %s AND REPLACE(REPLACE(REPLACE(ip_phone_or_email, '+880', '0'), '-', ''), ' ', '') = %s",
         $type,
         $value
     );
@@ -233,7 +233,7 @@ function get_total_orders_by_billing_phone_and_status($order) {
     }
 
     $args = [
-        'status'    => $order_status, // Specific order status
+        'status'    => 'wc-'.$order_status, // Specific order status
         'return'    => 'objects', // Fetch full order objects
         'type'     => 'shop_order',
         [

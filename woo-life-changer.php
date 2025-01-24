@@ -244,6 +244,7 @@ if (!class_exists('WooEasyLife')) :
                 "clear_data_when_deactivate_plugin" => false,
                 "ip_block" => true,
                 "phone_number_block" => true,
+                "email_block" => true,
                 "place_order_otp_verification" => false,
                 "daily_order_place_limit_per_customer" => 3,
                 "only_bangladeshi_ip" => false,

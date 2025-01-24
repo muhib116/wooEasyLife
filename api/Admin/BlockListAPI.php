@@ -91,16 +91,16 @@ class BlockListAPI extends WP_REST_Controller {
         global $wpdb;
 
         $type = sanitize_text_field($request->get_param('type'));
-        $ip_or_phone = sanitize_text_field($request->get_param('ip_or_phone'));
+        $ip_phone_or_email = sanitize_text_field($request->get_param('ip_phone_or_email'));
         $created_at = current_time('mysql');
         $updated_at = current_time('mysql');
 
         // Check for uniqueness
         $existing_record = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT * FROM {$this->table_name} WHERE type = %s AND ip_or_phone = %s",
+                "SELECT * FROM {$this->table_name} WHERE type = %s AND ip_phone_or_email = %s",
                 $type,
-                $ip_or_phone
+                $ip_phone_or_email
             ),
             ARRAY_A
         );
@@ -118,7 +118,7 @@ class BlockListAPI extends WP_REST_Controller {
             $this->table_name,
             [
                 'type'        => $type,
-                'ip_or_phone' => $ip_or_phone,
+                'ip_phone_or_email' => $ip_phone_or_email,
                 'created_at'  => $created_at,
                 'updated_at'  => $updated_at,
             ],
@@ -143,7 +143,7 @@ class BlockListAPI extends WP_REST_Controller {
             'data'    => [
                 'id'          => $wpdb->insert_id,
                 'type'        => $type,
-                'ip_or_phone' => $ip_or_phone,
+                'ip_phone_or_email' => $ip_phone_or_email,
                 'created_at'  => $created_at,
                 'updated_at'  => $updated_at,
             ],
@@ -167,26 +167,26 @@ class BlockListAPI extends WP_REST_Controller {
         $responses = [];
 
         foreach ($payload as $entry) {
-            if (!isset($entry['type'], $entry['ip_or_phone'])) {
+            if (!isset($entry['type'], $entry['ip_phone_or_email'])) {
                 $responses[] = [
                     'status'  => 'error',
-                    'message' => 'Missing type or ip_or_phone in entry.',
+                    'message' => 'Missing type or ip_phone_or_email in entry.',
                     'entry'   => $entry,
                 ];
                 continue;
             }
 
             $type = sanitize_text_field($entry['type']);
-            $ip_or_phone = sanitize_text_field($entry['ip_or_phone']);
+            $ip_phone_or_email = sanitize_text_field($entry['ip_phone_or_email']);
             $created_at = current_time('mysql');
             $updated_at = current_time('mysql');
 
             // Check for uniqueness
             $existing_record = $wpdb->get_row(
                 $wpdb->prepare(
-                    "SELECT * FROM {$this->table_name} WHERE type = %s AND ip_or_phone = %s",
+                    "SELECT * FROM {$this->table_name} WHERE type = %s AND ip_phone_or_email = %s",
                     $type,
-                    $ip_or_phone
+                    $ip_phone_or_email
                 ),
                 ARRAY_A
             );
@@ -205,7 +205,7 @@ class BlockListAPI extends WP_REST_Controller {
                 $this->table_name,
                 [
                     'type'        => $type,
-                    'ip_or_phone' => $ip_or_phone,
+                    'ip_phone_or_email' => $ip_phone_or_email,
                     'created_at'  => $created_at,
                     'updated_at'  => $updated_at,
                 ],
@@ -232,7 +232,7 @@ class BlockListAPI extends WP_REST_Controller {
                 'data'    => [
                     'id'          => $wpdb->insert_id,
                     'type'        => $type,
-                    'ip_or_phone' => $ip_or_phone,
+                    'ip_phone_or_email' => $ip_phone_or_email,
                     'created_at'  => $created_at,
                     'updated_at'  => $updated_at,
                 ],
@@ -277,15 +277,15 @@ class BlockListAPI extends WP_REST_Controller {
 
         $id = $request->get_param('id');
         $type = sanitize_text_field($request->get_param('type'));
-        $ip_or_phone = sanitize_text_field($request->get_param('ip_or_phone'));
+        $ip_phone_or_email = sanitize_text_field($request->get_param('ip_phone_or_email'));
         $updated_at = current_time('mysql');
 
-        // Check for unique combination of type and ip_or_phone
+        // Check for unique combination of type and ip_phone_or_email
         $existing_entry = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT id FROM {$this->table_name} WHERE type = %s AND ip_or_phone = %s AND id != %d",
+                "SELECT id FROM {$this->table_name} WHERE type = %s AND ip_phone_or_email = %s AND id != %d",
                 $type,
-                $ip_or_phone,
+                $ip_phone_or_email,
                 $id
             )
         );
@@ -301,7 +301,7 @@ class BlockListAPI extends WP_REST_Controller {
             $this->table_name,
             [
                 'type'        => $type,
-                'ip_or_phone' => $ip_or_phone,
+                'ip_phone_or_email' => $ip_phone_or_email,
                 'updated_at'  => $updated_at,
             ],
             ['id' => $id],
@@ -326,7 +326,7 @@ class BlockListAPI extends WP_REST_Controller {
             'data'    => [
                 'id'          => $id,
                 'type'        => $type,
-                'ip_or_phone' => $ip_or_phone,
+                'ip_phone_or_email' => $ip_phone_or_email,
                 'updated_at'  => $updated_at,
             ],
         ], 200);
@@ -369,7 +369,7 @@ class BlockListAPI extends WP_REST_Controller {
                 'enum'        => ['ip', 'phone_number'],
                 'description' => 'Type of the blocked entry (ip or phone_number).',
             ],
-            'ip_or_phone' => [
+            'ip_phone_or_email' => [
                 'required'    => true,
                 'type'        => 'string',
                 'description' => 'IP address or phone number to block.',
@@ -394,10 +394,10 @@ class BlockListAPI extends WP_REST_Controller {
                     'type' => [
                         'required'    => true,
                         'type'        => 'string',
-                        'enum'        => ['phone_number', 'ip'],
+                        'enum'        => ['phone_number', 'email', 'ip'],
                         'description' => 'Type of entry to block (phone_number or ip).',
                     ],
-                    'ip_or_phone' => [
+                    'ip_phone_or_email' => [
                         'required'    => true,
                         'type'        => 'string',
                         'description' => 'The phone number or IP address to block.',

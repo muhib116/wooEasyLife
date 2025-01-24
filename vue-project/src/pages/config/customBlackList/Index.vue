@@ -16,7 +16,7 @@
         <Table.Table v-if="blackListData?.length">
             <Table.THead>
                 <Table.Th>#sl</Table.Th>
-                <Table.Th>Phone/Ip</Table.Th>
+                <Table.Th>Phone/Email/Ip</Table.Th>
                 <Table.Th>Type</Table.Th>
                 <Table.Th>Blocked At</Table.Th>
                 <Table.Th class="text-right">Action</Table.Th>
