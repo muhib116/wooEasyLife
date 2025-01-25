@@ -278,8 +278,9 @@ export const updateAbandonedOrderStatus = async (
     status: string;
   }
 ) => {
+  const timestamp = new Date().getTime(); // Generate a unique timestamp
   const { data } = await axios.put(
-    `${localApiBaseURL}/abandoned-orders/${id}`,
+    `${localApiBaseURL}/abandoned-orders/${id}?nocache=${timestamp}`,
     payload
   );
   return data;

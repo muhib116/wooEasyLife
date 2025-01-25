@@ -1,8 +1,5 @@
-export let baseUrl = ''
-if (location.hostname == 'localhost') {
-    baseUrl = import.meta.env.DEV ? 'http://localhost:8080/wordpress' : location.origin + '/wordpress'
-} else {
-    baseUrl = location.origin
-}
+export const baseUrl = location.hostname === 'localhost'
+    ? (import.meta.env.DEV ? 'http://localhost:8080/wordpress' : window?.wooLifeChanger?.site_url || location.origin)
+    : location.origin;
 
-export const localApiBaseURL = `${baseUrl}/wp-json/wooeasylife/v1`
+export const localApiBaseURL = `${baseUrl}/wp-json/wooeasylife/v1`;

@@ -6,6 +6,7 @@ class BootClass {
     public $manifest;
     public $css_file_name;
     public $js_file_name;
+    public $assets_file_name;
 
     public function __construct()
     {
@@ -13,6 +14,7 @@ class BootClass {
         $this->manifest = json_decode(file_get_contents($this->manifest_path), true);
         $this->css_file_name = $this->manifest['src/main.ts']['css'][0] ?? null;
         $this->js_file_name = $this->manifest['src/main.ts']['file'] ?? null;
+        $this->assets_file_name = $this->manifest['src/main.ts']['assets'][0] ?? null;
 
         add_action('admin_menu', [$this, 'wel_add_menu']);
         add_action('admin_enqueue_scripts', [$this, 'wel_enqueue_scripts']);
@@ -75,14 +77,25 @@ class BootClass {
         }
     
         // Pass data to Vue
-        wp_localize_script('woo-easy-life', 'WELData', [
+        wp_localize_script('woo-easy-life', 'wooLifeChanger', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce'    => wp_create_nonce('wel_nonce'),
+            'dist_url' => plugins_url('vue-project/dist', __DIR__),
+            'site_url' => get_site_url(),
         ]);
+        wp_enqueue_script('woo-easy-life');
     }
 
 
     public function check_woocommerce_installed() {
+
+        if ($this->assets_file_name) {
+            $assets = plugins_url('vue-project/dist/' . $this->assets_file_name, __DIR__);
+            echo '<div class="notice notice-warning is-dismissible">
+                    '.$assets.'
+                  </div>';
+        }
+
         // Check if WooCommerce is active
         if (class_exists('WooCommerce')) {
             return; // WooCommerce is already installed and active

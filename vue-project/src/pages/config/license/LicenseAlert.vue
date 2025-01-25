@@ -1,5 +1,4 @@
 <template>
-    {{ licenseAlertMessage }}
     <MessageBox
         v-if="licenseAlertMessage.message || licenseAlertMessage.title"
         :title="licenseAlertMessage.message || licenseAlertMessage.title"

@@ -38,6 +38,8 @@
     background: #555; 
 }
 
+
+/* wordpress default style overwrite start */
 #woo-easy-life {
     .wp-person a:focus .gravatar, a:focus, a:focus .media-icon img, a:focus .plugin-icon {
         color: inherit;
@@ -68,5 +70,17 @@
         outline: none !important;
     }
 }
-/* wordpress default style overwrite start */
 /* wordpress default style overwrite end */
+
+@media print {
+    #adminmenuwrap, #wpadminbar, #adminmenuback, .notice{
+        display: none !important;
+    }
+    html.wp-toolbar{
+        padding-top: 0 !important;
+    }
+    .toplevel_page_woo-life-changer.folded :is(#wpcontent,#wpfooter){
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+    }
+}

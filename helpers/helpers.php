@@ -1,10 +1,15 @@
 <?php
 function api_permission_check () {
-    // if (!is_user_logged_in() || !current_user_can('manage_options')) {
-    //     wp_die('Access denied. Only admin can access.');
-    //     return;
-    // }
-    return '__return_true';
+    $server_ip = $_SERVER['SERVER_ADDR'];
+    if ($server_ip === '127.0.0.1' || $server_ip === '::1') {
+        // local server
+        return '__return_true';
+    } else {
+        if (!is_user_logged_in() || !current_user_can('manage_options')) {
+            wp_die('Access denied. Only admin can access.');
+            return;
+        }
+    }
 }
 
 function decode_json_if_string($data) {

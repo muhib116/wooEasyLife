@@ -1,9 +1,9 @@
 <template>
     <MessageBox
-        v-if="hasNewOrder"
+        v-if="!!hasNewOrder"
         title="New Order Received 🎉"
-        type="info"
-        class="fixed z-[999999] inset-x-0"
+        type="success"
+        class="fixed z-[999999] bottom-0 right-10"
     />
 
     <div
