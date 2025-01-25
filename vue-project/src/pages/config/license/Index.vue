@@ -1,15 +1,6 @@
 <template>
     <Card.Native class="relative min-h-[200px] !py-10">
-        <MessageBox
-            class="absolute z-50 inset-x-0 top-0"
-            :title="alertMessage.message"
-            :type="alertMessage.type"
-        />
-
-        <LicenseAlert
-            :isValidLicenseKey="isValidLicenseKey"
-            :licenseKey="licenseKey"
-        />
+        <LicenseAlert />
 
         <Heading
             title="Get Started with Your License Key Today"
@@ -29,8 +20,10 @@
             :class="isValidLicenseKey ? 'bg-green-50 border border-green-400' : 'bg-red-50/50 border border-red-400'"
         >
             <Input.Primary
+                type="password"
                 label="Enter License Key"
                 v-model="licenseKey"
+                :disabled="isValidLicenseKey"
             />
             <Button.Primary 
                 class="ml-auto"
@@ -87,16 +80,14 @@
 </template>
 
 <script setup lang="ts">
-    import { Card, Input, Icon, Loader, Button, MessageBox, Heading } from '@components'
+    import { Card, Input, Icon, Loader, Button, Heading } from '@components'
     import { useLicense } from './UseLicense'
     import LicenseAlert from './LicenseAlert.vue'
 
     const {
         isLoading,
         licenseKey,
-        deactivateLicense,
         ActivateLicense,
-        alertMessage,
         isValidLicenseKey
     } = useLicense()
 </script>

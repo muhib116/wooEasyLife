@@ -5,7 +5,7 @@
             :key="index"
             :to="item.to"
             class="cursor-pointer group flex gap-3 items-center px-3.5 py-4 text-sm hover:text-orange-600 hover:bg-orange-50 font-medium rounded-md text-gray-600"
-            exact-active-class="text-orange-600 bg-orange-50"
+            exact-active-class="!text-orange-600 bg-orange-50"
         >
             <Icon
                 :name="item.iconName"

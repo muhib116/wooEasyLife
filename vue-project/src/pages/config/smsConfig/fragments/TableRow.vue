@@ -1,13 +1,8 @@
 <template>
     <Table.Tr>
         <Table.Td>{{ index + 1 }}</Table.Td>
-        <Table.Td class="capitalize">
-            <Switch
-                v-model="item.is_active"
-                @onInput="async () => {
-                    await handleUpdateSMS({isLoading: false}, item)
-                }"
-            />
+        <Table.Td class="capitalize font-bold">
+            {{ item.is_active ? 'Yes' : 'No' }}
         </Table.Td>
         <Table.Td class="capitalize">
             {{ item.status.replace('wc-', '').replaceAll('-', ' ') }}
@@ -60,7 +55,6 @@
 
     const toggleEdit = ref(false)
     const {
-        handleDeleteSMS,
-        handleUpdateSMS
+        handleDeleteSMS
     } = inject('useSmsConfig')
 </script>

@@ -9,7 +9,7 @@
         />
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             <Card.Stylist
-                :title="`${courierBalanceData.total}tk`"
+                :title="`${courierBalanceData?.total || 0}tk`"
                 subtitle="Total Balance"
                 class="!bg-[#693d84]"
             />

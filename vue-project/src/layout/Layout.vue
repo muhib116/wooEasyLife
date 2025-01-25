@@ -33,11 +33,13 @@
     import { useCourier } from '@/pages/config/courier/useCourier'
     import { useNotification } from './useNotification'
     import { useLayout } from './useLayout'
+    import { useLicense } from '@/pages/config/license/UseLicense'
 
     const isDevelopmentMode =  import.meta.env.DEV
     const _useCourierConfig = useCourier()
     const { loadCourierConfigData } = _useCourierConfig
 
+    const { isValidLicenseKey } = useLicense(false)
     const _useLayout = useLayout()
     const {
         configData,
@@ -46,7 +48,9 @@
 
     onBeforeMount(async () => {
         await loadConfig()
-        await loadCourierConfigData()
+        if(isValidLicenseKey.value) {
+            await loadCourierConfigData()
+        }
     })
     
     const _useNotification = useNotification()

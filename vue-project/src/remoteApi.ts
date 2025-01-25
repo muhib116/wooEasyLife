@@ -4,7 +4,7 @@ import { computed, ref } from "vue";
 import { normalizePhoneNumber } from "./helper";
 import { useLicense } from "@/pages/config/license/UseLicense";
 
-const { licenseKey, isValidLicenseKey } = useLicense(false);
+const { licenseKey, isValidLicenseKey, licenseAlertMessage } = useLicense(false);
 
 export const remoteApiBaseURL = "https://api.wpsalehub.com/api";
 const headers = computed(() => ({
@@ -32,7 +32,7 @@ export const checkFraudCustomer = async (payload: {
     );
     return data;
   } catch (err) {
-    isValidLicenseKey.value = err.status != 401;
+    handleLicenseValidations(err)
   }
 };
 
@@ -46,7 +46,7 @@ export const getCourierCompanies = async () => {
     );
     return data;
   } catch (err) {
-    isValidLicenseKey.value = err.status != 401;
+    handleLicenseValidations(err)
   }
 };
 
@@ -65,7 +65,7 @@ export const saveCourierConfig = async (payload: {
     );
     return data;
   } catch (err) {
-    isValidLicenseKey.value = err.status != 401;
+    handleLicenseValidations(err)
   }
 };
 
@@ -78,7 +78,7 @@ export const getCourierConfig = async () => {
     );
     return data;
   } catch (err) {
-    isValidLicenseKey.value = err.status != 401;
+    handleLicenseValidations(err)
   }
 };
 
@@ -99,7 +99,7 @@ export const steadfastBulkOrderCreate = async (payload: {
     );
     return data;
   } catch (err) {
-    isValidLicenseKey.value = err.status != 401;
+    handleLicenseValidations(err)
   }
 };
 
@@ -114,7 +114,7 @@ export const steadfastStatusCheck = async (payload: {
     );
     return data;
   } catch (err) {
-    isValidLicenseKey.value = err.status != 401;
+    handleLicenseValidations(err)
   }
 };
 
@@ -129,7 +129,7 @@ export const steadfastBulkStatusCheck = async (payload: {
     );
     return data;
   } catch (err) {
-    isValidLicenseKey.value = err.status != 401;
+    handleLicenseValidations(err)
   }
 };
 // courier end
@@ -154,7 +154,7 @@ export const sendSMS = async (payload: {
     });
     return data;
   } catch (err) {
-    isValidLicenseKey.value = err.status != 401;
+    handleLicenseValidations(err)
   }
 };
 // sms integration end
@@ -173,7 +173,8 @@ export const checkCourierStatus = async (
     );
     return data;
   } catch (err) {
-    isValidLicenseKey.value = err.status != 401;
+    
+    handleLicenseValidations(err)
   }
 };
 
@@ -185,7 +186,7 @@ export const checkCourierBalance = async () => {
     );
     return data;
   } catch (err) {
-    isValidLicenseKey.value = err.status != 401;
+    handleLicenseValidations(err)
   }
 };
 
@@ -198,6 +199,68 @@ export const getUser = async () => {
     isValidLicenseKey.value = true
     return data;
   } catch (err) {
-    isValidLicenseKey.value = err.status != 401;
+    handleLicenseValidations(err)
   }
 };
+
+const handleLicenseValidations = (err) => 
+{
+  isValidLicenseKey.value = err.status != 401;
+  const msg = err.response.data.message
+  localStorage.removeItem('license_key')
+  licenseKey.value = ''
+
+  switch(msg) {
+    case 'Expired': 
+      licenseAlertMessage.value = {
+        title: `
+          <strong style="font-size: 18px;">Your License Key Has Expired!</strong>
+          <br />
+          <p>
+              It looks like your license key is no longer active. Don’t worry—we’re here to help! Contact us to renew your key and regain access, or check out our renewal options to get started right away.
+          </p>
+        `,
+        type: 'danger'
+      }
+      break
+      
+      case 'Invalid token':
+        licenseAlertMessage.value = {
+          title: `
+            <strong style="font-size: 18px;">Invalid License!</strong>
+            <br />
+            <p>
+                The license key you entered is invalid. Don’t worry—we’re here to assist! Reach out to us to obtain your license key.
+            </p>
+          `,
+          type: 'danger'
+        }
+    break
+
+    case 'Unauthenticated':
+      licenseAlertMessage.value = {
+        title: `
+          <strong style="font-size: 18px;">License key not found!</strong>
+          <br />
+          <p>
+              The license key you entered is invalid. Don’t worry—we’re here to assist! Reach out to us to obtain your license key.
+          </p>
+        `,
+        type: 'danger'
+      }
+    break
+
+    case 'Token not found':
+      licenseAlertMessage.value = {
+        title: `
+          <strong style="font-size: 18px;">License key not found!</strong>
+          <br />
+          <p>
+              The license key you entered is invalid. Don’t worry—we’re here to assist! Reach out to us to obtain your license key.
+          </p>
+        `,
+        type: 'danger'
+      }
+    break
+  }
+}
