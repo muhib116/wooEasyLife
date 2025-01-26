@@ -10,6 +10,7 @@
         <Icon
             name="PhSpinner"
             :size="size"
+            weight="bold"
             class="animate-spin !w-full !h-full"
         />
     </div>
@@ -28,7 +29,7 @@
         },
         size: {
             type: String,
-            default: '32',
+            default: 40,
         }
     })
 </script>

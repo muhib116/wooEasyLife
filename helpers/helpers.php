@@ -4,11 +4,10 @@ function api_permission_check () {
     if ($server_ip === '127.0.0.1' || $server_ip === '::1') {
         // local server
         return '__return_true';
-    } else {
-        if (!is_user_logged_in() || !current_user_can('manage_options')) {
-            wp_die('Access denied. Only admin can access.');
-            return;
-        }
+    }
+    if (!is_user_logged_in() || !current_user_can('manage_options')) {
+        wp_die('Access denied. Only admin can access.');
+        return;
     }
 }
 
@@ -228,30 +227,38 @@ function get_block_data_by_type($value, $type = 'phone_number') {
 
 
 function get_total_orders_by_billing_phone_and_status($order) {
+    $billing_phone = $order->get_billing_phone();
+    $order_status = ['wc-'.$order->get_status()];
+
+    $orders = get_orders_by_billing_phone_and_status($billing_phone, $order_status);
+    return count($orders); // Total orders matching criteria
+}
+
+
+function get_orders_by_billing_phone_and_status($billing_phone, $status=null) {
         
     // Get billing phone and status from the current $order
-    $billing_phone = $order->get_billing_phone();
-    $order_status = $order->get_status();
+    $billing_phone = normalize_phone_number($billing_phone);
 
-    if (empty($billing_phone) || empty($order_status)) {
+    if (empty($billing_phone) || empty($status)) {
         return []; // Return empty array if inputs are invalid
     }
 
     $args = [
-        'status'    => 'wc-'.$order_status, // Specific order status
+        'status'    => $status, // Specific order status
         'return'    => 'objects', // Fetch full order objects
         'type'     => 'shop_order',
-        [
-            'key'     => 'billing_phone',
-            'value'   => $billing_phone, // Match any phone number containing the input
-            'compare' => 'LIKE',
-        ],
+        'billing_phone' => $billing_phone,
+        'limit' => -1
     ];
 
     $orders = wc_get_orders($args);
 
-    return count($orders); // Total orders matching criteria
+    return $orders; // Total orders matching criteria
 }
+
+
+
 
 function storeFraudDataWhenPlaceOrder($order_id)
 {

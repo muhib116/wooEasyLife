@@ -4,23 +4,29 @@ export default function (router) {
   const { licenseKey, isValidLicenseKey, loadLicenseKey } = useLicense(false);
 
   router.beforeEach(async (to, from, next) => {
-    // Load the license key if not already loaded
-    if (!licenseKey.value) {
-      await loadLicenseKey();
-    }
+    try {
+      // Load the license key if not already loaded
+      if (!licenseKey.value) {
+        await loadLicenseKey();
+      }
 
-    // Skip validation for the license route to prevent infinite redirects
-    if (to.name === "license") {
-      return next();
-    }
+      // Allow access to the license route without validation
+      if (to.name === "license") {
+        return next();
+      }
 
-    // Redirect if the license key is invalid
-    if (!isValidLicenseKey.value) {
-      return next({ name: "license" });
-    }
+      // Redirect to the license route if the key is invalid or missing
+      if (!isValidLicenseKey.value) {
+        return next({ name: "license" });
+      }
 
-    // Proceed to the intended route
-    next();
+      // Proceed to the intended route
+      next();
+    } catch (error) {
+      console.error("Error validating license:", error);
+      // Redirect to the license page in case of an error
+      next({ name: "license" });
+    }
   });
 
   return router;

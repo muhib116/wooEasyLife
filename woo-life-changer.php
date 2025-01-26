@@ -3,7 +3,7 @@
  * Plugin Name: Woo Life Changer
  * Plugin URI: https://api.wpsalehub.com/api/get-metadata
  * Description: "Woo Life Changer" is a custom plugin designed to enhance WooCommerce functionality with features like bulk SMS, fraud detection, OTP validation, and much more.
- * Version: 1.1.3
+ * Version: 1.1.4
  * Author: Muhibbullah Ansary
  * Author URI: https://wpsalehub.com
  * Text Domain: woo-life-changer

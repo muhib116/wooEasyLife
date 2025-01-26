@@ -106,7 +106,7 @@ class OrderListAPI
         $status   = $request->get_param('status');
         $per_page = intval($request->get_param('per_page'));
         $page     = intval($request->get_param('page'));
-        $billing_phone = $request->get_param('billing_phone');
+        $billing_phone = normalize_phone_number($request->get_param('billing_phone'));
         $search   = $request->get_param('search'); // Get search parameter
     
         // Use WooCommerce Order Query to fetch orders with pagination and search
@@ -114,11 +114,7 @@ class OrderListAPI
             'status'        => $status,
             'limit'         => $per_page,
             'page'          => $page,
-            [
-                'key'     => 'billing_phone',
-                'value'   => $billing_phone, // Match any phone number containing the input
-                'compare' => 'LIKE',
-            ],
+            'billing_phone' => $billing_phone,
             'type'          => 'shop_order',
             'paginate'      => true, // Enable pagination
             'orderby' => 'id',
@@ -171,7 +167,7 @@ class OrderListAPI
             $order_notes = get_order_notes($order);
             $created_via = $order->get_meta('_created_via', true);
             $courier_data = get_courier_data_from_order($order->get_id());
-            $is_repeat_customer = is_repeat_customer_by_id($order->get_id());
+            $is_repeat_customer = is_repeat_customer_by_billing_phone($order->get_billing_phone());
 
             $data[] = [
                 'id'            => $order->get_id(),
@@ -617,38 +613,35 @@ function get_order_shipping_methods($order) {
  * @param int $order_id The ID of the WooCommerce order.
  * @return bool True if the customer is a repeat customer, false otherwise.
  */
-function is_repeat_customer_by_id($order_id) {
-    // Retrieve the order object
-    $order = wc_get_order($order_id);
-    if (!$order instanceof \WC_Order) {
-        return false; // Invalid order object
-    }
-
-    // Get the billing phone from the order
-    $billing_phone = normalize_phone_number($order->get_billing_phone());
+function is_repeat_customer_by_billing_phone($billing_phone) {
     if (empty($billing_phone)) {
-        return false; // No billing phone provided, cannot determine repeat status
+        return false; // No phone number provided
     }
 
-    // Query WooCommerce for all completed orders with the same billing phone
-    $args = [
-        [
-            'key'     => 'billing_phone',
-            'value'   => $billing_phone, // Match any phone number containing the input
-            'compare' => 'LIKE',
-        ],
-        
-        'status'        => 'wc-completed',
-        'type'          => 'shop_order',
-        'limit'         => -1,
-        'return'        => 'ids', // Only retrieve order IDs
+    $my_orders = [
+        'total_completed_order' => 0,
+        'total_processing_order' => 0
     ];
 
-    $completed_orders = wc_get_orders($args);
+    $isRepeatCustomer = false;
 
-    // Exclude the current order from the list of completed orders
-    $completed_orders = array_diff($completed_orders, [$order_id]);
+    // Fetch orders by billing phone and status
+    $orders = get_orders_by_billing_phone_and_status($billing_phone, ['processing', 'completed']);
 
-    // If there are any remaining completed orders, the customer is a repeat customer
-    return count($completed_orders) > 0;
+    foreach ($orders as $order) {
+        $status = $order->get_status();
+
+        // Count orders by status
+        if (isset($my_orders["total_{$status}_order"])) {
+            $my_orders["total_{$status}_order"]++;
+        }
+    }
+
+    // Determine if the customer is a repeat customer
+    if ($my_orders['total_completed_order'] >= 2 || 
+        ($my_orders['total_processing_order'] >= 1 && $my_orders['total_completed_order'] == 1)) {
+        $isRepeatCustomer = true;
+    }
+
+    return $isRepeatCustomer;
 }
