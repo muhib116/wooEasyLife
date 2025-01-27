@@ -49,11 +49,7 @@
 </template>
 
 <script setup lang="ts">
-    import {
-        Card,
-        Loader
-    } from '@components'
-    import { computed } from 'vue'
+    import { Card, Loader } from '@components'
     import { useSalesSummary } from './useSalesSummary'
     import DashboardCard from '../DashboardCard.vue'
 
@@ -62,16 +58,4 @@
         salesSummaryData,
         loadSalesSummaryData  
     } = useSalesSummary()
-
-    const chartData = computed(() => {
-        return {
-            type: 'line',
-            options: {
-                xaxis: {
-                    categories: orderProgressData.value?.categories || []
-                }
-            },
-            series: orderProgressData.value?.series || []
-        }
-    })
 </script>

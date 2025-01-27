@@ -1,8 +1,8 @@
 <template>
     <div class="relative">
         <MessageBox
-            title="Hello"
-            type="info"
+            :title="alertMessage.title"
+            :type="alertMessage.type"
         />
         <Loader
             :active="isLoading"
@@ -50,6 +50,7 @@
 
     const {
         isLoading,
+        alertMessage,
         endDate,
         salesTargetData,
         dailyTargetAmount,

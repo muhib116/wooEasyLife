@@ -56,6 +56,7 @@
     import AddressPreview from './AddressPreview.vue'
     import AddressForm from './AddressForm.vue'
     import { Icon, Button } from '@components'
+import { normalizePhoneNumber, validateBDPhoneNumber } from '@/helper';
 
     const props = defineProps<{
         title?: string
@@ -69,9 +70,15 @@
 
     const isEditable = ref(false)
     const handleUpdate = async (btn) => {
+        if(!validateBDPhoneNumber(props.address?.phone)) {
+            alert('Phone number is not valid! \n Enter a valid bangladeshi number.')
+            return
+        }
+
         if(isEditable.value){
             try {
                 btn.isLoading = true
+                props.address.phone = normalizePhoneNumber(props.address?.phone)
                 await handleAddressEdit(props.address)
             } finally {
                 btn.isLoading = false

@@ -226,31 +226,36 @@ function get_block_data_by_type($value, $type = 'phone_number') {
 }
 
 
-function get_total_orders_by_billing_phone_and_status($order) {
-    $billing_phone = $order->get_billing_phone();
-    $order_status = ['wc-'.$order->get_status()];
+function get_total_orders_by_billing_phone_or_email_and_status($order) {
+    $phone = $order->get_billing_phone();
+    $email = $order->get_billing_email();
+    $order_status = [$order->get_status()];
 
-    $orders = get_orders_by_billing_phone_and_status($billing_phone, $order_status);
+    if(!empty($phone)) {
+        $orders = get_orders_by_billing_phone_or_email_and_status($phone, null, $order_status);
+    } else if(!empty($email)) {
+        $orders = get_orders_by_billing_phone_or_email_and_status(null, $email, $order_status);
+    }
     return count($orders); // Total orders matching criteria
 }
 
 
-function get_orders_by_billing_phone_and_status($billing_phone, $status=null) {
-        
+function get_orders_by_billing_phone_or_email_and_status($billing_phone, $billing_email, $status=[]) {        
     // Get billing phone and status from the current $order
     $billing_phone = normalize_phone_number($billing_phone);
-
-    if (empty($billing_phone) || empty($status)) {
-        return []; // Return empty array if inputs are invalid
-    }
-
     $args = [
-        'status'    => $status, // Specific order status
+        'status' => $status,
         'return'    => 'objects', // Fetch full order objects
         'type'     => 'shop_order',
-        'billing_phone' => $billing_phone,
-        'limit' => -1
+        'limit' => -1,
     ];
+
+    if (!empty($billing_phone)) {
+        $args['billing_phone'] = $billing_phone;
+    }
+    else if (!empty($billing_email)) {
+        $args['billing_email'] = $billing_email;
+    }
 
     $orders = wc_get_orders($args);
 
@@ -301,6 +306,29 @@ function normalize_phone_number($phone) {
 
     return $normalized;
 }
+
+function validate_BD_phoneNumber($phoneNumber) {
+    // Remove spaces and non-numeric characters except for "+"
+    $phoneNumber = preg_replace('/[^\d+]/', '', $phoneNumber);
+
+    // Define valid patterns
+    $patterns = [
+        '/^\+8801[3-9]\d{8}$/',  // +880 format
+        '/^8801[3-9]\d{8}$/',    // 880 format
+        '/^01[3-9]\d{8}$/'       // 01 format
+    ];
+
+    // Check if the phone number matches any of the valid patterns
+    foreach ($patterns as $pattern) {
+        if (preg_match($pattern, $phoneNumber)) {
+            return true;
+        }
+    }
+
+    // Return false for invalid phone numbers
+    return false;
+}
+
 
 /**
  * Get courier data for an order.
@@ -391,4 +419,32 @@ function delete_wc_orders_meta_by_key($meta_key) {
             $meta_key
         )
     );
+}
+
+
+/**
+ * send an associated array, and specific key
+ * $data = [
+ *  'phone' => [
+ *      'phone one',
+ *      'phone 2',
+ *      'phone one',
+ *      'phone three',
+ *      'phone 2',
+ *  ]
+ * ]
+ */
+function array_group_by_key($dataArray, $key='phone') {
+    $grouped_data = [];
+
+    // Loop through the phone numbers
+    foreach ($dataArray[$key] as $data) {
+        if (isset($grouped_data[$data])) {
+            $grouped_data[$data]++;
+        } else {
+            $grouped_data[$data] = 1;
+        }
+    }
+
+    return $grouped_data;
 }

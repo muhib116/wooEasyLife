@@ -806,6 +806,7 @@ class OrderStatisticsAPI extends WP_REST_Controller
         // Retrieve date range parameters from the request
         $start_date = $request->get_param('start_date');
         $end_date = $request->get_param('end_date');
+        $status = $request->get_param('status');
     
         // Validate and sanitize dates
         if ($start_date && $end_date) {
@@ -825,83 +826,106 @@ class OrderStatisticsAPI extends WP_REST_Controller
         }
     
         // Initialize result arrays
-        $returning_series = [];
+        $repeat_series = [];
         $new_series = [];
         $categories = [];
     
-        $total_returning_orders = 0;
-        $total_new_orders = 0;
+        $billing_info = [
+            'phone' => [],
+            'email' => []
+        ];
+
     
         // Loop through dates and fetch order data
         $current_date = strtotime($start_date);
         $end_date_timestamp = strtotime($end_date);
+
+
+        $args = [
+            'status'        => ['wc-processing', 'wc-completed'],
+            'date_created'  => $start_date . '...' . $end_date,
+            'type'         => 'shop_order',
+        ];
+        $orders = wc_get_orders($args);
+
+
+        foreach($orders as $order) {
+            $phone = $order->get_billing_phone();
+            $email = $order->get_billing_email();
+
+            // collect customer contact info
+            if(!empty($phone)) {
+                $billing_info['phone'][] = normalize_phone_number($phone);
+            } else if(!empty($email)) {
+                $billing_info['email'][] = trim($email);
+            }
+        }
+
+        $customer_ratio = get_order_ratio($billing_info);
+        $new_customer = $customer_ratio['new_customer'];
+        $repeat_customer = $customer_ratio['repeat_customer'];
+        $total_customer = $customer_ratio['total_customer'];
+
+        $new_customer_percentage = $total_customer > 0 ? ($new_customer / $total_customer) * 100 : 0;
+        $repeat_customer_percentage = $total_customer > 0 ? ($repeat_customer / $total_customer) * 100 : 0;
+
+
     
+        /**
+         * make chart data for
+         * new order repeat comparison
+         */
         while ($current_date <= $end_date_timestamp) {
             $date = date('Y-m-d', $current_date);
             $categories[] = $date;
     
             // Fetch orders for this date
             $args = [
-                'status'        => ['wc-completed', 'wc-processing'],
+                'status'        => ['wc-processing'],
                 'date_created'  => $date . ' 00:00:00...' . $date . ' 23:59:59',
-                'return'        => 'ids',
+                'type'         => 'shop_order',
             ];
             $orders = wc_get_orders($args);
+
+            $total_orders = count($orders) ?? 0;
+            $total_repeat_orders = 0;
+
     
-            $returning_count = 0;
-            $new_count = 0;
-    
-            foreach ($orders as $order_id) {
-                $order = wc_get_order($order_id);
-                $customer_id = $order->get_customer_id();
-    
-                // Determine if the customer is new or returning
-                if ($customer_id > 0) {
-                    $previous_orders = wc_get_orders([
-                        'customer_id'  => $customer_id,
-                        'status'       => ['wc-completed', 'wc-processing'],
-                        'date_created' => '<' . $order->get_date_created()->date('Y-m-d H:i:s'),
-                        'return'       => 'ids',
-                    ]);
-    
-                    if (!empty($previous_orders)) {
-                        $returning_count++;
-                    } else {
-                        $new_count++;
-                    }
-                } else {
-                    // Guest orders are considered "new" customers
-                    $new_count++;
+            foreach($orders as $order) {
+                $phone = $order->get_billing_phone();
+                $email = $order->get_billing_email();
+
+                $_order = [];
+                // collect customer contact info
+                if(!empty($phone)) {
+                    $_order = get_orders_by_billing_phone_or_email_and_status($phone, null, ['wc-completed']);
+                } else if(!empty($email)) {
+                    $_order = get_orders_by_billing_phone_or_email_and_status(null, trim($email), ['wc-completed']);
+                }
+
+                if(count($_order)) {
+                    $total_repeat_orders ++;
                 }
             }
-    
-            $returning_series[] = $returning_count;
-            $new_series[] = $new_count;
-    
-            $total_returning_orders += $returning_count;
-            $total_new_orders += $new_count;
+
+            $repeat_series[] = $total_repeat_orders;
+            $new_series[] = $total_orders - $total_repeat_orders;
     
             $current_date = strtotime('+1 day', $current_date);
         }
-    
-        $total_orders = $total_returning_orders + $total_new_orders;
-    
-        // Calculate percentages
-        $new_order_percentage = $total_orders > 0 ? ($total_new_orders / $total_orders) * 100 : 0;
-        $returning_order_percentage = $total_orders > 0 ? ($total_returning_orders / $total_orders) * 100 : 0;
-    
+
         return new WP_REST_Response([
             'status' => 'success',
             'data'   => [
-                'total_order'                 => $total_orders,
-                'total_returning_customer_order' => $total_returning_orders,
-                'total_new_customer_order'       => $total_new_orders,
-                'new_order_percentage'        => round($new_order_percentage, 2),
-                'returning_order_percentage'  => round($returning_order_percentage, 2),
+                'total_customer'       => $total_customer,
+                'repeat_customer'  => $repeat_customer,
+                'new_customer'     => $new_customer,
+                'new_customer_percentage'     => round($new_customer_percentage, 2),
+                'repeat_customer_percentage'  => round($repeat_customer_percentage, 2),
                 'series' => [
                     [
                         'name' => 'Returning order',
-                        'data'  => $returning_series,
+                        'data'  => $repeat_series,
                     ],
                     [
                         'name' => 'New order',
@@ -912,4 +936,41 @@ class OrderStatisticsAPI extends WP_REST_Controller
             ],
         ], 200);
     }
+}
+
+function get_order_ratio($data)
+{
+    $new_customer_count = 0;
+    $repeat_customer_count = 0;
+
+    $group_by_phone_array = array_group_by_key($data, 'phone');
+    $group_by_email_array = array_group_by_key($data, 'email');
+
+    if(!empty($group_by_phone_array)) {
+        foreach($group_by_phone_array as $total_count) 
+        {
+            $total_count > 1 
+                ? $repeat_customer_count ++
+                : $new_customer_count = 1
+            ;
+        }
+    }else if(!empty($group_by_email_array)) {
+        foreach($group_by_email_array as $total_count) 
+        {
+            $total_count > 1 
+                ? $repeat_customer_count ++
+                : $new_customer_count = 1
+            ;
+        }
+    }
+
+    return [
+        'new_customer' => $new_customer_count,
+        'repeat_customer' => $repeat_customer_count,
+        'total_customer' => $new_customer_count + $repeat_customer_count
+    ];
+}
+
+function get_orders_by_email_or_phone_and_status(){
+
 }

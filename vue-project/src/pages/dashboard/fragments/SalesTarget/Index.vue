@@ -1,6 +1,7 @@
 <template>
   <DashboardCard
     title="Sales Target"
+    subtitle="Track Progress Toward Your Sales Goals"
     :showDateFilter="false"
     @dateChange="() => {}"
   >
@@ -10,7 +11,7 @@
         title="Make a sales target"
         @onClick="toggleModal = true"
       >
-        <Icon name="PhPlus" weight="bold" />
+        Set your target
       </Button.Outline>
     </template>
 

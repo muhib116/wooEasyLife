@@ -15,7 +15,8 @@ export const getOrderStatusStatistics = async (payload: {
 
 export const getSalesSummary = async (payload: {
     startDate: string,
-    endDate: string
+    endDate: string,
+    status: string
 }) => {
     const { data } = await axios.get(`${localApiBaseURL}/sales-summary`, { params: payload })
     return data
@@ -78,6 +79,7 @@ export const getCourierDeliveryReport = async (payload: {
 export const getCustomerData = async (payload: {
     start_date: string | Date
     end_date: string | Date
+    status: string
 }) => {
     const { data } = await axios.get(`${localApiBaseURL}/customer-data`, {
         params: payload

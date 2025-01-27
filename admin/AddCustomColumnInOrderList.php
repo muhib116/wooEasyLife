@@ -52,7 +52,7 @@ class AddCustomColumnInOrderList {
                 return;
             }
 
-            $total_order_per_customer_for_current_order_status = get_total_orders_by_billing_phone_and_status($order);
+            $total_order_per_customer_for_current_order_status = get_total_orders_by_billing_phone_or_email_and_status($order);
             if($total_order_per_customer_for_current_order_status>1)
             {
                 echo "<button 

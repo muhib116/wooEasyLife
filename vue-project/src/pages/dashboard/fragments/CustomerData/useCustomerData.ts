@@ -5,13 +5,16 @@ export const useCustomerData = () => {
     const customerData = ref()
     const isLoading = ref(false)
 
-    const loadCustomerData = async (date: {
-        start_date: string
-        end_date: string
-    }) => {
+    const loadCustomerData = async (
+        date: {
+            start_date: string
+            end_date: string
+        }, 
+        status: string
+    ) => {
         try {
             isLoading.value = true
-            const { data } = await getCustomerData(date)
+            const { data } = await getCustomerData({...date, status})
             customerData.value = data
         } finally {
             isLoading.value = false

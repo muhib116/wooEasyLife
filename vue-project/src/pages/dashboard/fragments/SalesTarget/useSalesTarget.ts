@@ -73,9 +73,6 @@ export const useSalesTarget = () => {
       _prepareChartData(data);
     } finally {
       isLoading.value = false;
-      setTimeout(() => {
-        alertMessage.value.title = "";
-      }, 6000);
     }
   };
 

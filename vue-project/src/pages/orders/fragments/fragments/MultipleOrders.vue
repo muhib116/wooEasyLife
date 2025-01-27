@@ -3,7 +3,10 @@
         <div v-if="orders.length">
             <div class="flex justify-between items-center">
                 <h3 class="font-bold m-0 mb-[10px]">
-                    Customer Details
+                    Customer Details 
+                    <span class="font-medium text-sky-500">
+                        (total orders: {{ orders?.length || 0 }})
+                    </span>
                 </h3>
                 <Button.Primary
                     v-if="selectedOrderInfo.length"
@@ -44,6 +47,7 @@
 
             <Table.Table v-else>
                 <Table.THead>
+                    <Table.Th>#SL</Table.Th>
                     <Table.Th>Order</Table.Th>
                     <Table.Th>Date</Table.Th>
                     <Table.Th>Payment Method</Table.Th>
@@ -54,9 +58,10 @@
     
                 <Table.TBody>
                     <Table.Tr
-                        v-for="order in orders"
+                        v-for="(order, index) in orders"
                         :key="order.id"
                     >
+                        <Table.Td>{{ index + 1 }}</Table.Td>
                         <Table.Td>
                             #{{ order.id }}
                             {{ order.billing_address.first_name }}
@@ -69,7 +74,7 @@
                             {{ order.payment_method_title }}
                         </Table.Td>
                         <Table.Td class="capitalize">
-                            {{ order.status }}
+                            {{ order.status == 'processing' ? 'New order' : order.status }}
                         </Table.Td>
                         <Table.Td>
                             {{ order.product_info.total_price }}

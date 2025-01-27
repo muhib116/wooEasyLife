@@ -1,6 +1,7 @@
 <template>
     <DashboardCard
         title="Sales Progress"
+        subtitle="Total Completed Orders Within the Selected Date Range"
         :Key="chartKey"
         @dateChange="loadSalesProgressData"
     >

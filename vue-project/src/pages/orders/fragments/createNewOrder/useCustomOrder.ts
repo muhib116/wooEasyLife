@@ -1,4 +1,5 @@
 import { createOrder, getProducts, validateCoupon } from "@/api"
+import { normalizePhoneNumber, validateBDPhoneNumber } from "@/helper";
 import { computed, onMounted, ref, inject } from "vue"
 
 export const useCustomOrder = () => 
@@ -238,6 +239,11 @@ export const useCustomOrder = () =>
             !form.value.products.length
         ){
             alert('The fields marked with an asterisk (*) are required and cannot be left empty!');
+            return
+        }
+
+        if(!validateBDPhoneNumber(normalizePhoneNumber(form.value.phone.trim()))){
+            alert('Please enter a valid bangladeshi number!')
             return
         }
 

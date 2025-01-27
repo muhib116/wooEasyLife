@@ -11,7 +11,7 @@ export const useSalesSummary = () => {
     const isLoading = ref(false)
     const chartKey = ref(Date.now()) // Unique key
 
-    const loadSalesSummaryData = async (date: {start_date: string, end_date: string}, status) => {
+    const loadSalesSummaryData = async (date: {start_date: string, end_date: string}, status: string) => {
         try {
             isLoading.value = true
             const { data } = await getSalesSummary({...date, status})
