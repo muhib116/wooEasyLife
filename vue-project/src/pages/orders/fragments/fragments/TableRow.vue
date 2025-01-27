@@ -29,7 +29,8 @@
                     class="px-1 bg-sky-500 text-white capitalize rounded-sm text"
                     title="Order source"
                 >
-                    {{ order.created_via.replace('-', ' ') }}
+                    {{ order.order_source }}
+                    <!-- {{ order.created_via.replace('-', ' ') }} -->
                 </span>
             </div>
             <div

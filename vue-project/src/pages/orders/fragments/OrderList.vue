@@ -61,11 +61,8 @@
             </div>
 
 
-            <TableHeaderAction class="items-center">
-                <Pagination
-                    hideSearch
-                />
-            </TableHeaderAction>
+            <TableHeaderAction />
+            <Pagination />
         </div>
     </div>
 </template>

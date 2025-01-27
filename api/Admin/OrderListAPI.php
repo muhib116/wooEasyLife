@@ -179,6 +179,7 @@ class OrderListAPI
                 'customer_name' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
                 'shipping_cost' => $order->get_shipping_total(),
                 'shipping_methods' => get_order_shipping_methods($order),
+                'order_source'     => get_order_source($order),
                 'created_via' => $created_via,
                 'customer_ip'   => $customer_ip,
                 'phone_block_listed' => $phone_block_listed,
@@ -647,4 +648,20 @@ function is_repeat_customer($order) {
     }
 
     return $isRepeatCustomer;
+}
+
+function get_order_source($order) {
+    // Ensure $order is a valid WooCommerce order object or ID
+    if (!$order instanceof \WC_Order) {
+        $order = wc_get_order($order);
+    }
+
+    if (!$order) {
+        return 'No source found'; // Return a default message if the order is invalid
+    }
+
+    // Get the source data from the custom meta key
+    $source = $order->get_meta('_wc_order_attribution_utm_source', true);
+
+    return $source ? $source : 'No source found'; // Return the source or a fallback message
 }

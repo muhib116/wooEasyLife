@@ -1,4 +1,5 @@
 Kod30eDnI1EFG9vaf9gBPsSwaD3IkklCIATZoSYz9cf733bd
+10|O1M7T4YZNWeXtf2NcKJ2BJLheJSzPhts22GQut6H77a207c6
 
 ✅ order status manage from plugin order list
 ✅ SMS ta amader api throute korte hobe:->helper.php: send_sms()
@@ -48,7 +49,13 @@ Dashboard:
 ✅ steadfast chara baki courier config gulu apadoto commented thakbe
 
 
---------
+--------heigh priority task------------
+👉🏻 Order list filter by courier partner
+👉🏻 Order Tags: Add tags to orders for easier categorization (e.g., VIP, Urgent, Gift).
+👉🏻 Send message for abandoned order customer
+👉🏻 landing page calculation
+
+
 
 
 => courier config a error handle korte hobe
@@ -67,8 +74,6 @@ Dashboard:
 
 
 👉🏻 jei sokol jay gay sms er option ahce sob jagay sms balance show korte hobe balance na thakle balance recharge er jonno button dite hobe and option hide kore dite hobe jate configur korte na pare
-👉🏻 Order list filter by courier partner
-👉🏻 Send message for abandoned order customer
 👉🏻 Marketing Tools (Low priority) from funnel liner
    1. Microsoft Clarity
    2. Pixel
@@ -76,7 +81,6 @@ Dashboard:
 
 
 =====new feature-=======================
-Order Tags: Add tags to orders for easier categorization (e.g., VIP, Urgent, Gift).
 Live Chat Support: Provide a chatbox for instant support or queries.
 
 2. Inventory Management-------

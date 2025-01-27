@@ -1,9 +1,7 @@
 <template>
     <Layout>
         <Container>
-            <Card.Native
-                class="h-[calc(100svh-120px)]"
-            >
+            <Card.Native>
                 <div class="border-b pb-3">
                     <h3 class="text-2xl font-semibold">Settings</h3>
                 </div>

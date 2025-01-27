@@ -1,78 +1,82 @@
 <template>
     <div v-bind="$attrs" class="flex justify-between text-[10px] px-4 my-4">
-        <div class="flex-justify-controller">
-            <div 
-                class="flex gap-3 items-center relative z-40"
-                v-click-outside="() => toggleCourierDropdown = false"
+        <div 
+            class="flex gap-3 items-center relative z-40"
+            v-click-outside="() => toggleCourierDropdown = false"
+        >
+            <span 
+                class="size-6 shadow -mr-2 flex items-center justify-center text-[10px] aspect-square rounded-full bg-orange-500 text-white "
             >
-                <span 
-                    class="size-6 shadow -mr-2 flex items-center justify-center text-[10px] aspect-square rounded-full bg-orange-500 text-white "
+                {{ [...selectedOrders].length }}
+            </span>
+            <template
+                v-for="(item, index) in actionBtns"
+                :key="index"
+            >
+                <div class="relative"
+                    v-if="item.active"
                 >
-                    {{ [...selectedOrders].length }}
-                </span>
-                <template
-                    v-for="(item, index) in actionBtns"
-                    :key="index"
-                >
-                    <div class="relative"
-                        v-if="item.active"
+                    <Button.Native
+                        :title="item.title"
+                        class="py-1 px-2 border shadow rounded-sm"
+                        :style="{
+                            backgroundColor: item.bg,
+                            color: item.color   
+                        }"
+                        @onClick="btn => item?.isCourier 
+                                        ? toggleCourierDropdown = !toggleCourierDropdown 
+                                        : item.method(btn)"
                     >
-                        <Button.Native
-                            :title="item.title"
-                            class="py-1 px-2 border shadow rounded-sm"
-                            :style="{
-                                backgroundColor: item.bg,
-                                color: item.color   
-                            }"
-                            @onClick="btn => item?.isCourier 
-                                            ? toggleCourierDropdown = !toggleCourierDropdown 
-                                            : item.method(btn)"
+                        <Icon
+                            :name="item.icon"
+                            size="16"
+                        />
+                        {{ item.title }}
+                    </Button.Native>
+                    <div
+                        v-if="item?.isCourier && toggleCourierDropdown"
+                        class="absolute top-full left-0 min-w-[120px] border border-[#693d84] overflow-hidden bg-white [&>button+button]:border-t shadow rounded-b-sm z-50 grid"
+                    >
+                        <template
+                            v-for="_item in courierCompanyNames"
+                            :key="_item.slug"
                         >
-                            <Icon
-                                :name="item.icon"
-                                size="16"
-                            />
-                            {{ item.title }}
-                        </Button.Native>
-                        <div
-                            v-if="item?.isCourier && toggleCourierDropdown"
-                            class="absolute top-full left-0 min-w-[120px] border border-[#693d84] overflow-hidden bg-white [&>button+button]:border-t shadow rounded-b-sm z-50 grid"
-                        >
-                            <template
-                                v-for="_item in courierCompanyNames"
-                                :key="_item.slug"
+                            <Button.Native 
+                                v-if="courierConfigs[_item.slug]?.is_active"
+                                class="text-left text-xl px-2 py-2 text-gray-500 hover:scale-110 origin-left duration-300"
+                                @onClick="btn => item.method(_item.slug, btn)"
                             >
-                                <Button.Native 
-                                    v-if="courierConfigs[_item.slug]?.is_active"
-                                    class="text-left text-xl px-2 py-2 text-gray-500 hover:scale-110 origin-left duration-300"
-                                    @onClick="btn => item.method(_item.slug, btn)"
-                                >
-                                    <img
-                                        v-if="courierConfigs[_item.slug]?.logo"
-                                        :src="courierConfigs[_item.slug]?.logo"
-                                        class="w-20 object-contain"
-                                    />
-                                    <span v-else>{{ _item.title }}</span>
-                                </Button.Native>
-                            </template>
-                        </div>
+                                <img
+                                    v-if="courierConfigs[_item.slug]?.logo"
+                                    :src="courierConfigs[_item.slug]?.logo"
+                                    class="w-20 object-contain"
+                                />
+                                <span v-else>{{ _item.title }}</span>
+                            </Button.Native>
+                        </template>
                     </div>
-                </template>
+                </div>
+            </template>
 
-                <Button.Native
-                    class="opacity-100 w-fit text-white bg-sky-500 shadow rounded-sm px-1 py-1"
-                    title="Refresh CourierData"
-                    @onClick="refreshBulkCourierData"
-                >
-                    <Icon
-                        name="PhArrowsClockwise"
-                        size="16"
-                        weight="bold"
-                    />
-                </Button.Native>
-            </div>
+            <Button.Native
+                class="opacity-100 w-fit text-white bg-sky-500 shadow rounded-sm px-1 py-1"
+                title="Refresh CourierData"
+                @onClick="refreshBulkCourierData"
+            >
+                <Icon
+                    name="PhArrowsClockwise"
+                    size="16"
+                    weight="bold"
+                />
+            </Button.Native>
         </div>
-        <slot></slot>
+
+        <div>
+            <slot></slot>
+            <button>
+                Filter
+            </button>
+        </div>
     </div>
 
     <Modal

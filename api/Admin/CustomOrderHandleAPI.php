@@ -79,7 +79,8 @@ class CustomOrderHandleAPI extends WP_REST_Controller
             $order->set_customer_note($customer_note);
         }
     
-        $order->set_created_via($order_source);
+        $order->set_created_via('admin');
+        $order->set_meta_data('_wc_order_attribution_utm_source', $order_source);
     
         // Step 7: Apply Coupon Codes
         if (!empty($coupon_codes)) {

@@ -5,7 +5,7 @@
             :class="orderFilter.status == '' ? 'font-semibold' : 'font-light'"
             @click="btn => handleFilter('', btn)"
         >
-            All
+            All<span class="font-bold">({{ orders.length }})</span>
         </Button.Native>
         <template
             v-for="(item, index) in orderStatusWithCounts || []"
@@ -31,6 +31,7 @@
     import { Button } from '@components'
 
     const {
+        orders,
         getOrders,
         orderFilter,
         orderStatusWithCounts

@@ -19,17 +19,17 @@
     </DashboardCard>
 
     <DashboardCard
-        title="Customer Overview"
-        subtitle=""
-        @dateChange="loadCustomerData"
+        title="Customer Overview (based on completed order)"
+        :showDateFilter="false"
+        class="-mt-6"
     >
         <Card.Stylist class="!bg-orange-500 mb-4"
-            :title="customerData?.total_customer || 0"
+            :title="customerData?.total_customers || 0"
             subtitle="Total Customer"
         />
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 md:gap-4 xl:gap-6">
             <Card.Stylist class="!bg-green-600"
-                :title="customerData?.repeat_customer || 0"
+                :title="customerData?.total_repeat_customers || 0"
                 subtitle="Repeat Customer"
                 iconName="PhArrowUUpLeft"
                 weight="fill"
@@ -40,7 +40,7 @@
                 iconName="PhShoppingBagOpen"
             />
             <Card.Stylist class="!bg-sky-600"
-                :title="customerData?.new_customer || 0"
+                :title="customerData?.total_new_customers || 0"
                 subtitle="New Customer"
                 iconName="PhBasket"
             />

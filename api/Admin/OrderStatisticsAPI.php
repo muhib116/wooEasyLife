@@ -842,13 +842,14 @@ class OrderStatisticsAPI extends WP_REST_Controller
 
 
         $args = [
-            'status'        => ['wc-processing', 'wc-completed'],
+            'status'        => ['wc-completed'],
             'date_created'  => $start_date . '...' . $end_date,
             'type'         => 'shop_order',
+            'limit' => -1
         ];
         $orders = wc_get_orders($args);
-
-
+        
+        $customer_data = [];
         foreach($orders as $order) {
             $phone = $order->get_billing_phone();
             $email = $order->get_billing_email();
@@ -856,19 +857,12 @@ class OrderStatisticsAPI extends WP_REST_Controller
             // collect customer contact info
             if(!empty($phone)) {
                 $billing_info['phone'][] = normalize_phone_number($phone);
+                $customer_data = get_customer_data($billing_info, 'phone');
             } else if(!empty($email)) {
                 $billing_info['email'][] = trim($email);
+                $customer_data = get_customer_data($billing_info, 'email');
             }
         }
-
-        $customer_ratio = get_order_ratio($billing_info);
-        $new_customer = $customer_ratio['new_customer'];
-        $repeat_customer = $customer_ratio['repeat_customer'];
-        $total_customer = $customer_ratio['total_customer'];
-
-        $new_customer_percentage = $total_customer > 0 ? ($new_customer / $total_customer) * 100 : 0;
-        $repeat_customer_percentage = $total_customer > 0 ? ($repeat_customer / $total_customer) * 100 : 0;
-
 
     
         /**
@@ -884,6 +878,7 @@ class OrderStatisticsAPI extends WP_REST_Controller
                 'status'        => ['wc-processing'],
                 'date_created'  => $date . ' 00:00:00...' . $date . ' 23:59:59',
                 'type'         => 'shop_order',
+                'limit' => -1,
             ];
             $orders = wc_get_orders($args);
 
@@ -895,15 +890,15 @@ class OrderStatisticsAPI extends WP_REST_Controller
                 $phone = $order->get_billing_phone();
                 $email = $order->get_billing_email();
 
-                $_order = [];
+                $complete_orders_for_billing_phone = [];
                 // collect customer contact info
                 if(!empty($phone)) {
-                    $_order = get_orders_by_billing_phone_or_email_and_status($phone, null, ['wc-completed']);
+                    $complete_orders_for_billing_phone = get_orders_by_billing_phone_or_email_and_status($phone, null, ['wc-completed']);
                 } else if(!empty($email)) {
-                    $_order = get_orders_by_billing_phone_or_email_and_status(null, trim($email), ['wc-completed']);
+                    $complete_orders_for_billing_phone = get_orders_by_billing_phone_or_email_and_status(null, trim($email), ['wc-completed']);
                 }
 
-                if(count($_order)) {
+                if(count($complete_orders_for_billing_phone)) {
                     $total_repeat_orders ++;
                 }
             }
@@ -917,18 +912,14 @@ class OrderStatisticsAPI extends WP_REST_Controller
         return new WP_REST_Response([
             'status' => 'success',
             'data'   => [
-                'total_customer'       => $total_customer,
-                'repeat_customer'  => $repeat_customer,
-                'new_customer'     => $new_customer,
-                'new_customer_percentage'     => round($new_customer_percentage, 2),
-                'repeat_customer_percentage'  => round($repeat_customer_percentage, 2),
+                ...$customer_data,
                 'series' => [
                     [
-                        'name' => 'Returning order',
+                        'name' => 'Order by repeat customer',
                         'data'  => $repeat_series,
                     ],
                     [
-                        'name' => 'New order',
+                        'name' => 'Order by new Customer',
                         'data'  => $new_series,
                     ],
                 ],
@@ -938,39 +929,41 @@ class OrderStatisticsAPI extends WP_REST_Controller
     }
 }
 
-function get_order_ratio($data)
+function get_customer_data($data)
 {
-    $new_customer_count = 0;
-    $repeat_customer_count = 0;
-
     $group_by_phone_array = array_group_by_key($data, 'phone');
     $group_by_email_array = array_group_by_key($data, 'email');
+    
+    $data = count($group_by_phone_array) ? $group_by_phone_array : $group_by_email_array;
+    $result = [
+        'total_new_customers' => 0,
+        'new_customers' => [],
+        'new_customer_percentage' => 0,
+        'total_repeat_customers' => 0,
+        'repeat_customers' => [],
+        'repeat_customer_percentage' => 0,
+        'total_customers' => 0
+    ];
 
-    if(!empty($group_by_phone_array)) {
-        foreach($group_by_phone_array as $total_count) 
-        {
-            $total_count > 1 
-                ? $repeat_customer_count ++
-                : $new_customer_count = 1
-            ;
-        }
-    }else if(!empty($group_by_email_array)) {
-        foreach($group_by_email_array as $total_count) 
-        {
-            $total_count > 1 
-                ? $repeat_customer_count ++
-                : $new_customer_count = 1
-            ;
+    // Categorize customers
+    foreach ($data as $key => $value) {
+        if ($value == 1) {
+            $result['new_customers'][] = $key;
+            $result['total_new_customers']++;
+        } elseif ($value > 1) {
+            $result['repeat_customers'][] = $key;
+            $result['total_repeat_customers']++;
         }
     }
 
-    return [
-        'new_customer' => $new_customer_count,
-        'repeat_customer' => $repeat_customer_count,
-        'total_customer' => $new_customer_count + $repeat_customer_count
-    ];
-}
+    // Calculate total customers
+    $result['total_customers'] = count($data);
 
-function get_orders_by_email_or_phone_and_status(){
+    // Calculate percentages
+    if ($result['total_customers'] > 0) {
+        $result['new_customer_percentage'] = round(($result['total_new_customers'] / $result['total_customers']) * 100, 2);
+        $result['repeat_customer_percentage'] = round(($result['total_repeat_customers'] / $result['total_customers']) * 100, 2);
+    }
 
+    return $result;
 }
