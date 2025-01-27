@@ -147,7 +147,7 @@ class OrderListAPI
         {
             $product_info = getProductInfo($order);
             $customer_ip = $order->get_meta('_customer_ip_address', true);
-            $total_order_per_customer_for_current_order_status = get_total_orders_by_billing_phone_and_status($order);
+            $total_order_per_customer_for_current_order_status = get_total_orders_by_billing_phone_or_email_and_status($order);
     
             // Fetch fraud data from the custom table
             $table_name = $wpdb->prefix . __PREFIX . 'fraud_customers';
@@ -167,7 +167,7 @@ class OrderListAPI
             $order_notes = get_order_notes($order);
             $created_via = $order->get_meta('_created_via', true);
             $courier_data = get_courier_data_from_order($order->get_id());
-            $is_repeat_customer = is_repeat_customer_by_billing_phone($order->get_billing_phone());
+            $is_repeat_customer = is_repeat_customer($order);
 
             $data[] = [
                 'id'            => $order->get_id(),
@@ -613,20 +613,23 @@ function get_order_shipping_methods($order) {
  * @param int $order_id The ID of the WooCommerce order.
  * @return bool True if the customer is a repeat customer, false otherwise.
  */
-function is_repeat_customer_by_billing_phone($billing_phone) {
-    if (empty($billing_phone)) {
-        return false; // No phone number provided
-    }
-
+function is_repeat_customer($order) {
+    $phone = $order->get_billing_phone();
+    $email = $order->get_billing_email();
+    $orders = [];
     $my_orders = [
         'total_completed_order' => 0,
         'total_processing_order' => 0
     ];
 
-    $isRepeatCustomer = false;
+    if(!empty($phone)) {
+        $orders = get_orders_by_billing_phone_or_email_and_status($phone, null, ['processing', 'completed']);
+    } else if(!empty($email)) {
+        $orders = get_orders_by_billing_phone_or_email_and_status(null, $email, ['processing', 'completed']);
+    }
 
-    // Fetch orders by billing phone and status
-    $orders = get_orders_by_billing_phone_and_status($billing_phone, ['processing', 'completed']);
+
+    $isRepeatCustomer = false;
 
     foreach ($orders as $order) {
         $status = $order->get_status();
