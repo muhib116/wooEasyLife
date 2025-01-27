@@ -1,6 +1,6 @@
 import axios from "axios";
-import { createSMSHistory, getWPOption } from "./api";
-import { computed, ref } from "vue";
+import { createSMSHistory } from "./api";
+import { computed } from "vue";
 import { normalizePhoneNumber } from "./helper";
 import { useLicense } from "@/pages/config/license/UseLicense";
 
