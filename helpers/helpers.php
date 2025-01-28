@@ -448,3 +448,19 @@ function array_group_by_key($dataArray, $key='phone') {
 
     return $grouped_data;
 }
+
+function get_order_source($order) {
+    // Ensure $order is a valid WooCommerce order object or ID
+    if (!$order instanceof \WC_Order) {
+        $order = wc_get_order($order);
+    }
+
+    if (!$order) {
+        return 'No source found'; // Return a default message if the order is invalid
+    }
+
+    // Get the source data from the custom meta key
+    $source = $order->get_meta('_wc_order_attribution_utm_source', true);
+
+    return $source ? $source : 'No source found'; // Return the source or a fallback message
+}

@@ -19,6 +19,7 @@ class ComposerStaticInit4bd325c6d539e219feefd4ea170fecd7
             'WooEasyLife\\CRUD\\' => 17,
             'WooEasyLife\\Admin\\' => 18,
             'WooEasyLife\\API\\' => 16,
+            'WooEasyLife\\' => 12,
         ),
     );
 
@@ -46,6 +47,10 @@ class ComposerStaticInit4bd325c6d539e219feefd4ea170fecd7
         'WooEasyLife\\API\\' => 
         array (
             0 => __DIR__ . '/../..' . '/api',
+        ),
+        'WooEasyLife\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/',
         ),
     );
 

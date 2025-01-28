@@ -12,4 +12,5 @@ return array(
     'WooEasyLife\\CRUD\\' => array($baseDir . '/CRUD'),
     'WooEasyLife\\Admin\\' => array($baseDir . '/admin'),
     'WooEasyLife\\API\\' => array($baseDir . '/api'),
+    'WooEasyLife\\' => array($baseDir . '/'),
 );

@@ -3,7 +3,10 @@ namespace WooEasyLife\Admin\DBTable;
 
 if (!class_exists('AbandonCartTable')) :
 class AbandonCartTable {
+    public $table_name = '';
     public function __construct() {
+        global $wpdb;
+        $this->table_name = $wpdb->prefix . __PREFIX . 'abandon_cart';
         add_action('admin_notices', [$this, 'showAdminNotice']);
     }
 
@@ -19,11 +22,10 @@ class AbandonCartTable {
         }
 
         // Define table name
-        $table_name = $wpdb->prefix . __PREFIX . 'abandon_cart';
         $charset_collate = $wpdb->get_charset_collate();
 
         // SQL to create the table
-        $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+        $sql = "CREATE TABLE IF NOT EXISTS $this->table_name (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             session_id VARCHAR(255) NOT NULL,
             customer_email VARCHAR(255) DEFAULT NULL,
@@ -54,16 +56,8 @@ class AbandonCartTable {
     public function delete() {
         global $wpdb;
 
-        // Ensure the __PREFIX constant is defined
-        if (!defined('__PREFIX')) {
-            define('__PREFIX', 'woo_easy_life_');
-        }
-
-        // Define table name
-        $table_name = $wpdb->prefix . __PREFIX . 'abandon_cart';
-
         // Optional: Uncomment the next line to delete the table on plugin deactivation
-        $wpdb->query("DROP TABLE IF EXISTS $table_name");
+        $wpdb->query("DROP TABLE IF EXISTS $this->table_name");
     }
 
     /**
@@ -72,17 +66,10 @@ class AbandonCartTable {
     public function showAdminNotice() {
         global $wpdb;
 
-        // Ensure the __PREFIX constant is defined
-        if (!defined('__PREFIX')) {
-            define('__PREFIX', 'woo_easy_life_');
-        }
-
-        $table_name = $wpdb->prefix . __PREFIX . 'abandon_cart';
-
         // Check if the table exists
-        $table_exists = $wpdb->get_var("SHOW TABLES LIKE '$table_name'");
+        $table_exists = $wpdb->get_var("SHOW TABLES LIKE '$this->table_name'");
 
-        if ($table_exists !== $table_name) {
+        if ($table_exists !== $this->table_name) {
             echo '<div class="notice notice-error is-dismissible">
                 <p>' . esc_html__('The abandon cart table was not created. Please deactivate and reactivate the "WooEasyLife" plugin.', 'wooeasylife') . '</p>
             </div>';

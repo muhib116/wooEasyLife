@@ -10,5 +10,6 @@ class Frontend_Class_Register{
         new \WooEasyLife\Frontend\Order_limit();
         new \WooEasyLife\Frontend\TrackAbandonCart();
         new \WooEasyLife\Frontend\CheckoutFormValidation();
+        new \WooEasyLife\Frontend\CustomerHandler();
     }
 }

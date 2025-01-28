@@ -3,7 +3,11 @@ namespace WooEasyLife\Admin\DBTable;
 
 if (!class_exists('SmsConfigTable')) :
 class SMSConfigTable {
+    public $table_name = '';
     public function __construct() {
+        global $wpdb;
+
+        $this->table_name = $wpdb->prefix . __PREFIX . 'sms_config';
         add_action('admin_notices', [$this, 'showAdminNotice']);
     }
 
@@ -13,17 +17,11 @@ class SMSConfigTable {
     public function create() {
         global $wpdb;
 
-        // Ensure the __PREFIX constant is defined
-        if (!defined('__PREFIX')) {
-            define('__PREFIX', 'woo_easy_life_');
-        }
-
         // Define table name
-        $table_name = $wpdb->prefix . __PREFIX . 'sms_config';
         $charset_collate = $wpdb->get_charset_collate();
 
         // SQL to create the table
-        $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+        $sql = "CREATE TABLE IF NOT EXISTS $this->table_name (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             status VARCHAR(255) NOT NULL,
             phone_number VARCHAR(255) NULL,
@@ -45,11 +43,8 @@ class SMSConfigTable {
     private function insertDefaultData() {
         global $wpdb;
     
-        // Define table name
-        $table_name = $wpdb->prefix . __PREFIX . 'sms_config';
-    
         // Check if the table already contains records
-        $record_count = $wpdb->get_var("SELECT COUNT(*) FROM $table_name");
+        $record_count = $wpdb->get_var("SELECT COUNT(*) FROM $this->table_name");
     
         if ($record_count > 0) {
             return; // If records exist, exit the function
@@ -76,7 +71,7 @@ class SMSConfigTable {
         foreach ($default_data as $data) {
             // Insert each default row
             $wpdb->insert(
-                $table_name,
+                $this->table_name,
                 $data,
                 [
                     '%s', // status
@@ -96,16 +91,8 @@ class SMSConfigTable {
     public function delete() {
         global $wpdb;
 
-        // Ensure the __PREFIX constant is defined
-        if (!defined('__PREFIX')) {
-            define('__PREFIX', 'wooeasylife_');
-        }
-
-        // Define table name
-        $table_name = $wpdb->prefix . __PREFIX . 'sms_config';
-
         // Optional: Uncomment the next line to delete the table on plugin deactivation
-        $wpdb->query("DROP TABLE IF EXISTS $table_name");
+        $wpdb->query("DROP TABLE IF EXISTS $this->table_name");
     }
 
     /**
@@ -114,17 +101,10 @@ class SMSConfigTable {
     public function showAdminNotice() {
         global $wpdb;
 
-        // Ensure the __PREFIX constant is defined
-        if (!defined('__PREFIX')) {
-            define('__PREFIX', 'wooeasylife_');
-        }
-
-        $table_name = $wpdb->prefix . __PREFIX . 'sms_config';
-
         // Check if the table exists
-        $table_exists = $wpdb->get_var("SHOW TABLES LIKE '$table_name'");
+        $table_exists = $wpdb->get_var("SHOW TABLES LIKE '$this->table_name'");
 
-        if ($table_exists !== $table_name) {
+        if ($table_exists !== $this->table_name) {
             echo '<div class="notice notice-error is-dismissible">
                 <p>' . esc_html__('The SMS configuration table was not created. Please deactivate and reactivate the "WooEasyLife" plugin.', 'wooeasylife') . '</p>
             </div>';

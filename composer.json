@@ -4,6 +4,7 @@
     "description": "WooEasyLife is a WordPress plugin for WooCommerce enhancements.",
     "autoload": {
         "psr-4": {
+            "WooEasyLife\\": "",
             "WooEasyLife\\Admin\\": "admin/",
             "WooEasyLife\\Frontend\\": "frontend/",
             "WooEasyLife\\Includes\\": "includes/",

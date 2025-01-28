@@ -53,7 +53,7 @@ Dashboard:
 👉🏻 Order list filter by courier partner
 👉🏻 Order Tags: Add tags to orders for easier categorization (e.g., VIP, Urgent, Gift).
 👉🏻 Send message for abandoned order customer
-👉🏻 landing page calculation
+👉🏻 landing page view calculation
 
 
 

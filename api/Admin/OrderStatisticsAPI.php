@@ -53,7 +53,7 @@ class OrderStatisticsAPI extends WP_REST_Controller
         ]);
         register_rest_route(__API_NAMESPACE, '/orders-grouped-by-created-via', [
             'methods'             => 'GET',
-            'callback'            => [$this, 'get_orders_grouped_by_created_via'],
+            'callback'            => [$this, 'get_orders_grouped_by_order_source'],
             'permission_callback' => api_permission_check(), // Adjust permissions as needed
         ]);
         register_rest_route(__API_NAMESPACE, '/order-cycle-time', [
@@ -447,7 +447,7 @@ class OrderStatisticsAPI extends WP_REST_Controller
         ], 200);
     }
     
-    public function get_orders_grouped_by_created_via(WP_REST_Request $request) {
+    public function get_orders_grouped_by_order_source(WP_REST_Request $request) {
         // Retrieve the start_date and end_date from the request
         $start_date = $request->get_param('start_date') ?? date('Y-m-d', strtotime('-6 days'));
         $end_date = $request->get_param('end_date') ?? date('Y-m-d');
@@ -469,20 +469,20 @@ class OrderStatisticsAPI extends WP_REST_Controller
         // Initialize an array to store grouped data
         $grouped_data = [];
     
-        // Group orders by 'created_via'
+        // Group orders by 'order_source'
         foreach ($orders as $order) {
-            $created_via = $order->get_meta('_created_via', true);
+            $order_source = get_order_source($order);
     
-            if (!isset($grouped_data[$created_via])) {
-                $grouped_data[$created_via] = [
-                    'created_via' => $created_via ?: 'unknown',
+            if (!isset($grouped_data[$order_source])) {
+                $grouped_data[$order_source] = [
+                    'order_source' => $order_source ?: 'unknown',
                     'total_orders' => 0,
                     'total_amount' => 0,
                 ];
             }
     
-            $grouped_data[$created_via]['total_orders']++;
-            $grouped_data[$created_via]['total_amount'] += $order->get_total();
+            $grouped_data[$order_source]['total_orders']++;
+            $grouped_data[$order_source]['total_amount'] += $order->get_total();
         }
 
         // Prepare data for ApexCharts
@@ -491,7 +491,7 @@ class OrderStatisticsAPI extends WP_REST_Controller
         $total_amount_data = [];
 
         foreach ($grouped_data as $group) {
-            $categories[] = ucfirst($group['created_via']); // Capitalize the source for categories
+            $categories[] = ucfirst($group['order_source']); // Capitalize the source for categories
             $total_orders_data[] = $group['total_orders'];
             $total_amount_data[] = $group['total_amount'];
         }

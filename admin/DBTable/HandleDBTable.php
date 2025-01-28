@@ -8,6 +8,7 @@ class HandleDBTable{
     public $blockListTable;
     public $smsHistoryTable;
     public $abandonCartTable;
+    public $customerDataTable;
 
     public function __construct()
     {
@@ -16,6 +17,7 @@ class HandleDBTable{
         $this->blockListTable = new BlockListTable();
         $this->smsHistoryTable = new SMSHistoryTable();
         $this->abandonCartTable = new AbandonCartTable();
+        $this->customerDataTable = new CustomerDataTable();
     }
 
     public function create() {
@@ -24,6 +26,7 @@ class HandleDBTable{
         $this->blockListTable->create();
         $this->smsHistoryTable->create();
         $this->abandonCartTable->create();
+        $this->customerDataTable->create();
     }
 
     public function delete() {
@@ -32,6 +35,7 @@ class HandleDBTable{
         $this->blockListTable->delete();
         $this->smsHistoryTable->delete();
         $this->abandonCartTable->delete();
+        $this->customerDataTable->delete();
     }
 }
 endif;
