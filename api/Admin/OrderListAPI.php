@@ -149,13 +149,9 @@ class OrderListAPI
             $total_order_per_customer_for_current_order_status = get_total_orders_by_billing_phone_or_email_and_status($order);
     
             // Fetch fraud data from the custom table
-            $table_name = $wpdb->prefix . __PREFIX . 'fraud_customers';
             $_billing_phone = $order->get_billing_phone();
             $_billing_email = $order->get_billing_email();
-            $fraud_data = $wpdb->get_row(
-                $wpdb->prepare("SELECT report FROM $table_name WHERE customer_id = %s", normalize_phone_number($_billing_phone)),
-                ARRAY_A
-            );
+            $fraud_data = customer_courier_fraud_data($order);
     
             $ip_block_listed = get_block_data_by_type($customer_ip, 'ip');
             $phone_block_listed = get_block_data_by_type(normalize_phone_number($_billing_phone), 'phone_number');
@@ -165,7 +161,7 @@ class OrderListAPI
             $applied_coupons = $order->get_coupon_codes(); // Array of coupon codes
             $order_notes = get_order_notes($order);
             $created_via = $order->get_meta('_created_via', true);
-            $courier_data = get_courier_data_from_order($order->get_id());
+            $courier_data = get_courier_data_from_order($order);
             $is_repeat_customer = is_repeat_customer($order);
 
             $data[] = [

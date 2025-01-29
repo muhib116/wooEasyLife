@@ -30,6 +30,7 @@ class PluginLifecycleHandle {
         // Initialize required options
         if (empty(get_option(__PREFIX . 'license'))) update_option(__PREFIX . 'license', ['key' => ""]);
         if (empty(get_option(__PREFIX . 'plugin_installed'))) update_option(__PREFIX . 'plugin_installed', true);
+        if (empty(get_option(__PREFIX . '_courier_data'))) update_option(__PREFIX . '_courier_data', true);
 
         // Create required database tables and settings
         $handleDBTable->create();

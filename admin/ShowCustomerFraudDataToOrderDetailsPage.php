@@ -144,7 +144,7 @@ class ShowCustomerFraudDataToOrderDetailsPage {
             <div class="fraud-history-container">
                 <h2 class="fraud-history-title">
                     <?php
-                        if($fraud_data['report']['success_rate'] == '100%'){
+                        if(isset($fraud_data) && $fraud_data['report']['success_rate'] == '100%'){
                             echo '🎉 The number has no fraud history! ✅';
                         }
                     ?>

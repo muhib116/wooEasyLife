@@ -140,7 +140,8 @@ function getCustomerFraudData($payload)
         'headers' => [
             'Content-Type'  => 'application/json',
             'Authorization' => 'Bearer ' . $license_key,
-        ]
+        ],
+        'timeout' => 45,
     ];
 
     // Make the API request
@@ -327,6 +328,20 @@ function validate_BD_phoneNumber($phoneNumber) {
     return false;
 }
 
+
+function customer_courier_fraud_data($order) {
+    global $wpdb;
+     // Fetch fraud data from the custom table
+     $table_name = $wpdb->prefix . __PREFIX . 'fraud_customers';
+     $_billing_phone = $order->get_billing_phone();
+     $_billing_email = $order->get_billing_email();
+     $fraud_data = $wpdb->get_row(
+         $wpdb->prepare("SELECT report FROM $table_name WHERE customer_id = %s", normalize_phone_number($_billing_phone)),
+         ARRAY_A
+     );
+
+     return $fraud_data;
+}
 
 /**
  * Get courier data for an order.

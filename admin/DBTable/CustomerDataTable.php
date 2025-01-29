@@ -38,7 +38,7 @@ class CustomerDataTable {
             first_order_date DATETIME NULL,
             order_frequency VARCHAR(20) NULL,
             total_spent DECIMAL(10,2) DEFAULT 0.00,
-            customer_type ENUM('new', 'returning', 'vip', 'fraud') DEFAULT 'new',
+            customer_type ENUM('new', 'returning', 'vip', 'loyal') DEFAULT 'new',
             referral_source VARCHAR(255) NULL,
             marketing_consent BOOLEAN DEFAULT 0,
             fraud_score INT(11) DEFAULT 0,
