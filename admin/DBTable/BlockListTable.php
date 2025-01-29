@@ -7,7 +7,6 @@ class BlockListTable {
     public function __construct() {
         global $wpdb;
         $this->table_name = $wpdb->prefix . __PREFIX . 'block_list';
-        add_action('admin_notices', [$this, 'showAdminNotice']);
     }
 
     /**
@@ -48,22 +47,6 @@ class BlockListTable {
 
         // Optional: Uncomment the next line to delete the table on plugin deactivation
         $wpdb->query("DROP TABLE IF EXISTS $this->table_name");
-    }
-
-    /**
-     * Show an admin notice if the table does not exist
-     */
-    public function showAdminNotice() {
-        global $wpdb;
-
-        // Check if the table exists
-        $table_exists = $wpdb->get_var("SHOW TABLES LIKE '$this->table_name'");
-
-        if ($table_exists !== $this->table_name) {
-            echo '<div class="notice notice-error is-dismissible">
-                <p>' . esc_html__('The block list table was not created. Please deactivate and reactivate the "WooEasyLife" plugin.', 'wooeasylife') . '</p>
-            </div>';
-        }
     }
 }
 endif;

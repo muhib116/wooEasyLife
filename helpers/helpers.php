@@ -140,8 +140,7 @@ function getCustomerFraudData($payload)
         'headers' => [
             'Content-Type'  => 'application/json',
             'Authorization' => 'Bearer ' . $license_key,
-        ],
-        'timeout' => 45,
+        ]
     ];
 
     // Make the API request
@@ -156,7 +155,6 @@ function getCustomerFraudData($payload)
 
     $response_body = wp_remote_retrieve_body($response);
     $response_code = wp_remote_retrieve_response_code($response);
-
     if ($response_code !== 200) {
         return [
             'status'  => $response_code,
@@ -455,12 +453,18 @@ function get_order_source($order) {
         $order = wc_get_order($order);
     }
 
+    // Check if the order is valid
     if (!$order) {
         return 'No source found'; // Return a default message if the order is invalid
     }
 
-    // Get the source data from the custom meta key
+    // Safely retrieve the source data from the custom meta key
     $source = $order->get_meta('_wc_order_attribution_utm_source', true);
 
-    return $source ? $source : 'No source found'; // Return the source or a fallback message
+    // Ensure $source is not null or undefined
+    if (!empty($source)) {
+        return $source; // Return the source if it exists
+    } else {
+        return 'No source found'; // Fallback message if the source is not set
+    }
 }

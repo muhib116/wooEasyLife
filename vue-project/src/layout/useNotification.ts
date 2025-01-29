@@ -5,28 +5,33 @@ export const useNotification = () => {
   const { getOrders, loadOrderStatusList } = inject("useOrders", {});
   const hasNewOrder = ref(false);
 
-  let timeoutId;
+  let timeoutId1;
+  let timeoutId2;
   const checkNewOrderStatus = async () => 
   {
-    clearTimeout(timeoutId)
+    clearTimeout(timeoutId1);
+    clearTimeout(timeoutId2);
     const { data } = await checkHasNewOrder();
-    if (data.has_new_orders) 
-    {
-      const audio = new Audio(import.meta.env.DEV ? '/notification-sound.wav' : window?.wooLifeChanger?.dist_url+'/notification-sound.wav'); // Use relative path
+    if (data?.has_new_orders) {
+      const audio = new Audio(
+        import.meta.env.DEV
+          ? "/notification-sound.wav"
+          : window?.wooEasyLife?.dist_url + "/notification-sound.wav"
+      ); // Use relative path
       audio.play();
       hasNewOrder.value = true;
       loadOrderStatusList();
       getOrders(false);
 
-      timeoutId = setTimeout(() => {
+      timeoutId1 = setTimeout(() => {
         hasNewOrder.value = false;
         setTimeout(checkNewOrderStatus, 8000);
       }, 4000);
     } else {
-      timeoutId = setTimeout(checkNewOrderStatus, 8000);
+      timeoutId2 = setTimeout(checkNewOrderStatus, 8000);
     }
   };
-  onMounted(checkNewOrderStatus);
+  // onMounted(checkNewOrderStatus);
 
   return {
     hasNewOrder,

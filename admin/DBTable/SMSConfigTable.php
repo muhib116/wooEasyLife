@@ -8,7 +8,6 @@ class SMSConfigTable {
         global $wpdb;
 
         $this->table_name = $wpdb->prefix . __PREFIX . 'sms_config';
-        add_action('admin_notices', [$this, 'showAdminNotice']);
     }
 
     /**
@@ -93,22 +92,6 @@ class SMSConfigTable {
 
         // Optional: Uncomment the next line to delete the table on plugin deactivation
         $wpdb->query("DROP TABLE IF EXISTS $this->table_name");
-    }
-
-    /**
-     * Show an admin notice if the table does not exist
-     */
-    public function showAdminNotice() {
-        global $wpdb;
-
-        // Check if the table exists
-        $table_exists = $wpdb->get_var("SHOW TABLES LIKE '$this->table_name'");
-
-        if ($table_exists !== $this->table_name) {
-            echo '<div class="notice notice-error is-dismissible">
-                <p>' . esc_html__('The SMS configuration table was not created. Please deactivate and reactivate the "WooEasyLife" plugin.', 'wooeasylife') . '</p>
-            </div>';
-        }
     }
 }
 endif;

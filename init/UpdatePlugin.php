@@ -16,7 +16,7 @@ class UpdatePlugin
      */
     public function __construct($plugin_version, $license_key)
     {
-        $this->plugin_slug = 'woo-life-changer';
+        $this->plugin_slug = 'woo-easy-life';
         $this->update_server_url = 'https://api.wpsalehub.com/api/get-metadata';
         $this->plugin_version = $plugin_version;
         $this->license_key = $license_key;

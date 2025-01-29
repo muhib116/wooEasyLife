@@ -70,18 +70,17 @@ class OrderListAPI
             [
                 'methods'  => 'POST',
                 'callback' => [$this, 'change_order_status'], // Ensure this function exists and is callable
-                'permission_callback' => api_permission_check(),
-                'args'     => $this->get_status_change_schema(), // Optional validation
+                'permission_callback' => api_permission_check(), // Ensure this exists and returns true/false
             ]
         );
+
         register_rest_route(
             __API_NAMESPACE, 
             '/check-fraud-customer',
             [
                 'methods'  => 'POST',
                 'callback' => [$this, 'check_fraud_customer'], // Ensure this function exists and is callable
-                'permission_callback' => api_permission_check(),
-                'args'     => $this->get_check_fraud_customer_schema(), // Optional validation
+                'permission_callback' => api_permission_check()
             ]
         );
         register_rest_route(
@@ -453,65 +452,6 @@ class OrderListAPI
             }
         }
     }
-
-    /**
-     * Schema for status change input validation
-     */
-    public function get_status_change_schema() {
-        return [
-            'type'       => 'array',
-            'required'   => true,
-            'description' => 'Array of orders with their new statuses.',
-            'items'      => [
-                'type'       => 'object',
-                'properties' => [
-                    'order_id' => [
-                        'required'    => true,
-                        'type'        => 'integer',
-                        'description' => 'ID of the order to update.',
-                    ],
-                    'new_status' => [
-                        'required'    => true,
-                        'type'        => 'string',
-                        'description' => 'New status for the order.',
-                        'enum'        => array_map(function ($status) {
-                            return str_replace('wc-', '', $status);
-                        }, array_keys(wc_get_order_statuses())),
-                    ],
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * Schema for fraud customer check
-     */
-    public function get_check_fraud_customer_schema() {
-        return [
-            'type'       => 'array',
-            'required'   => true,
-            'description' => 'Array of customer data with their .',
-            'items'      => [
-                'type'       => 'object',
-                'properties' => [
-                    'order_id' => [
-                        'required'    => true,
-                        'type'        => 'integer',
-                        'description' => 'ID of the order to update.',
-                    ],
-                    'new_status' => [
-                        'required'    => true,
-                        'type'        => 'string',
-                        'description' => 'New status for the order.',
-                        'enum'        => array_map(function ($status) {
-                            return str_replace('wc-', '', $status);
-                        }, array_keys(wc_get_order_statuses())),
-                    ],
-                ],
-            ],
-        ];
-    }
-    
 }
 
 

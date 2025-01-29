@@ -29,6 +29,7 @@ export const useLicense = (mountable: boolean = true) => {
         try {
             if(shouldDisabled && confirm('Are you sure to deactivate license?')){
                 licenseKey.value = ''
+                isValidLicenseKey.value = false
                 localStorage.removeItem('license_key')
             }
 

@@ -30,9 +30,9 @@ class BootClass {
     public function wel_add_menu() {
         add_menu_page(
             'WEL',
-            'WooLifeChanger',
+            'WooEasyLife',
             'manage_options',
-            'woo-life-changer',
+            'woo-easy-life',
             [$this, 'wel_render_admin_page'],
             'dashicons-admin-site-alt',
             6
@@ -53,7 +53,7 @@ class BootClass {
 
     // load admin script
     public function wel_enqueue_scripts($hook_suffix) {
-        if($hook_suffix != 'toplevel_page_woo-life-changer') return;
+        if($hook_suffix != 'toplevel_page_woo-easy-life') return;
     
         if (file_exists($this->manifest_path)) {
             if ($this->js_file_name) {
@@ -77,7 +77,7 @@ class BootClass {
         }
     
         // Pass data to Vue
-        wp_localize_script('woo-easy-life', 'wooLifeChanger', [
+        wp_localize_script('woo-easy-life', 'wooEasyLife', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce'    => wp_create_nonce('wel_nonce'),
             'dist_url' => plugins_url('vue-project/dist', __DIR__),

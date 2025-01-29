@@ -29,7 +29,7 @@ export const useSalesTarget = () => {
     dateWise: {},
   });
   const salesTargetData = ref({
-    option_name: "woo_easy_life_sales_target",
+    option_name: "sales_target",
     data: {
       ...defaultData,
     },
@@ -62,7 +62,7 @@ export const useSalesTarget = () => {
     try {
       isLoading.value = true;
       const { data } = await getWPOption({
-        option_name: "woo_easy_life_sales_target",
+        option_name: "sales_target",
       }); // Replace with your actual API call
 
       salesTargetData.value = {
