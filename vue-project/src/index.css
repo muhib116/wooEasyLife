@@ -42,7 +42,7 @@
 }
 
 /* wordpress default style overwrite start */
-#woo-easy-life {
+.wp-admin #woo-easy-life {
   .wp-person a:focus .gravatar,
   a:focus,
   a:focus .media-icon img,

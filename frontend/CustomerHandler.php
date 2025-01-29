@@ -9,13 +9,14 @@ class CustomerHandler {
         $this->table_name = $wpdb->prefix . __PREFIX . 'customer_data';
 
         // Hook into WooCommerce order creation
-        add_action('woocommerce_checkout_order_created', [$this, 'handle_customer_data'], 10, 2);
+        // add_action('woocommerce_checkout_order_created', [$this, 'handle_customer_data'], 10, 2);
+        add_action('woocommerce_new_order', [$this, 'handle_customer_data'], 10, 2);
     }
 
     /**
      * Handle customer insertion or update when a new order is placed
      */
-    public function handle_customer_data($order) {
+    public function handle_customer_data($order_id, $order) {
         global $wpdb;
 
     
@@ -270,56 +271,79 @@ class CustomerHandler {
     
         return $total_spent;
     }
-    
-
     private function calculate_fraud_score($order) {
         $score = 0;
     
         // Extract relevant order details
         $billing_phone = normalize_phone_number($order->get_billing_phone());
-        $customer_email = $order->get_billing_email();
+        $billing_email = $order->get_billing_email();
         $customer_ip = $order->get_customer_ip_address();
     
-        // 1️⃣ **Calculate Courier Fraud Score (Using a Separate Function)**
+        // 1️⃣ **🚚 Calculate Courier Fraud Score**
         $score += $this->get_courier_fraud_score($order);
     
-        // 2️⃣ **Mismatched Billing & Shipping Address → Potential fraud**
+        // 2️⃣ **🏠 Mismatched Billing & Shipping Address → Potential fraud**
         if ($order->get_billing_address_1() !== $order->get_shipping_address_1()) {
             $score += 10;
         }
     
-        // 3️⃣ **Email & Phone Number Usage → Multiple accounts using the same info**
-        $duplicate_email = $this->check_duplicate_customer_data('email', $customer_email);
+        // 3️⃣ **📧 Email & Phone Number Usage → Multiple accounts using the same info**
+        $duplicate_email = $this->check_duplicate_customer_data('email', $billing_email);
         $duplicate_phone = $this->check_duplicate_customer_data('phone', $billing_phone);
     
-        if ($duplicate_email > 2) {
+        if ($duplicate_email >= 3) {
             $score += 15;
-        } elseif ($duplicate_email > 1) {
+        } elseif ($duplicate_email >= 2) {
             $score += 8;
         }
     
-        if ($duplicate_phone > 2) {
+        if ($duplicate_phone >= 3) {
             $score += 15;
-        } elseif ($duplicate_phone > 1) {
+        } elseif ($duplicate_phone >= 2) {
             $score += 8;
         }
     
-        // 4️⃣ **Blacklist Check → If customer email, phone, or IP is blacklisted**
-        if ($this->is_blacklisted($billing_phone, $customer_email, $customer_ip)) {
+        // 4️⃣ **🛑 Blacklist Check → If customer email, phone, or IP is blacklisted**
+        if ($this->is_blacklisted($billing_phone, $billing_email, $customer_ip)) {
             $score += 50; // High risk if blacklisted
         }
     
-        // 5️⃣ **Multiple failed/canceled orders → Possible fraud**
-        $failed_orders = $this->get_failed_orders_count($billing_phone, $customer_email);
-        if ($failed_orders > 3) {
+        // 5️⃣ **❌ Multiple failed/canceled orders → Possible fraud**
+        $failed_orders = $this->get_failed_orders_count($billing_phone, $billing_email);
+        if ($failed_orders >= 4) {
             $score += 20;
-        } elseif ($failed_orders > 1) {
+        } elseif ($failed_orders >= 2) {
             $score += 10;
+        }
+    
+        // 6️⃣ **📊 Order Frequency → Unusual frequency patterns**
+        $order_frequency = $this->getOrderFrequency($billing_phone, $billing_email);
+    
+        if ($order_frequency < 0.3) {
+            $score += 0; // Low frequency, no risk
+        } elseif ($order_frequency >= 0.3 && $order_frequency < 0.6) {
+            $score += 5; // Mild risk
+        } elseif ($order_frequency >= 0.6 && $order_frequency < 1.2) {
+            $score += 15; // Moderate risk
+        } elseif ($order_frequency >= 1.2 && $order_frequency < 2) {
+            $score += 25; // High risk
+        } elseif ($order_frequency >= 2) {
+            $score += 40; // Very high risk
+        }
+    
+        // 7️⃣ **🚨 High Order Amount on First Order → Suspicious**
+        $order_total = (float) $order->get_total();
+        $total_orders = $this->get_total_orders($billing_phone, $billing_email);
+    
+        if ($total_orders == 1 && $order_total > 5000) {
+            $score += 25; // High fraud risk for large first-time orders
+        } elseif ($total_orders > 1 && $order_total > 10000) {
+            $score += 15; // Potential fraud risk for bulk orders
         }
     
         // Final fraud score (capped at 100)
         return min($score, 100);
-    }
+    }    
 
     private function get_courier_fraud_score($order) {
         $score = 0;
@@ -374,7 +398,20 @@ class CustomerHandler {
         return $score;
     }
     
-    
+    private function getOrderFrequency ($phone, $email) {
+        global $wpdb;
+        
+        $existing_customer_data = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM {$this->table_name} WHERE phone = %s OR email = %s LIMIT 1",
+                $phone, $email
+            ),
+            ARRAY_A
+        );
+
+        $order_frequency = isset($existing_customer_data['order_frequency']) ? $existing_customer_data['order_frequency'] : 0;
+        return  $order_frequency;
+    }    
 
     
     private function get_failed_orders_count($billing_phone, $billing_email) {

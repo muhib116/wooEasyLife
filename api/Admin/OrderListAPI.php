@@ -2,8 +2,6 @@
 
 namespace WooEasyLife\API\Admin;
 
-use WooEasyLife\Frontend\CustomerHandler;
-
 class OrderListAPI
 {
 
@@ -165,7 +163,7 @@ class OrderListAPI
             $created_via = $order->get_meta('_created_via', true);
             $courier_data = get_courier_data_from_order($order);
             $is_repeat_customer = is_repeat_customer($order);
-            $customer_custom_data = CustomerHandler::get_customer_data($_billing_phone, $_billing_email);
+            $customer_custom_data = \WooEasyLife\Frontend\CustomerHandler::get_customer_data($_billing_phone, $_billing_email);
 
             $data[] = [
                 'id'            => $order->get_id(),
@@ -391,6 +389,11 @@ class OrderListAPI
             // Update the order status
             try {
                 $order->update_status($new_status, 'Status updated via API', true);
+                if($new_status == 'wc-completed'){
+                    $customerHandler = new \WooEasyLife\Frontend\CustomerHandler();
+                    $customerHandler->handle_customer_data($order);
+                }
+
                 $responses[] = [
                     'status'  => 'success',
                     'message' => 'Order status updated successfully.',
