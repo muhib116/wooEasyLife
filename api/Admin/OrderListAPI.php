@@ -2,6 +2,8 @@
 
 namespace WooEasyLife\API\Admin;
 
+use WooEasyLife\Frontend\CustomerHandler;
+
 class OrderListAPI
 {
 
@@ -163,11 +165,13 @@ class OrderListAPI
             $created_via = $order->get_meta('_created_via', true);
             $courier_data = get_courier_data_from_order($order);
             $is_repeat_customer = is_repeat_customer($order);
+            $customer_custom_data = CustomerHandler::get_customer_data($_billing_phone, $_billing_email);
 
             $data[] = [
                 'id'            => $order->get_id(),
                 'status'        => $order->get_status(),
                 'total'         => $order->get_total(),
+                'customer_custom_data' => $customer_custom_data,
                 'total_order_per_customer_for_current_order_status' => $total_order_per_customer_for_current_order_status,
                 'date_created'  => $order->get_date_created() ? $order->get_date_created()->date('M j, Y \a\t g:i A') : null,
                 'customer_id'   => $order->get_customer_id(),

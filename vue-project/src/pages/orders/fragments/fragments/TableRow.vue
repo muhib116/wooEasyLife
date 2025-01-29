@@ -32,19 +32,6 @@
                     {{ order.order_source }}
                     <!-- {{ order.created_via.replace('-', ' ') }} -->
                 </span>
-            </div>
-            <div
-                class="flex gap-1 font-semibold"
-            >
-                {{ order.billing_address.first_name }}
-                {{ order.billing_address.last_name }}
-                <span
-                    v-if="order.repeat_customer"
-                    class="text-green-500"
-                    title="Repeat customer"
-                >
-                    (Repeat)
-                </span>
                 <a 
                     class="text-orange-500 hover:scale-150 duration-200 opacity-0 group-hover:opacity-100"
                     :href="`${baseUrl}/wp-admin/post.php?post=${order.id}&action=edit`"
@@ -56,6 +43,19 @@
                         weight="bold"
                     />
                 </a>
+            </div>
+            <div
+                class="flex gap-1 font-medium"
+            >
+                {{ order.billing_address.first_name }}
+                {{ order.billing_address.last_name }}
+                <span
+                    v-if="order.repeat_customer"
+                    class="text-green-500 tex-sm"
+                    title="Repeat customer"
+                >
+                    (Repeat)
+                </span>
             </div>
             <div class="text-[12px] flex gap-1 items-center">
                 📅 {{ order.date_created }}
@@ -76,7 +76,7 @@
 
             <div class="flex gap-2">
                 <span
-                    v-if="order.ip_block_listed"
+                    v-if="order?.ip_block_listed"
                     class="!py-0 !text-[10px] flex items-center text-[#f93926]"
                 >
                     <Icon
@@ -86,7 +86,7 @@
                     Ip blocked
                 </span>
                 <span
-                    v-if="order.phone_block_listed"
+                    v-if="order?.phone_block_listed"
                     class="!py-0 !text-[10px] flex items-center text-[#e82661]"
                 >
                     <Icon
@@ -96,7 +96,7 @@
                     Phone blocked
                 </span>
                 <span
-                    v-if="order.email_block_listed"
+                    v-if="order?.email_block_listed"
                     class="!py-0 !text-[10px] flex items-center text-[#444444]"
                 >
                     <Icon
@@ -105,6 +105,49 @@
                     />
                     Email blocked
                 </span>
+            </div>
+        </Table.Td>
+        <Table.Td>
+            <div v-if="order?.customer_custom_data" class="grid">
+                <span
+                    title="Lifetime total orders"
+                >
+                    📦 Orders: 
+                    {{order?.customer_custom_data?.total_orders}}
+                </span>
+                <span
+                    title="Total spent amount"
+                    class="text-green-500"
+                >
+                    💰 Spent: 
+                    <span
+                        v-html="order?.currency_symbol || 'tk'"
+                    ></span>{{order?.customer_custom_data?.total_spent}}
+                </span>
+                <span
+                    title="Order frequency per day"
+                    class="text-orange-400"
+                >
+                    ⏳ Frequency: 
+                    {{order?.customer_custom_data?.order_frequency}}
+                </span>
+                <span
+                    class="capitalize"
+                    title="Customer Type"
+                >
+                        ⚠️ Type: 
+                    {{order?.customer_custom_data?.customer_type}}
+                </span>
+                <span
+                    title="Customer fraud score"
+                    class="text-red-500"
+                >
+                    🚨 Fraud score: 
+                    {{order?.customer_custom_data?.fraud_score || 0}}%
+                </span>
+            </div>
+            <div v-else class="text-red-400 text-center">
+                Behavior not detected!
             </div>
         </Table.Td>
         <Table.Td>
@@ -245,28 +288,28 @@
             </button>
         </Table.Td>
         <Table.Td>
-            <button
-                class="relative flex flex-col whitespace-nowrap justify-center items-center text-orange-500"
-                @click="toggleNotesModel = true"
-            >
-                <Icon
-                    name="PhNote"
-                    size="20"
-                />
-                Notes
-            </button>
-        </Table.Td>
-        <Table.Td>
-            <button
-                class="relative flex flex-col whitespace-nowrap justify-center items-center text-sky-500"
-                @click="toggleModel = true"
-            >
-                <Icon
-                    name="PhMapPinLine"
-                    size="20"
-                />
-                Address
-            </button>
+            <div class="flex flex-col items-center gap-2">
+                <button
+                    class="relative flex flex-col whitespace-nowrap justify-center items-center text-orange-500"
+                    @click="toggleNotesModel = true"
+                >
+                    <Icon
+                        name="PhNote"
+                        size="20"
+                    />
+                    Notes
+                </button>
+                <button
+                    class="relative flex flex-col whitespace-nowrap justify-center items-center text-sky-500"
+                    @click="toggleModel = true"
+                >
+                    <Icon
+                        name="PhMapPinLine"
+                        size="20"
+                    />
+                    Address
+                </button>
+            </div>
         </Table.Td>
         <Table.Td class="pointer-events-none">
             <button

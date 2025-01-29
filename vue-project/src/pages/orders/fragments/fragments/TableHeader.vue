@@ -10,14 +10,14 @@
                 />
             </label>
         </Table.Th>
-        <Table.Th>Order Info</Table.Th>
+        <Table.Th>Customer Info</Table.Th>
+        <Table.Th>Consumer Behavior</Table.Th>
         <Table.Th>Delivery History</Table.Th>
         <Table.Th>Delivery Partner</Table.Th>
         <Table.Th>Shipping</Table.Th>
         <Table.Th>Payment</Table.Th>
         <Table.Th>Status</Table.Th>
-        <Table.Th>Note</Table.Th>
-        <Table.Th>Address</Table.Th>
+        <Table.Th>More</Table.Th>
         <Table.Th>Action</Table.Th>
     </Table.THead>
 </template>

@@ -97,7 +97,30 @@ class CustomerHandler {
         }
     }
     
-
+    static function get_customer_data($billing_phone = null, $billing_email = null) {
+        global $wpdb;
+    
+        // Validate input
+        if (empty($billing_phone) && empty($billing_email)) {
+            return null; // No valid identifier provided
+        }
+    
+        // Define the table name
+        $table_name = $wpdb->prefix . __PREFIX . 'customer_data';
+    
+        // Prioritize phone, then fallback to email
+        $query = "SELECT * FROM {$table_name} WHERE ";
+        $query .= !empty($billing_phone) ? "phone = %s" : "email = %s";
+        
+        // Fetch customer data
+        $customer_data = $wpdb->get_row(
+            $wpdb->prepare($query, !empty($billing_phone) ? $billing_phone : $billing_email),
+            ARRAY_A
+        );
+    
+        return $customer_data ?: null;
+    }
+    
 
     /**
      * Get total orders for a customer by phone or email
@@ -184,31 +207,29 @@ class CustomerHandler {
         $total_orders = isset($existingCustomer['total_orders']) ? $existingCustomer['total_orders'] : 0;
         $order_frequency = isset($existingCustomer['order_frequency']) ? $existingCustomer['order_frequency'] : 0;
 
-        return [
-            $total_orders,
-            $order_frequency
-        ];
-
-        $tags = 'fraud';
+        
+        $tags = '';
     
         // Assign "New" tag for first-time customers
         if ($total_orders == 1) {
             $tags = 'new';
         }
-    
-        // Assign "Regular" tag if the customer has placed multiple orders
-        if ($total_orders > 1 && $order_frequency < 1) {
+        else if ($total_orders > 1 && $order_frequency < 1) {
             $tags = 'returning';
         }
     
-        // Assign "VIP" tag if the customer orders frequently
-        if ($total_orders > 20 && $order_frequency < 1) {
-            $tags = 'vip';
+        // Assign "Loyal" tag if the customer has placed a high number of orders
+        else if ($total_orders >= 10 && $order_frequency < 1) {
+            $tags = 'loyal';
         }
     
-        // Assign "Loyal" tag if the customer has placed a high number of orders
-        if ($total_orders >= 10 && $order_frequency < 1) {
-            $tags = 'loyal';
+        // Assign "VIP" tag if the customer orders frequently
+        else if ($total_orders > 20 && $order_frequency < 1) {
+            $tags = 'vip';
+        }
+
+        else {
+            $tags = 'fraud';
         }
     
         return $tags;
