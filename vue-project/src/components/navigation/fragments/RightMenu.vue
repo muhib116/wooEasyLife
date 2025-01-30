@@ -35,9 +35,13 @@
         </RouterLink>
       </li>
       <li>
-        <a href="#" class="text-gray-400 hover:text-gray-500 py-4 inline-flex">
+        <button 
+          class="text-gray-400 hover:text-gray-500 py-4 inline-flex"
+          @click="setActiveTutorialList($route.name)"
+        >
+          {{ $route.name }}
           <Icon name="PhPlayCircle" size="28" />
-        </a>
+        </button>
       </li>
       <li>
         <a href="#" class="text-gray-400 hover:text-gray-500 py-4 inline-flex">
@@ -49,8 +53,9 @@
 </template>
 
 <script setup lang="ts">
-import { Icon, Button } from "@components";
-import { useLicense } from "@/pages/config/license/UseLicense";
+import { Icon, Button } from "@components"
+import { useLicense } from "@/pages/config/license/UseLicense"
+import { setActiveTutorialList } from '@/tutorials/useTutorials'
 
-const { isValidLicenseKey } = useLicense();
+const { isValidLicenseKey } = useLicense()
 </script>

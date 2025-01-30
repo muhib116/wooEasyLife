@@ -73,9 +73,6 @@
 
         <div>
             <slot></slot>
-            <button>
-                Filter
-            </button>
         </div>
     </div>
 
@@ -93,6 +90,7 @@
 <script setup lang="ts">
     import { inject, computed, ref } from 'vue'
     import CreateNewOrder from './createNewOrder/Index.vue'
+
     import {
         Button,
         Icon,

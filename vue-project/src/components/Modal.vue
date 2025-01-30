@@ -26,7 +26,13 @@
                 </div>
             </slot>
 
-            <div class="py-3 pb-5 max-h-[calc(100svh-190px)] overflow-auto">
+            <div 
+                class="pb-5 max-h-[calc(100svh-190px)] overflow-auto"
+                :class="[
+                    !hideHeader ? 'pt-3' : '',
+                    !hideFooter ? 'pb-3' : '',
+                ]"
+            >
                 <slot></slot>
             </div>
 
@@ -34,6 +40,8 @@
                 <footer class="flex justify-end gap-5 items-center border-t pt-3">
                     <Button.Outline
                         v-if="cancelText"
+                        class="bg-red-500 text-white border-0"
+                        
                         @click="$emit('close')"
                     >
                         {{ cancelText }}

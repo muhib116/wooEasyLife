@@ -34,7 +34,7 @@
 import { Container } from "@layout";
 import { inject } from "vue";
 import { remoteApiBaseURL } from "@/remoteApi";
-import RightMenu from './fragments/RightMenu.vue'
+import RightMenu from "./fragments/RightMenu.vue";
 
 const { configData } = inject("configData");
 
@@ -42,7 +42,7 @@ const menus = [
   {
     title: "Dashboard",
     to: {
-      name: "home",
+      name: "dashboard",
     },
     visible: true,
   },
@@ -56,14 +56,14 @@ const menus = [
   {
     title: "Missing Orders",
     to: {
-      name: "missing-orders",
+      name: "missingOrders",
     },
     visible: true,
   },
   {
     title: "Black List",
     to: {
-      name: "customBlackList",
+      name: "blackList",
     },
     visible: true,
   },

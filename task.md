@@ -47,13 +47,20 @@ Dashboard:
 ✅ Courier Delivery Report
 ✅ How many orders came from returning customers?
 ✅ steadfast chara baki courier config gulu apadoto commented thakbe
+✅ Order Tags: Add tags to orders for easier categorization.
+✅ Order frequency
+✅ Fraud score
+✅ Total spent
+✅ Total orders
 
 
 --------heigh priority task------------
 👉🏻 Order list filter by courier partner
-👉🏻 Order Tags: Add tags to orders for easier categorization (e.g., VIP, Urgent, Gift).
 👉🏻 Send message for abandoned order customer
 👉🏻 landing page view calculation
+👉🏻 Courier status refrash dile, courier status er upor base kore order status update korte hobe.
+👉🏻 online and offline er jonno slack er moto alert show korate hobe
+
 
 
 
@@ -132,3 +139,64 @@ api/sms/recharge-history -> get
 api/sms/use-history -> get
 start_date?: string
 end_date?: string
+
+
+
+
+
+
+🚀 Fraud Detection Dashboard Design for WooEasyLife
+A fraud detection dashboard should provide clear, actionable insights on customer risk levels, fraud scores, and suspicious activities. Below is a structured breakdown of the dashboard components:
+
+📊 Fraud Detection Dashboard Layout
+🔹 Key Metrics (Top Summary Cards)
+These cards provide a quick overview of fraud-related data:
+
+Total Orders Scanned for Fraud → Shows the total number of orders evaluated for fraud.
+High-Risk Orders → Number of orders flagged as high-risk (fraud score > 75).
+Medium-Risk Orders → Number of orders flagged as medium-risk (fraud score 50-75).
+Low-Risk Orders → Number of orders flagged as low-risk (fraud score < 50).
+Total Blacklisted Customers → Number of emails, phone numbers, and IPs in the blacklist.
+📈 Fraud Score Distribution (Bar Chart)
+X-Axis: Fraud Score Ranges (0-20, 21-40, 41-60, 61-80, 81-100)
+Y-Axis: Number of Orders in Each Range
+Color-Coded (Green: Low-Risk, Yellow: Medium-Risk, Red: High-Risk)
+🛑 High-Risk Orders List (Table)
+Order ID	Customer Name	Fraud Score	Risk Level	Order Total	Order Frequency	Action
+#3451	John Doe	92	High	$5,600	2.5 orders/day	Review
+#3428	Jane Smith	78	Medium	$3,200	1.5 orders/day	Review
+#3402	Alex Brown	60	Medium	$900	1 order/5 days	Approve
+🔹 Actions:
+
+Review → Allows manual fraud verification.
+Approve → Clears order if flagged wrongly.
+Blacklist → Adds customer to fraud blacklist.
+📍 Customer Behavior Analysis (Heatmap)
+Identifies suspicious IPs & regions where high fraud cases originate.
+Shows high-risk referral sources (e.g., proxy, unknown, social media, etc.).
+Highlights repeat offenders (multiple failed/canceled orders).
+📊 Fraud Causes Breakdown (Pie Chart)
+% of frauds from mismatched billing & shipping addresses
+% of frauds from high-value first-time orders
+% of frauds from blacklisted customers
+% of frauds from courier fraud patterns
+% of frauds from excessive failed orders
+📍 Repeat Offenders List (Table)
+Phone/Email	Total Orders	Failed Orders	Success Rate	Blacklisted?	Action
+01712253647	21	5	77%	❌ No	Monitor
+01307619085	18	6	70%	✅ Yes	Block
+01987654321	10	3	80%	❌ No	Monitor
+🚚 Courier-Based Fraud Insights
+Most fraudulent courier (Highest failed orders)
+Courier with the highest success rate
+Orders flagged for courier fraud detection
+Average delivery success rate for high-risk customers
+📌 Actionable Features
+✅ Export Fraud Reports (Download CSV, Excel)
+✅ Automated Blacklisting (Mark fraud customers automatically)
+✅ Risk Alerts & Notifications (Email admin for high-risk orders)
+✅ Custom Fraud Rules Setup (Threshold-based fraud detection)
+🔹 Summary
+This fraud detection dashboard ensures real-time tracking, risk mitigation, and automation to prevent revenue loss from fraudulent orders. 🚀
+
+Would you like me to design a Vue.js component for this? 🎨🔥

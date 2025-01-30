@@ -10,7 +10,7 @@
         <Icon
             name="PhSpinner"
             :size="size"
-            weight="bold"
+            :weight="weight"
             class="animate-spin !w-full !h-full"
         />
     </div>
@@ -30,6 +30,10 @@
         size: {
             type: String,
             default: 40,
+        },
+        weight: {
+            type: String,
+            default: 'bold',
         }
     })
 </script>

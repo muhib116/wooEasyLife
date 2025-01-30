@@ -25,6 +25,8 @@
             size="30"
         />
     </div>
+
+    <Tutorials/>
 </template>
 
 <script setup lang="ts">
@@ -34,6 +36,7 @@
     import { useNotification } from './useNotification'
     import { useLayout } from './useLayout'
     import { useLicense } from '@/pages/config/license/UseLicense'
+    import Tutorials from '@/tutorials/Index.vue'
 
     const isDevelopmentMode =  import.meta.env.DEV
     const _useCourierConfig = useCourier()
