@@ -201,7 +201,21 @@ export const getUser = async () => {
   } catch (err) {
     handleLicenseValidations(err)
   }
-};
+}
+
+export const getTutorials = async () => {
+  try {
+    const { data } = await axios.get(
+      `${remoteApiBaseURL}/get-tutorials`,
+      headers.value
+    )
+    return data;
+  } catch (err) {
+    handleLicenseValidations(err)
+  }
+}
+
+
 
 const handleLicenseValidations = (err) => 
 {
