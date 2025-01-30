@@ -6,7 +6,7 @@
           <img
             class="w-auto max-w-[120px]"
             :src="`${remoteApiBaseURL}/app-logo`"
-            alt=""
+            alt="WPSaleHub"
           />
         </a>
 

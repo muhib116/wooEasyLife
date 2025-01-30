@@ -75,7 +75,7 @@ const routes = [
   },
   {
     to: {
-      name: "marketing-tools",
+      name: "marketingTools",
     },
     title: "Marketing Tools",
     iconName: "PhCode",

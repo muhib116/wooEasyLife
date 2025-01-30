@@ -36,10 +36,10 @@
       </li>
       <li>
         <button 
-          class="text-gray-400 hover:text-gray-500 py-4 inline-flex"
+          class="text-red-500 hover:text-red-600 animate-bounce py-4 inline-flex"
           @click="setActiveTutorialList($route.name)"
+          title="Watch the tutorial!"
         >
-          {{ $route.name }}
           <Icon name="PhPlayCircle" size="28" />
         </button>
       </li>

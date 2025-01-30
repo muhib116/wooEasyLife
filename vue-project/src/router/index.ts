@@ -89,7 +89,7 @@ const router = createRouter({
         },
         {
           path: "marketing-tools",
-          name: "marketing-tools",
+          name: "marketingTools",
           component: MarketingTools,
         },
       ],
