@@ -10,13 +10,13 @@ export const useSalesTarget = () => {
     type: "info",
   });
   const defaultData: {
-    monthly_target_amount: number | null;
-    daily_target_amount: number | null;
+    monthly_target_amount: number;
+    daily_target_amount: number;
     start_date: Date | string;
     end_date: Date | string;
   } = {
-    monthly_target_amount: null,
-    daily_target_amount: null,
+    monthly_target_amount: 0,
+    daily_target_amount: 0,
     start_date: new Date().toISOString().split("T")[0], // Default to today's date in 'yyyy-MM-dd' format
     end_date: "",
   };
@@ -36,7 +36,7 @@ export const useSalesTarget = () => {
   });
 
   const dailyTargetAmount = computed(() => {
-    return (salesTargetData.value.data.monthly_target_amount || 0) / 30;
+    return (salesTargetData.value?.data?.monthly_target_amount || 0) / 30;
   });
 
   const endDate = computed(() => {
@@ -49,7 +49,7 @@ export const useSalesTarget = () => {
     if (!startDate || isNaN(new Date(startDate).getTime())) {
       console.error(
         "Invalid start_date value:",
-        salesTargetData.value.data.start_date
+        salesTargetData.value?.data?.start_date
       );
       return ""; // Return an empty string or handle the error appropriately
     }
@@ -65,11 +65,13 @@ export const useSalesTarget = () => {
         option_name: "sales_target",
       }); // Replace with your actual API call
 
+      if(!data) return
+
       salesTargetData.value = {
         ...salesTargetData.value,
         data: data,
-      };
-
+      }
+      
       _prepareChartData(data);
     } finally {
       isLoading.value = false;

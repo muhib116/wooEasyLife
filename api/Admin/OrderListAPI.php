@@ -391,7 +391,7 @@ class OrderListAPI
                 $order->update_status($new_status, 'Status updated via API', true);
                 if($new_status == 'wc-completed'){
                     $customerHandler = new \WooEasyLife\Frontend\CustomerHandler();
-                    $customerHandler->handle_customer_data($order);
+                    $customerHandler->handle_customer_data($order_id, $order);
                 }
 
                 $responses[] = [

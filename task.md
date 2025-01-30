@@ -40,7 +40,6 @@ Dashboard:
 ✅ Popular product koyta dekhabe ta dropdown theke chinai dite parbe
 ✅ kun kun user otp dise ar kun kun user otp dey nai tar akta list dekhate hobe phone number soho
 ✅ abandoned order
-
 ✅ License add na kora thakle alert dekhate hobe (license key add na kora thakle sob somoy license add er page a redirect kore dibe)
 ✅ bearar token validation from remote server
 ✅ table clear korar somoy meta key jei gulu ase clean kore dite hobe jemon _courier_data
@@ -60,6 +59,10 @@ Dashboard:
 👉🏻 landing page view calculation
 👉🏻 Courier status refrash dile, courier status er upor base kore order status update korte hobe.
 👉🏻 online and offline er jonno slack er moto alert show korate hobe
+👉🏻 status complete a gele customer data recalculate hobe
+👉🏻 bulk request guluke chunk kore nite hobe
+👉🏻 customer ke backend theke notice dewar bebosta korte hobe, get-user er response a notice key te dta thakbe.
+
 
 
 

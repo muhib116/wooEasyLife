@@ -181,7 +181,13 @@
                     title="Success Rate"
                 >
                     ✅ Rate:
-                    <strong class="truncate block">
+                    <span
+                        v-if="order.customer_report?.success_rate == 'No order history found!'"
+                        class="truncate block"
+                    >
+                        N/A
+                    </span>
+                    <strong v-else class="truncate block">
                         {{ order.customer_report?.success_rate || '0%' }}
                     </strong>
                 </div>
@@ -192,7 +198,7 @@
                     View Details
                 </button>
             </div>
-            <div v-else>n/a</div>
+            <div v-else>N/A</div>
         </Table.Td>
         <Table.Td
             @click="setSelectedOrder(order)"  
@@ -229,10 +235,10 @@
                     class="font-medium text-sky-500" 
                     title="Courier status"
                 >
-                    📦 {{ order?.courier_data?.status || 'n/a' }}
+                    📦 {{ order?.courier_data?.status || 'N/A' }}
                 </span>
             </div>
-            <div v-else>n/a</div>
+            <div v-else>N/A</div>
         </Table.Td>
         <Table.Td
             @click="setSelectedOrder(order)"  
@@ -242,19 +248,19 @@
                     title="Payment methods"
                     class="font-medium whitespace-nowrap"
                 >
-                    🚚 {{ order.payment_method_title || 'n/a' }}
+                    🚚 {{ order.payment_method_title || 'N/A' }}
                 </span>
                 <span
                     class="truncate"
-                    :title="`Shipping methods: ${order.shipping_methods.join(', ') || 'n/a'}`"
+                    :title="`Shipping methods: ${order.shipping_methods.join(', ') || 'N/A'}`"
                 >
-                    📍 {{ order.shipping_methods.join(', ') || 'n/a' }}
+                    📍 {{ order.shipping_methods.join(', ') || 'N/A' }}
                 </span>
                 <span
                     title="Shipping cost"
                     class="font-medium text-red-500"
                 >
-                    💰 Cost: <span v-html="order.currency_symbol"></span>{{ order.shipping_cost || 'n/a' }}
+                    💰 Cost: <span v-html="order.currency_symbol"></span>{{ order.shipping_cost || 'N/A' }}
                 </span>
             </div>
         </Table.Td>
@@ -267,7 +273,7 @@
             <div class="whitespace-nowrap">
                 💰 Discount: {{ order.discount_total }}
                 <br/>
-                🎟️ Coupons: {{ order.applied_coupons.join(', ') || 'n/a' }}
+                🎟️ Coupons: {{ order.applied_coupons.join(', ') || 'N/A' }}
             </div>
         </Table.Td>
         <Table.Td
