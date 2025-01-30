@@ -74,7 +74,7 @@
                 </p>
             </div>
 
-            <div class="flex gap-2">
+            <div class="flex flex-wrap gap-x-2">
                 <span
                     v-if="order?.ip_block_listed"
                     class="!py-0 !text-[10px] flex items-center text-[#f93926]"

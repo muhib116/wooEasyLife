@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Woo Life Changer
+ * Plugin Name: Woo Easy Life
  * Plugin URI: https://api.wpsalehub.com/api/get-metadata
- * Description: "Woo Life Changer" is a custom plugin designed to enhance WooCommerce functionality with features like bulk SMS, fraud detection, OTP validation, and much more.
+ * Description: "Woo Easy Life" is a custom plugin designed to enhance WooCommerce functionality with features like bulk SMS, fraud detection, OTP validation, and much more.
  * Version: 1.1.4
  * Author: Muhibbullah Ansary
  * Author URI: https://wpsalehub.com
@@ -30,7 +30,7 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     // Show admin notice if composer dependencies are not installed.
     add_action('admin_notices', function () {
         echo '<div class="notice notice-error is-dismissible">
-                <p>' . esc_html__('Woo Life Changer: Missing composer dependencies. Please run "composer install" to install required libraries.', 'woo-easy-life') . '</p>
+                <p>' . esc_html__('Woo Easy Life: Missing composer dependencies. Please run "composer install" to install required libraries.', 'woo-easy-life') . '</p>
               </div>';
     });
     return; // Exit early if dependencies are missing.

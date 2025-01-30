@@ -1,4 +1,4 @@
-=== Woo Life Changer ===
+=== Woo Easy Life ===
 Contributors: muhibbullah, nasir
 Tags: woocommerce, sms, otp validation, fraud prevention, abandoned cart
 Requires at least: 5.0
@@ -8,11 +8,11 @@ Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Woo Life Changer is an all-in-one WooCommerce plugin that elevates your eCommerce experience by integrating advanced tools for automation, tracking, and management.
+Woo Easy Life is an all-in-one WooCommerce plugin that elevates your eCommerce experience by integrating advanced tools for automation, tracking, and management.
 
 == Description ==
 
-**Woo Life Changer** is a comprehensive WooCommerce plugin designed to enhance store management and customer engagement. It combines powerful features with a user-friendly interface to simplify operations and improve efficiency.
+**Woo Easy Life** is a comprehensive WooCommerce plugin designed to enhance store management and customer engagement. It combines powerful features with a user-friendly interface to simplify operations and improve efficiency.
 
 ### **Key Features**
 
@@ -86,13 +86,13 @@ Woo Life Changer is an all-in-one WooCommerce plugin that elevates your eCommerc
 - **Missing Orders**: Insights into abandoned and recovered orders to minimize revenue loss.
 - **Integration Tools**: Seamlessly connect with courier and SMS platforms for automation.
 
-**Woo Life Changer** transforms your WooCommerce store into an efficient, secure, and customer-friendly platform. Simplify your workflow, prevent fraud, and boost customer satisfaction all in one place.
+**Woo Easy Life** transforms your WooCommerce store into an efficient, secure, and customer-friendly platform. Simplify your workflow, prevent fraud, and boost customer satisfaction all in one place.
 
 == Installation ==
 
 1. Upload the plugin to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Configure the plugin settings from the Woo Life Changer dashboard.
+3. Configure the plugin settings from the Woo Easy Life dashboard.
 
 == Frequently Asked Questions ==
 
@@ -103,7 +103,7 @@ Go to the plugin's settings, enable the OTP validation option, and configure the
 Yes, you can block customers directly from the plugin's blacklist feature.
 
 = Is this plugin compatible with my courier service? =
-Woo Life Changer supports integration with multiple courier services. Check the integration settings for supported providers.
+Woo Easy Life supports integration with multiple courier services. Check the integration settings for supported providers.
 
 == Changelog ==
 

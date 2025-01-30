@@ -157,7 +157,7 @@ class UpdatePlugin
         if (version_compare($current_version, $latest_version, '<')) {
             // Display the notice
             echo '<div class="notice notice-warning is-dismissible">';
-            echo '<p><strong>Woo Life Changer:</strong> A new version (' . esc_html($latest_version) . ') is available. You are using version ' . esc_html($current_version) . '. <a href="' . esc_url(admin_url('update-core.php')) . '">Update now</a>.</p>';
+            echo '<p><strong>Woo Easy Life:</strong> A new version (' . esc_html($latest_version) . ') is available. You are using version ' . esc_html($current_version) . '. <a href="' . esc_url(admin_url('update-core.php')) . '">Update now</a>.</p>';
             echo '</div>';
         }
     }
