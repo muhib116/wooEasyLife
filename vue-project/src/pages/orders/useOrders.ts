@@ -32,17 +32,21 @@ export const useOrders = () => {
 
   const courierStatusInfo = {
     pending: "Consignment is not delivered or cancelled yet.",
-    delivered_approval_pending: "Consignment is delivered but waiting for admin approval.",
-    partial_delivered_approval_pending: "Consignment is delivered partially and waiting for admin approval.",
-    cancelled_approval_pending: "Consignment is cancelled and waiting for admin approval.",
-    unknown_approval_pending: "Unknown Pending status. Need contact with the support team.",
+    delivered_approval_pending:
+      "Consignment is delivered but waiting for admin approval.",
+    partial_delivered_approval_pending:
+      "Consignment is delivered partially and waiting for admin approval.",
+    cancelled_approval_pending:
+      "Consignment is cancelled and waiting for admin approval.",
+    unknown_approval_pending:
+      "Unknown Pending status. Need contact with the support team.",
     delivered: "Consignment is delivered and balance added.",
     partial_delivered: "Consignment is partially delivered and balance added.",
     cancelled: "Consignment is cancelled and balance updated.",
     hold: "Consignment is held.",
     in_review: "Order is placed and waiting to be reviewed.",
     unknown: "Unknown status. Need contact with the support team.",
-  }
+  };
 
   const orderFilter = ref({
     page: 1,
@@ -69,43 +73,65 @@ export const useOrders = () => {
       selectedOrders.value.clear();
     }
   };
-
   const handleFraudCheck = async (button) => {
     if (![...selectedOrders.value].length) {
-      alert("Please select at least on item.");
+      alert("Please select at least one item.");
       return;
     }
 
     const _selectedOrders = [...selectedOrders.value];
-    try {
-      button.isLoading = true;
-      /**
-       * payload = {
-       *  data: [
-       *      id: '',
-       *      phone: ''
-       *  ]
-       * }
-       */
+    const chunkSize = 10; // Process 10 orders at a time
+    const orderChunks = [];
+
+    // Step 1: Slice `_selectedOrders` into chunks of 10
+    for (let i = 0; i < _selectedOrders.length; i += chunkSize) {
+      orderChunks.push(_selectedOrders.slice(i, i + chunkSize));
+    }
+
+    // Step 2 & 3: Process each chunk sequentially
+    const processChunks = async (index = 0) => {
+      if (index >= orderChunks.length) return; // Stop when all chunks are processed
+
+      // Enable `fraudDataLoading` for orders in this chunk
+      orderChunks[index].forEach((item) => {
+        item.fraudDataLoading = true;
+      });
+
       const payload = {
-        data: _selectedOrders.map((item) => {
-          return {
-            id: item.id, // this id using for showing report data in order list
-            phone: normalizePhoneNumber(item.billing_address.phone),
-          };
-        }),
+        data: orderChunks[index].map((item) => ({
+          id: item.id, // ID for tracking report data
+          phone: normalizePhoneNumber(item.billing_address.phone),
+        })),
       };
 
-      const { data } = await checkFraudCustomer(payload);
-      if (data.length) {
-        data.forEach((item) => {
-          _selectedOrders.forEach((_item) => {
-            if (item.id == _item.id) {
-              _item.customer_report = item.report;
-            }
+      try {
+        const { data } = await checkFraudCustomer(payload);
+
+        if (data.length) {
+          data.forEach((item) => {
+            _selectedOrders.forEach((_item) => {
+              if (item.id === _item.id) {
+                _item.customer_report = item.report;
+              }
+            });
           });
+        }
+      } catch (error) {
+        console.error("API Error:", error);
+      } finally {
+        // Disable `fraudDataLoading` after API response
+        orderChunks[index].forEach((item) => {
+          item.fraudDataLoading = false;
         });
       }
+
+      // Process the next chunk
+      await processChunks(index + 1);
+    };
+
+    try {
+      button.isLoading = true;
+      await processChunks(); // Start processing the chunks
     } finally {
       button.isLoading = false;
     }
@@ -152,7 +178,7 @@ export const useOrders = () => {
     }
 
     const payload: {
-      customer_id: string | number
+      customer_id: string | number;
       type: "phone_number";
       ip_phone_or_email: string;
     }[] = [...selectedOrders.value].map((item) => ({
@@ -177,7 +203,7 @@ export const useOrders = () => {
     }
 
     const payload: {
-      customer_id: string | number
+      customer_id: string | number;
       type: "email";
       ip_phone_or_email: string;
     }[] = [...selectedOrders.value].map((item) => ({
@@ -202,7 +228,7 @@ export const useOrders = () => {
     }
 
     const payload: {
-      customer_id: string | number
+      customer_id: string | number;
       type: "ip";
       ip_phone_or_email: string;
     }[] = [...selectedOrders.value].map((item) => ({
@@ -285,11 +311,12 @@ export const useOrders = () => {
     }
   };
 
-  const refreshBulkCourierData = async (btn) => 
-  {
+  const refreshBulkCourierData = async (btn) => {
     try {
       btn.isLoading = true;
-      let courierData = selectedOrders.value?.size ? [...selectedOrders.value] : orders.value;
+      let courierData = selectedOrders.value?.size
+        ? [...selectedOrders.value]
+        : orders.value;
       courierData = courierData.filter((item) => !isEmpty(item.courier_data));
 
       const consignment_ids = courierData.map(
@@ -316,9 +343,8 @@ export const useOrders = () => {
 
           changeStatus({
             order_id: order.id,
-            new_status: get_status(courierUpdatedStatus)
-          })
-          
+            new_status: get_status(courierUpdatedStatus),
+          });
         }
       });
 
@@ -336,7 +362,7 @@ export const useOrders = () => {
         };
       }, 5000);
     }
-  }
+  };
 
   const get_status = (courier_status: string): string => {
     /**
@@ -355,26 +381,26 @@ export const useOrders = () => {
      * -unknown: Unknown status. Need contact with the support team.
      */
     const statuses: {
-      in_review: string
-      pending: string
-      cancelled: string
-      delivered_approval_pending: string
-      delivered: string
-      hold: string
-      unknown: string
-      cancelled_approval_pending: string
+      in_review: string;
+      pending: string;
+      cancelled: string;
+      delivered_approval_pending: string;
+      delivered: string;
+      hold: string;
+      unknown: string;
+      cancelled_approval_pending: string;
     } = {
-      in_review: 'wc-courier-entry',
-      pending: 'wc-courier-hand-over',
-      cancelled: 'wc-returned',
-      unknown: 'wc-unknown',
-      delivered_approval_pending: 'wc-pending',
-      delivered: 'wc-complete',
-      hold: 'wc-on-hold',
-    }
+      in_review: "wc-courier-entry",
+      pending: "wc-courier-hand-over",
+      cancelled: "wc-returned",
+      unknown: "wc-unknown",
+      delivered_approval_pending: "wc-pending",
+      delivered: "wc-complete",
+      hold: "wc-on-hold",
+    };
 
-    return statuses[courier_status]
-  }
+    return statuses[courier_status];
+  };
 
   watch(
     () => selectedOrders,

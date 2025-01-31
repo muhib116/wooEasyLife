@@ -1,5 +1,5 @@
 <template>
-  <Container class="bg-white border-gray-200 border-b sticky">
+  <Container class="bg-white border-gray-200 border-b z-50 sticky">
     <nav class="w-full flex justify-between">
       <div class="flex -mb-[2px]">
         <a href="#" class="flex items-center">

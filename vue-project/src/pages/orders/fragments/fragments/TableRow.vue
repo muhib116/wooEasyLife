@@ -198,7 +198,14 @@
                     View Details
                 </button>
             </div>
-            <div v-else>N/A</div>
+            <div v-else class="relative">
+                <Loader
+                    :active="'fraudDataLoading' in order && order.fraudDataLoading"
+                    class="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2"
+                    size="26"
+                />
+                N/A
+            </div>
         </Table.Td>
         <Table.Td
             @click="setSelectedOrder(order)"  
@@ -386,7 +393,7 @@
 </template>
 
 <script setup lang="ts">
-    import { Table, Icon, Badge, Modal, Button } from '@components'
+    import { Table, Icon, Loader, Modal, Button } from '@components'
     import { inject, ref } from 'vue'
     import Address from './address/Index.vue'
     import { baseUrl } from '@/api'

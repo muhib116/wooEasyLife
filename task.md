@@ -55,15 +55,16 @@ Dashboard:
 ✅ status complete a gele customer data recalculate hobe
 ✅ customer ke backend theke notice dewar bebosta korte hobe, get-user er response a notice key te dta thakbe.
 ✅ online and offline er jonno slack er moto alert show korate hobe
-
+✅ black list a data add korle fraud score er calculation abnormal mone hoy,
+✅ black list theke remove korar somoy customer data update korte hobe
+✅ new order place howar shate shate fraud data entry
 
 --------heigh priority task------------
 👉🏻 Send message for abandoned order customer
 👉🏻 Order list filter by courier partner
 👉🏻 landing page view calculation
 👉🏻 bulk request guluke chunk kore nite hobe
-👉🏻 black list theke remove korar somoy customer data update korte hobe
-👉🏻 black list a data add korle fraud score er calculation abnormal mone hoy,
+
 
 
 
