@@ -1,11 +1,4 @@
 <template>
-    <MessageBox
-        v-if="!!hasNewOrder"
-        title="New Order Received 🎉"
-        type="success"
-        class="fixed z-[999999] bottom-0 right-10"
-    />
-
     <div
         v-if="configData"
         class="print:bg-transparent bg-gray-100 min-h-screen print:pb-0 pb-10 text-gray-600"
@@ -14,6 +7,26 @@
             class="sticky z-50 print:hidden"
             :class="isDevelopmentMode ? 'top-0' : 'top-8'"
         />
+
+        <!-- messages start -->
+        <MessageBox
+            v-if="!!hasNewOrder"
+            title="New Order Received 🎉"
+            type="success"
+        />
+        <MessageBox
+            v-if="userData?.notice && userData?.notice?.message"
+            :title="userData?.notice?.message"
+            :type="userData?.notice?.type"
+        />
+        <MessageBox
+            v-if="internetStatusMessage.title"
+            :type="internetStatusMessage.type"
+            :title="internetStatusMessage.title"
+        />
+        <!-- messages end -->
+
+
         <main class="print:mt-0 mt-6">
             <slot></slot>
         </main>
@@ -46,8 +59,11 @@
     const _useLayout = useLayout()
     const {
         configData,
-        loadConfig
+        loadConfig,
+        userData,
+        internetStatusMessage
     } = _useLayout
+
 
     onBeforeMount(async () => {
         await loadConfig()

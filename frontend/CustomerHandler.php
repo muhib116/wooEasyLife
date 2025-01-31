@@ -13,6 +13,66 @@ class CustomerHandler {
         add_action('woocommerce_new_order', [$this, 'handle_customer_data'], 10, 2);
     }
 
+
+    public function recalculate_customer_data($customer_id) {
+        global $wpdb;
+    
+        // Fetch existing customer data
+        $existing_customer = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM {$this->table_name} WHERE id = %d LIMIT 1",
+                $customer_id
+            ),
+            ARRAY_A
+        );
+    
+        // If customer not found, exit early
+        if (!$existing_customer) {
+            return;
+        }
+    
+        // Extract order, phone, and email
+        $order_id = $existing_customer['order_id'] ?? null;
+        $phone = $existing_customer['phone'] ?? null;
+        $email = $existing_customer['email'] ?? null;
+    
+        // If no order ID, phone, or email, stop processing
+        if (empty($order_id) || (empty($phone) && empty($email))) {
+            return;
+        }
+    
+        // Retrieve order object
+        $order = wc_get_order($order_id);
+        if (!$order) {
+            return;
+        }
+    
+        // Calculate key customer metrics
+        $order_frequency = $this->calculate_order_frequency($phone, $email);
+        $total_orders = $this->get_total_orders($phone, $email);
+        $fraud_score = $this->calculate_fraud_score($order);
+        $total_spent = $this->get_total_spent($phone, $email);
+    
+        // Prepare updated customer data
+        $customer_data = [
+            'order_frequency' => $order_frequency,
+            'total_orders'    => $total_orders,
+            'fraud_score'     => $fraud_score,
+            'total_spent'     => $total_spent,
+            'customer_type'   => $this->assign_customer_tags($total_orders, $order_frequency, $total_spent),
+            'last_order_date' => current_time('mysql'),
+            'updated_at'      => current_time('mysql'),
+        ];
+    
+        // Update customer record
+        $wpdb->update(
+            $this->table_name,
+            $customer_data,
+            ['id' => $customer_id]
+        );
+    }
+    
+
     /**
      * Handle customer insertion or update when a new order is placed
      */

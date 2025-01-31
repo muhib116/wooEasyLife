@@ -6,6 +6,14 @@ class InitClass {
     {
         // Define static statuses
         $static_statuses = [
+            'unknown' => [
+                'title'       => 'Unknown',
+                'slug'        => 'unknown',
+                'is_default'  => true,
+                'not_using'   => false,
+                'color'       => '#444444',
+                'description' => 'Order is being prepared.',
+            ],
             'processing' => [
                 'title'       => 'Processing',
                 'slug'        => 'processing',

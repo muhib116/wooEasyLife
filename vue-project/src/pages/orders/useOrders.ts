@@ -30,6 +30,20 @@ export const useOrders = () => {
     type: "success" | "danger" | "warning" | "info";
   }>();
 
+  const courierStatusInfo = {
+    pending: "Consignment is not delivered or cancelled yet.",
+    delivered_approval_pending: "Consignment is delivered but waiting for admin approval.",
+    partial_delivered_approval_pending: "Consignment is delivered partially and waiting for admin approval.",
+    cancelled_approval_pending: "Consignment is cancelled and waiting for admin approval.",
+    unknown_approval_pending: "Unknown Pending status. Need contact with the support team.",
+    delivered: "Consignment is delivered and balance added.",
+    partial_delivered: "Consignment is partially delivered and balance added.",
+    cancelled: "Consignment is cancelled and balance updated.",
+    hold: "Consignment is held.",
+    in_review: "Order is placed and waiting to be reviewed.",
+    unknown: "Unknown status. Need contact with the support team.",
+  }
+
   const orderFilter = ref({
     page: 1,
     per_page: 30,
@@ -138,9 +152,11 @@ export const useOrders = () => {
     }
 
     const payload: {
+      customer_id: string | number
       type: "phone_number";
       ip_phone_or_email: string;
     }[] = [...selectedOrders.value].map((item) => ({
+      customer_id: item?.customer_custom_data?.id,
       type: "phone_number",
       ip_phone_or_email: item?.billing_address?.phone,
     }));
@@ -161,9 +177,11 @@ export const useOrders = () => {
     }
 
     const payload: {
+      customer_id: string | number
       type: "email";
       ip_phone_or_email: string;
     }[] = [...selectedOrders.value].map((item) => ({
+      customer_id: item?.customer_custom_data?.id,
       type: "email",
       ip_phone_or_email: item?.billing_address?.email,
     }));
@@ -184,9 +202,11 @@ export const useOrders = () => {
     }
 
     const payload: {
+      customer_id: string | number
       type: "ip";
       ip_phone_or_email: string;
     }[] = [...selectedOrders.value].map((item) => ({
+      customer_id: item?.customer_custom_data?.id,
       type: "ip",
       ip_phone_or_email: item?.customer_ip,
     }));
@@ -265,15 +285,11 @@ export const useOrders = () => {
     }
   };
 
-  const refreshBulkCourierData = async (btn) => {
-    if (![...selectedOrders.value].length) {
-      alert("Please select at least on item.");
-      return;
-    }
-
+  const refreshBulkCourierData = async (btn) => 
+  {
     try {
       btn.isLoading = true;
-      let courierData = [...selectedOrders.value];
+      let courierData = selectedOrders.value?.size ? [...selectedOrders.value] : orders.value;
       courierData = courierData.filter((item) => !isEmpty(item.courier_data));
 
       const consignment_ids = courierData.map(
@@ -297,6 +313,12 @@ export const useOrders = () => {
             order_id: order.id,
             courier_data: order.courier_data,
           });
+
+          changeStatus({
+            order_id: order.id,
+            new_status: get_status(courierUpdatedStatus)
+          })
+          
         }
       });
 
@@ -314,7 +336,45 @@ export const useOrders = () => {
         };
       }, 5000);
     }
-  };
+  }
+
+  const get_status = (courier_status: string): string => {
+    /**
+     * Name             Description
+     * --------------------------------------
+     * pending: Consignment is not delivered or cancelled yet.
+     * delivered_approval_pending: Consignment is delivered but waiting for admin approval.
+     * partial_delivered_approval_pending: Consignment is delivered partially and waiting for admin approval.
+     * cancelled_approval_pending: Consignment is cancelled and waiting for admin approval.
+     * unknown_approval_pending: Unknown Pending status. Need contact with the support team.
+     * -delivered: Consignment is delivered and balance added.
+     * -partial_delivered: Consignment is partially delivered and balance added.
+     * -cancelled: Consignment is cancelled and balance updated.
+     * -hold: Consignment is held.
+     * -in_review: Order is placed and waiting to be reviewed.
+     * -unknown: Unknown status. Need contact with the support team.
+     */
+    const statuses: {
+      in_review: string
+      pending: string
+      cancelled: string
+      delivered_approval_pending: string
+      delivered: string
+      hold: string
+      unknown: string
+      cancelled_approval_pending: string
+    } = {
+      in_review: 'wc-courier-entry',
+      pending: 'wc-courier-hand-over',
+      cancelled: 'wc-returned',
+      unknown: 'wc-unknown',
+      delivered_approval_pending: 'wc-pending',
+      delivered: 'wc-complete',
+      hold: 'wc-on-hold',
+    }
+
+    return statuses[courier_status]
+  }
 
   watch(
     () => selectedOrders,
@@ -341,9 +401,10 @@ export const useOrders = () => {
     showInvoices,
     totalRecords,
     alertMessage,
+    toggleNewOrder,
     selectedStatus,
     selectedOrders,
-    toggleNewOrder,
+    courierStatusInfo,
     wooCommerceStatuses,
     orderStatusWithCounts,
     getOrders,

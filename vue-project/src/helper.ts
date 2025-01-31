@@ -146,3 +146,43 @@ export const normalizePhoneNumber = (phone: string): string => {
 }
 
 
+export const  detectInternetState = (callback) => {
+    function updateStatus() {
+        if (!navigator.onLine) {
+            callback({
+                type: "warning",
+                title: 'You are currently offline. Check your internet connection.'
+            });
+            return;
+        }
+
+        if ('connection' in navigator) {
+            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            const effectiveType = connection.effectiveType;
+
+            if (effectiveType === "3g") {
+                callback({
+                    type: "warning",
+                    title: 'Slow internet connection.'
+                })
+            }else if(effectiveType != "4g") {
+                callback({
+                    type: "danger",
+                    title: 'Poor internet connection.'
+                })
+            }
+        }
+    }
+
+    // Initial check
+    updateStatus();
+
+    // Listen for online/offline events
+    window.addEventListener("online", updateStatus);
+    window.addEventListener("offline", updateStatus);
+
+    // Listen for connection changes if supported
+    if ('connection' in navigator) {
+        navigator.connection.addEventListener("change", updateStatus);
+    }
+}

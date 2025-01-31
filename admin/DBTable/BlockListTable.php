@@ -21,6 +21,7 @@ class BlockListTable {
         // SQL to create the table
         $sql = "CREATE TABLE IF NOT EXISTS $this->table_name (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            customer_id BIGINT UNSIGNED NOT NULL,
             type ENUM('ip', 'phone_number', 'email') NOT NULL,
             ip_phone_or_email VARCHAR(255) NOT NULL,
             created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

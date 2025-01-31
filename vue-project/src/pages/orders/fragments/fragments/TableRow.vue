@@ -232,10 +232,16 @@
                 </span>
                 
                 <span 
-                    class="font-medium text-sky-500" 
+                    class="font-medium text-sky-500 flex items-center gap-2" 
                     title="Courier status"
                 >
                     📦 {{ order?.courier_data?.status || 'N/A' }}
+                    <Icon
+                        name="PhInfo"
+                        :title="courierStatusInfo[order?.courier_data?.status]"
+                        size="20"
+                        class="cursor-pointer"
+                    />
                 </span>
             </div>
             <div v-else>N/A</div>
@@ -395,7 +401,8 @@
     const {
         setActiveOrder,
         setSelectedOrder,
-        selectedOrders
+        selectedOrders,
+        courierStatusInfo
     } = inject('useOrders')
     const { courierConfigs } = inject('useCourierConfig')
 

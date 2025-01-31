@@ -90,6 +90,7 @@ class BlockListAPI extends WP_REST_Controller {
     public function create_blocked_entry(WP_REST_Request $request) {
         global $wpdb;
 
+        $customer_id = sanitize_text_field($request->get_param('customer_id'));
         $type = sanitize_text_field($request->get_param('type'));
         $ip_phone_or_email = sanitize_text_field($request->get_param('ip_phone_or_email'));
         $created_at = current_time('mysql');
@@ -105,6 +106,12 @@ class BlockListAPI extends WP_REST_Controller {
             ARRAY_A
         );
 
+
+        // update customer data start
+        $this->update_customer_data(null, $customer_id);
+        // update customer data end
+
+
         if ($existing_record) {
 
             return new WP_REST_Response([
@@ -117,12 +124,14 @@ class BlockListAPI extends WP_REST_Controller {
         $inserted = $wpdb->insert(
             $this->table_name,
             [
+                'customer_id' => $customer_id,
                 'type'        => $type,
                 'ip_phone_or_email' => $ip_phone_or_email,
                 'created_at'  => $created_at,
                 'updated_at'  => $updated_at,
             ],
             [
+                '%s',
                 '%s',
                 '%s',
                 '%s',
@@ -176,6 +185,7 @@ class BlockListAPI extends WP_REST_Controller {
                 continue;
             }
 
+            $customer_id = sanitize_text_field($entry['customer_id']);
             $type = sanitize_text_field($entry['type']);
             $ip_phone_or_email = sanitize_text_field($entry['ip_phone_or_email']);
             $created_at = current_time('mysql');
@@ -191,6 +201,12 @@ class BlockListAPI extends WP_REST_Controller {
                 ARRAY_A
             );
 
+
+            // update customer data start
+            $this->update_customer_data(null, $customer_id);
+            // update customer data end
+
+
             if ($existing_record) {
                 $responses[] = [
                     'status'  => 'error',
@@ -204,12 +220,14 @@ class BlockListAPI extends WP_REST_Controller {
             $inserted = $wpdb->insert(
                 $this->table_name,
                 [
+                    'customer_id'        => $customer_id,
                     'type'        => $type,
                     'ip_phone_or_email' => $ip_phone_or_email,
                     'created_at'  => $created_at,
                     'updated_at'  => $updated_at,
                 ],
                 [
+                    '%s',
                     '%s',
                     '%s',
                     '%s',
@@ -231,6 +249,7 @@ class BlockListAPI extends WP_REST_Controller {
                 'message' => 'Blocked entry created successfully.',
                 'data'    => [
                     'id'          => $wpdb->insert_id,
+                    'customer_id' => $customer_id,
                     'type'        => $type,
                     'ip_phone_or_email' => $ip_phone_or_email,
                     'created_at'  => $created_at,
@@ -261,6 +280,10 @@ class BlockListAPI extends WP_REST_Controller {
                 'message' => 'Blocked entry not found.',
             ], 404);
         }
+
+        // update customer data start
+        $this->update_customer_data($id);
+        // update customer data end
 
         return new WP_REST_Response([
             'status'  => 'success',
@@ -352,17 +375,48 @@ class BlockListAPI extends WP_REST_Controller {
             ], 500);
         }
 
+        // update customer data start
+        $this->update_customer_data($id);
+        // update customer data end
+
         return new WP_REST_Response([
             'status'  => 'success',
             'message' => 'Blocked entry deleted successfully.',
         ], 200);
     }
 
+    private function update_customer_data($id=null, $customer_id=null) {
+        $customer_id = $this->get_blocked_customer_id($id) ?? $customer_id;
+        if($customer_id){
+            $customerHandler = new \WooEasyLife\Frontend\CustomerHandler();
+            $customerHandler->recalculate_customer_data($customer_id);
+        }
+    }
+
+    private function get_blocked_customer_id($id) {
+        global $wpdb;
+        // Fetch customer_id from the table using the provided ID
+        $customer_id = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT customer_id FROM {$this->table_name} WHERE id = %d LIMIT 1",
+                $id
+            )
+        );
+    
+        return $customer_id ?: null; // Return null if no record found
+    }
+    
+
     /**
      * Schema for block list input validation
      */
     private function get_block_list_schema($require_id = false) {
         $schema = [
+            'customer_id' => [
+                'required'    => true,
+                'type'        => 'string',
+                'description' => 'Type of the blocked entry custom customer data table id.',
+            ],
             'type' => [
                 'required'    => true,
                 'type'        => 'string',
@@ -391,6 +445,11 @@ class BlockListAPI extends WP_REST_Controller {
             [
                 'type'       => 'object',
                 'properties' => [
+                    'customer_id' => [
+                        'required'    => true,
+                        'type'        => 'string',
+                        'description' => 'Type of entry to block.',
+                    ],
                     'type' => [
                         'required'    => true,
                         'type'        => 'string',

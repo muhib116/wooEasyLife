@@ -1,6 +1,7 @@
 import { createOrUpdateWPOptionItem, getWPOptionItem } from "@/api"
 import { getUser } from "@/remoteApi"
 import { onMounted, ref } from "vue"
+import { userData } from '@/layout/useLayout.ts'
 
 const licenseKey = ref(localStorage.getItem('license_key'))
 const isValidLicenseKey = ref(true)
@@ -20,7 +21,10 @@ export const useLicense = (mountable: boolean = true) => {
             localStorage.setItem('license_key', data.value)
         }
 
-        licenseKey.value && await getUser() //this function calling to check authentication, read inside the code
+        if(licenseKey.value){
+            const data = await getUser() //this function calling to check authentication, read inside the code
+            userData.value = data
+        }
 
         return licenseKey.value
     }

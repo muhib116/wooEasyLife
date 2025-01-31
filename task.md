@@ -51,17 +51,20 @@ Dashboard:
 ✅ Fraud score
 ✅ Total spent
 ✅ Total orders
+✅ Courier status refrash dile, courier status er upor base kore order status update korte hobe.
+✅ status complete a gele customer data recalculate hobe
+✅ customer ke backend theke notice dewar bebosta korte hobe, get-user er response a notice key te dta thakbe.
+✅ online and offline er jonno slack er moto alert show korate hobe
 
 
 --------heigh priority task------------
-👉🏻 Order list filter by courier partner
 👉🏻 Send message for abandoned order customer
+👉🏻 Order list filter by courier partner
 👉🏻 landing page view calculation
-👉🏻 Courier status refrash dile, courier status er upor base kore order status update korte hobe.
-👉🏻 online and offline er jonno slack er moto alert show korate hobe
-👉🏻 status complete a gele customer data recalculate hobe
 👉🏻 bulk request guluke chunk kore nite hobe
-👉🏻 customer ke backend theke notice dewar bebosta korte hobe, get-user er response a notice key te dta thakbe.
+👉🏻 black list theke remove korar somoy customer data update korte hobe
+👉🏻 black list a data add korle fraud score er calculation abnormal mone hoy,
+
 
 
 
