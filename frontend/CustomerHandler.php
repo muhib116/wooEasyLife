@@ -14,14 +14,14 @@ class CustomerHandler {
     }
 
 
-    public function recalculate_customer_data($customer_id) {
+    public function recalculate_customer_data($table_id) {
         global $wpdb;
     
         // Fetch existing customer data
         $existing_customer = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT * FROM {$this->table_name} WHERE id = %d LIMIT 1",
-                $customer_id
+                $table_id
             ),
             ARRAY_A
         );
@@ -53,6 +53,7 @@ class CustomerHandler {
         $fraud_score = $this->calculate_fraud_score($order);
         $total_spent = $this->get_total_spent($phone, $email);
     
+
         // Prepare updated customer data
         $customer_data = [
             'order_frequency' => $order_frequency,
@@ -63,12 +64,12 @@ class CustomerHandler {
             'last_order_date' => current_time('mysql'),
             'updated_at'      => current_time('mysql'),
         ];
-    
+
         // Update customer record
         $wpdb->update(
             $this->table_name,
             $customer_data,
-            ['id' => $customer_id]
+            ['id' => $table_id]
         );
     }
     
@@ -364,8 +365,9 @@ class CustomerHandler {
         }
     
         // 4️⃣ **🛑 Blacklist Check → If customer email, phone, or IP is blacklisted**
-        if ($this->is_blacklisted($billing_phone, $billing_email, $customer_ip)) {
-            $score += 50; // High risk if blacklisted
+        $totalBlacklistedRecord = $this->is_blacklisted($billing_phone, $billing_email, $customer_ip);
+        if ($totalBlacklistedRecord) {
+            $score += $totalBlacklistedRecord * (50/3); // High risk if blacklisted
         }
     
         // 5️⃣ **❌ Multiple failed/canceled orders → Possible fraud**
@@ -509,7 +511,7 @@ class CustomerHandler {
             $phone, $email, $ip
         ));
     
-        return (int) $blacklist > 0;
+        return (int) $blacklist;
     }
     
 }

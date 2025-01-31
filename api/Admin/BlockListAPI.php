@@ -203,7 +203,7 @@ class BlockListAPI extends WP_REST_Controller {
 
 
             // update customer data start
-            $this->update_customer_data(null, $customer_id);
+            $this->update_customer_data($customer_id);
             // update customer data end
 
 
@@ -281,8 +281,9 @@ class BlockListAPI extends WP_REST_Controller {
             ], 404);
         }
 
+        $customer_id = $result['customer_id'];
         // update customer data start
-        $this->update_customer_data($id);
+        $this->update_customer_data($customer_id);
         // update customer data end
 
         return new WP_REST_Response([
@@ -362,6 +363,8 @@ class BlockListAPI extends WP_REST_Controller {
         global $wpdb;
 
         $id = $request->get_param('id');
+        $customer_id = $this->get_blocked_customer_id($id);
+
         $deleted = $wpdb->delete(
             $this->table_name,
             ['id' => $id],
@@ -376,7 +379,7 @@ class BlockListAPI extends WP_REST_Controller {
         }
 
         // update customer data start
-        $this->update_customer_data($id);
+        $this->update_customer_data($customer_id);
         // update customer data end
 
         return new WP_REST_Response([
@@ -385,11 +388,10 @@ class BlockListAPI extends WP_REST_Controller {
         ], 200);
     }
 
-    private function update_customer_data($id=null, $customer_id=null) {
-        $customer_id = $this->get_blocked_customer_id($id) ?? $customer_id;
+    private function update_customer_data($customer_id=null) {
         if($customer_id){
             $customerHandler = new \WooEasyLife\Frontend\CustomerHandler();
-            $customerHandler->recalculate_customer_data($customer_id);
+            return $customerHandler->recalculate_customer_data($customer_id);
         }
     }
 
