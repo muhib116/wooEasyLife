@@ -487,5 +487,5 @@ function get_order_source($order) {
 }
 
 function get_api_end_point ($path) {
-    return "https://api.wpsalehub.com/api/$path"
+    return "https://api.wpsalehub.com/api/$path";
 }
