@@ -58,12 +58,15 @@ Dashboard:
 ✅ black list a data add korle fraud score er calculation abnormal mone hoy,
 ✅ black list theke remove korar somoy customer data update korte hobe
 ✅ new order place howar shate shate fraud data entry
+✅ fraud check bulk request guluke chunk kore nite hobe
+
 
 --------heigh priority task------------
 👉🏻 Send message for abandoned order customer
 👉🏻 Order list filter by courier partner
 👉🏻 landing page view calculation
-👉🏻 bulk request guluke chunk kore nite hobe
+👉🏻 api key add hoyna
+👉🏻 api key chara on reload a dash board and list page visitkora jay
 
 
 

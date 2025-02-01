@@ -73,6 +73,7 @@ export const useOrders = () => {
       selectedOrders.value.clear();
     }
   };
+  
   const handleFraudCheck = async (button) => {
     if (![...selectedOrders.value].length) {
       alert("Please select at least one item.");
