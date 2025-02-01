@@ -219,7 +219,7 @@ export const getTutorials = async () => {
 
 const handleLicenseValidations = (err) => 
 {
-  isValidLicenseKey.value = err.status != 401;
+  isValidLicenseKey.value = false;
   const msg = err.response.data.message
   localStorage.removeItem('license_key')
   licenseKey.value = ''

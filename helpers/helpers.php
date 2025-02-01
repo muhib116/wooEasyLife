@@ -81,7 +81,7 @@ function send_sms($phone_number, $message)
 {
     global $license_key;
 
-    $url = "https://api.wpsalehub.com/api/sms/send";
+    $url = get_api_end_point("sms/send");
 
     $data = [
         "phone" => $phone_number,
@@ -92,6 +92,7 @@ function send_sms($phone_number, $message)
     $headers = [
         'Authorization' => 'Bearer '.$license_key,
         'Content-Type'  => 'application/x-www-form-urlencoded', // Adjust this if the API requires a different content type
+        'origin' => site_url()
     ];
 
     // Use wp_remote_post for HTTP requests
@@ -133,13 +134,14 @@ function getCustomerFraudData($payload)
         return new WP_Error('missing_data', 'Phone data is required in the correct format.', ['status' => 400]);
     }
     // External API URL and headers
-    $api_url = 'https://api.wpsalehub.com/api/fraud-check';
+    $api_url = get_api_end_point('fraud-check');
 
     $args = [
         'body'    => json_encode($payload),
         'headers' => [
             'Content-Type'  => 'application/json',
             'Authorization' => 'Bearer ' . $license_key,
+            'origin' => site_url()
         ],
         'timeout' => 45,
     ];
@@ -482,4 +484,8 @@ function get_order_source($order) {
     } else {
         return 'No source found'; // Fallback message if the source is not set
     }
+}
+
+function get_api_end_point ($path) {
+    return "https://api.wpsalehub.com/api/$path"
 }

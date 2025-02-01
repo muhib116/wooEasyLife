@@ -4,12 +4,12 @@ namespace WooEasyLife\Frontend;
 class Remote_UsePackageHistory {
     public function __construct()
     {
-        add_action('woocommerce_thankyou', [$this, 'confirmOrderPlaced'], 10, 1);
+        add_action('woocommerce_thankyou', [$this, 'confirmOrderPlaced'], 11, 1);
     }
-    private function confirmOrderPlaced($order_id) {
-        global $wpdb, $license_key;
+    public function confirmOrderPlaced($order_id) {
+        global $license_key;
     
-        $url = "https://api.wpsalehub.com/api/package-order-use";
+        $url = get_api_end_point("package-order-use");
     
         // Get the WooCommerce order object
         $order = wc_get_order($order_id);
@@ -57,6 +57,7 @@ class Remote_UsePackageHistory {
         $headers = [
             'Authorization' => 'Bearer ' . $license_key,
             'Content-Type'  => 'application/json', // JSON format
+            'origin' => site_url()
         ];
     
         // Use wp_remote_post for HTTP requests
@@ -78,6 +79,7 @@ class Remote_UsePackageHistory {
     
         // Decode and return the response
         $response_body = wp_remote_retrieve_body($response);
+
         return [
             'status'  => 'success',
             'message' => json_decode($response_body, true) ?: $response_body,

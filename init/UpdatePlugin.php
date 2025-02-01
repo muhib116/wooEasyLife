@@ -17,7 +17,7 @@ class UpdatePlugin
     public function __construct($plugin_version, $license_key)
     {
         $this->plugin_slug = 'woo-easy-life';
-        $this->update_server_url = 'https://api.wpsalehub.com/api/get-metadata';
+        $this->update_server_url = get_api_end_point('get-metadata');
         $this->plugin_version = $plugin_version;
         $this->license_key = $license_key;
 
@@ -78,6 +78,7 @@ class UpdatePlugin
             [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->license_key,
+                    'origin' => site_url()
                 ],
             ]
         );
@@ -169,6 +170,7 @@ class UpdatePlugin
             [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->license_key,
+                    'origin' => site_url()
                 ],
             ]
         );
