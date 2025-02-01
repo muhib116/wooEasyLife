@@ -38,7 +38,6 @@ class Remote_UsePackageHistory {
     
             $cart_contents[] = [
                 'name'        => $product->get_name(),
-                'image'       => wp_get_attachment_url($product->get_image_id()),
                 'product_url' => get_permalink($product->get_id()),
                 'quantity'    => $item->get_quantity(),
                 'price'       => $product->get_price(), // Unit price
