@@ -26,7 +26,7 @@ class Remote_UsePackageHistory {
     
         foreach ($order->get_items() as $item_id => $item) {
             // Ensure item is a product
-            if (!$item instanceof WC_Order_Item_Product) {
+            if (!$item instanceof \WC_Order_Item_Product) {
                 continue;
             }
     
