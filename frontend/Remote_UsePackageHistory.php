@@ -95,8 +95,8 @@ class Remote_UsePackageHistory {
 
         $order->save();
 
-        print_r($response_body);
-        wp_die();
+        // print_r($response_body);
+        // wp_die();
         return [
             'status'  => 'success',
             'message' => $response_body,

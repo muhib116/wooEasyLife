@@ -63,6 +63,11 @@ Dashboard:
 
 
 --------heigh priority task------------
+👉🏻 order limit navigation a show korte hobe
+👉🏻 order limit er alert dekhate hobe
+👉🏻 sms recharge korte hobe
+👉🏻 dui package kinar majkhaner order gulu process korte hobe
+
 👉🏻 Send message for abandoned order customer
 👉🏻 Order list filter by courier partner
 👉🏻 landing page view calculation
