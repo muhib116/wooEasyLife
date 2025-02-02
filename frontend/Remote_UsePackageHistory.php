@@ -5,9 +5,12 @@ class Remote_UsePackageHistory {
     public function __construct()
     {
         add_action('woocommerce_thankyou', [$this, 'confirmOrderPlaced'], 11, 1);
-        // add_action('woocommerce_checkout_order_processed', [$this, 'confirmOrderPlaced'], 11, 1);
+        // add_action('woocommerce_order_status_changed', [$this, 'confirmOrderPlaced'], 11, 1);
     }
-    public function confirmOrderPlaced($order_id) {
+    public function confirmOrderPlaced($order_id, $old_status, $new_status) {
+        if($new_status != 'processing') {
+            return;
+        }
         global $license_key;
     
         $url = get_api_end_point("package-order-use");
@@ -86,7 +89,7 @@ class Remote_UsePackageHistory {
         $response_body = json_decode($response_body, true) ?: $response_body;
 
         $order->update_meta_data( 'is_wel_balance_cut', 1);
-        if($response_body['is_order_limit_over']){
+        if(!$response_body['is_order_limit_over']){
             $order->update_meta_data( 'is_wel_balance_cut', 0);
         }
 

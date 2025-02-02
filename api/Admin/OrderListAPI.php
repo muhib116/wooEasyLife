@@ -108,6 +108,7 @@ class OrderListAPI
         $page     = intval($request->get_param('page'));
         $billing_phone = normalize_phone_number($request->get_param('billing_phone'));
         $search   = $request->get_param('search'); // Get search parameter
+        $total_new_orders_not_handled_by_wel_plugin = $this->get_total_new_orders_not_handled_by_wel_plugin();
     
         // Use WooCommerce Order Query to fetch orders with pagination and search
         $args = [
@@ -174,6 +175,7 @@ class OrderListAPI
                 'is_wel_order_handled' => $order->get_meta('is_wel_order_handled', true),
                 'is_wel_balance_cut'   => $order->get_meta('is_wel_balance_cut', true),
                 'customer_custom_data' => $customer_custom_data,
+                'total_new_orders_not_handled_by_wel_plugin' => $total_new_orders_not_handled_by_wel_plugin,
                 'total_order_per_customer_for_current_order_status' => $total_order_per_customer_for_current_order_status,
                 'date_created'  => $order->get_date_created() ? $order->get_date_created()->date('M j, Y \a\t g:i A') : null,
                 'customer_id'   => $order->get_customer_id(),
@@ -238,6 +240,27 @@ class OrderListAPI
             'total'  => $total_orders,
             'pages'  => $total_pages,
         ], 200);
+    }
+
+    private function get_total_new_orders_not_handled_by_wel_plugin() {
+        $order_query = new \WC_Order_Query([
+            'status'    => ['wc-processing'],
+            'limit'     => -1,
+            'type'      => 'shop_order',
+            'return'    => 'ids', // Only retrieve order IDs
+            'meta_query' => [
+                'relation' => 'AND',
+                [
+                    'key'     => 'is_wel_order_handled',
+                    'compare' => 'NOT EXISTS', // Meta key does not exist
+                ]
+            ]
+        ]);
+        
+        $order_ids = $order_query->get_orders();
+        $order_count = count($order_ids);
+        
+        return $order_count;        
     }
     
     public function get_order_status_with_counts()

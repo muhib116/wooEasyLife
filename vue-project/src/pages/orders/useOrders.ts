@@ -327,6 +327,14 @@ export const useOrders = () => {
         consignment_ids: consignment_ids,
       };
 
+      if(!consignment_ids?.length) {
+        alertMessage.value = {
+          type: "warning",
+          title: "There is no data available to refresh."
+        }
+        return
+      }
+
       // status: {consignment_id: string}
       const { data: statuses } = await steadfastBulkStatusCheck(payload);
 
@@ -347,12 +355,12 @@ export const useOrders = () => {
             new_status: get_status(courierUpdatedStatus),
           });
         }
-      });
+      })
 
       alertMessage.value = {
         type: "success",
-        title: "Courier data refresh done.",
-      };
+        title: "Courier data refresh done."
+      }
     } finally {
       btn.isLoading = false;
 
