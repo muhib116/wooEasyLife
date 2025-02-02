@@ -352,6 +352,7 @@ class CustomerHandler {
         $billing_phone = normalize_phone_number($order->get_billing_phone());
         $billing_email = $order->get_billing_email();
         $customer_ip = $order->get_customer_ip_address();
+        $total_orders = $this->get_total_orders($billing_phone, $billing_email);
     
         // 1️⃣ **🚚 Calculate Courier Fraud Score**
         $score += $this->get_courier_fraud_score($order);
@@ -394,7 +395,7 @@ class CustomerHandler {
         // 6️⃣ **📊 Order Frequency → Unusual frequency patterns**
         $order_frequency = $this->getOrderFrequency($billing_phone, $billing_email);
     
-        if ($order_frequency < 0.3) {
+        if ($order_frequency < 0.3 || $total_orders == 1) {
             $score += 0; // Low frequency, no risk
         } elseif ($order_frequency >= 0.3 && $order_frequency < 0.6) {
             $score += 5; // Mild risk
