@@ -23,6 +23,8 @@ class Order_limit {
                 'post_type'   => 'shop_order',
                 'post_status' => 'wc-processing', // You can also include other statuses if needed
                 'return'      => 'ids',
+
+                ...getMetaDataOfOrderForArgs()
             ];
         
             $orders = wc_get_orders($args);

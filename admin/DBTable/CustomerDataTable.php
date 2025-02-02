@@ -34,6 +34,7 @@ class CustomerDataTable {
             country VARCHAR(10) NULL,
             tags TEXT NULL, 
             total_orders INT(11) DEFAULT 0,
+            total_complete_orders INT(11) DEFAULT 0,
             last_order_date DATETIME NULL,
             first_order_date DATETIME NULL,
             order_frequency VARCHAR(20) NULL,

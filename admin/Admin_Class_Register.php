@@ -6,7 +6,7 @@ class Admin_Class_Register{
     {
         new ShowCustomerFraudDataToOrderDetailsPage();
         new AddCustomColumnInOrderList();
-        new SMSForStatusChange();
+        new StatusChangeAction();
         new StoreStatusChangeHistory();
     }
 }

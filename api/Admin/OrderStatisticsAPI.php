@@ -124,6 +124,7 @@ class OrderStatisticsAPI extends WP_REST_Controller
             'limit'  => -1, // No limit, fetch all orders
             'orderby'      => 'date',
             'order'        => 'DESC',
+            ...getMetaDataOfOrderForArgs()
         ];
 
         if ($start_date && $end_date) {
@@ -186,6 +187,7 @@ class OrderStatisticsAPI extends WP_REST_Controller
             'orderby'      => 'date',
             'order'        => 'DESC',
             'return'       => 'objects', // Return full order objects
+            ...getMetaDataOfOrderForArgs()
         ];
 
         $orders = wc_get_orders($args);
@@ -324,6 +326,7 @@ class OrderStatisticsAPI extends WP_REST_Controller
             'return'       => 'objects', // Return full order objects
             'type'         => 'shop_order',
             'date_created' => $start_date . '...' . $end_date, // Date range
+            ...getMetaDataOfOrderForArgs(),
         ];
     
         // Fetch orders using wc_get_orders
@@ -397,6 +400,7 @@ class OrderStatisticsAPI extends WP_REST_Controller
             'return'       => 'objects', // Return full order objects
             'type'         => 'shop_order',
             'date_created' => $start_date . '...' . $end_date, // Date range
+            ...getMetaDataOfOrderForArgs()
         ];
     
         // Fetch orders using wc_get_orders
@@ -461,6 +465,7 @@ class OrderStatisticsAPI extends WP_REST_Controller
             'return'      => 'objects',
             'type'         => 'shop_order',
             'date_created' => $start_date . '...' . $end_date, // Date range
+            ...getMetaDataOfOrderForArgs()
         ];
     
         // Fetch orders using WooCommerce's wc_get_orders function
@@ -530,6 +535,7 @@ class OrderStatisticsAPI extends WP_REST_Controller
             'type'     => 'shop_order',
             'return'   => 'objects', // Return full order objects
             'date_created' => $start_date . '...' . $end_date, // Date range
+            ...getMetaDataOfOrderForArgs()
         ];
 
         $orders = wc_get_orders($args);
@@ -648,6 +654,7 @@ class OrderStatisticsAPI extends WP_REST_Controller
             'return'       => 'objects', // Return full order objects
             'type'         => 'shop_order',
             'date_created' => $start_date . '...' . $end_date, // Date range
+            ...getMetaDataOfOrderForArgs()
         ];
 
         // Fetch orders using wc_get_orders
@@ -845,7 +852,8 @@ class OrderStatisticsAPI extends WP_REST_Controller
             'status'        => ['wc-completed'],
             'date_created'  => $start_date . '...' . $end_date,
             'type'         => 'shop_order',
-            'limit' => -1
+            'limit' => -1,
+            ...getMetaDataOfOrderForArgs()
         ];
         $orders = wc_get_orders($args);
         
@@ -879,6 +887,8 @@ class OrderStatisticsAPI extends WP_REST_Controller
                 'date_created'  => $date . ' 00:00:00...' . $date . ' 23:59:59',
                 'type'         => 'shop_order',
                 'limit' => -1,
+
+                ...getMetaDataOfOrderForArgs()
             ];
             $orders = wc_get_orders($args);
 

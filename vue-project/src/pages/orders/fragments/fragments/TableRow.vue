@@ -116,6 +116,12 @@
                     {{order?.customer_custom_data?.total_orders}}
                 </span>
                 <span
+                    title="Lifetime total complete orders"
+                >
+                    ✅ Orders: 
+                    {{order?.customer_custom_data?.total_complete_orders}}
+                </span>
+                <span
                     title="Total spent amount"
                     class="text-green-500"
                 >

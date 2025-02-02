@@ -38,6 +38,7 @@ class Remote_UsePackageHistory {
             }
     
             $cart_contents[] = [
+                'order_id'    => $order_id,
                 'name'        => $product->get_name(),
                 'product_url' => get_permalink($product->get_id()),
                 'quantity'    => $item->get_quantity(),
@@ -69,9 +70,6 @@ class Remote_UsePackageHistory {
             'sslverify'   => false,
         ]);
 
-        print_r($response);
-        wp_die();
-    
         // Check for errors in the response
         if (is_wp_error($response)) {
             return [
@@ -79,13 +77,26 @@ class Remote_UsePackageHistory {
                 'message' => $response->get_error_message(),
             ];
         }
+
+        $order->update_meta_data('is_wel_order_handled', 1);
+
     
         // Decode and return the response
         $response_body = wp_remote_retrieve_body($response);
+        $response_body = json_decode($response_body, true) ?: $response_body;
 
+        $order->update_meta_data( 'is_wel_balance_cut', 1);
+        if($response_body['is_order_limit_over']){
+            $order->update_meta_data( 'is_wel_balance_cut', 0);
+        }
+
+        $order->save();
+
+        print_r($response_body);
+        wp_die();
         return [
             'status'  => 'success',
-            'message' => json_decode($response_body, true) ?: $response_body,
+            'message' => $response_body,
         ];
     }    
 }

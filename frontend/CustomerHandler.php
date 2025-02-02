@@ -80,6 +80,9 @@ class CustomerHandler {
     public function handle_customer_data($order_id, $order) {
         global $wpdb;
 
+        if(empty($order) && $order_id) {
+            $order = wc_get_order($order_id);
+        }
     
         // Ensure $order is a valid WooCommerce order object
         if (!$order instanceof \WC_Order) {
@@ -105,6 +108,7 @@ class CustomerHandler {
         // Fetch order frequency & total orders for customer
         $order_frequency = $this->calculate_order_frequency($phone, $email);
         $total_orders = $this->get_total_orders($phone, $email);
+        $total_complete_orders = $this->get_total_orders($phone, $email, true);
         $referral_source = $this->get_referral_source($order);
         $fraud_score = $this->calculate_fraud_score($order);
         $total_spent = $this->get_total_spent($phone, $email);
@@ -133,6 +137,7 @@ class CustomerHandler {
             'country'         => $country,
             'order_frequency' => $order_frequency,
             'total_orders'    => $total_orders,
+            'total_complete_orders' => $total_complete_orders,
             'referral_source' => $referral_source,
             'fraud_score'     => $fraud_score,
             'total_spent'     => $total_spent,
@@ -157,6 +162,8 @@ class CustomerHandler {
     
             $wpdb->insert($this->table_name, $customer_data);
         }
+
+        return $customer_data;
     }
     
     static function get_customer_data($billing_phone = null, $billing_email = null) {
@@ -182,12 +189,11 @@ class CustomerHandler {
     
         return $customer_data ?: null;
     }
-    
 
     /**
      * Get total orders for a customer by phone or email
      */
-    private function get_total_orders($billing_phone = null, $billing_email = null) {
+    private function get_total_orders($billing_phone = null, $billing_email = null, $onlyCompleteOrder=false) {
         // Prioritize phone, then fallback to email
         $identifier = !empty($billing_phone) ? $billing_phone : $billing_email;
     
@@ -196,10 +202,15 @@ class CustomerHandler {
         }
     
         $args = [
-            'status'      => ['wc-completed'],
             'limit'       => -1,
             'return'      => 'ids',
+
+            ...getMetaDataOfOrderForArgs()
         ];
+
+        if($onlyCompleteOrder) {
+            $args['status'] = 'wc-completed';
+        }
     
         if (!empty($billing_phone)) {
             $args['billing_phone'] = $billing_phone;
@@ -210,7 +221,7 @@ class CustomerHandler {
         // Fetch customer orders using WooCommerce function
         $customer_orders = wc_get_orders($args);
     
-        return count($customer_orders)+1;
+        return count($customer_orders);
     }    
     
     /**
@@ -225,9 +236,10 @@ class CustomerHandler {
         }
 
         $args = [
-            'status'      => ['wc-completed', 'wc-processing'],
             'limit'       => -1,
-            'return'      => 'ids'
+            'return'      => 'ids',
+
+            ...getMetaDataOfOrderForArgs()
         ];
 
         if($billing_phone){
@@ -266,11 +278,14 @@ class CustomerHandler {
 
     private function assign_customer_tags($existingCustomer) 
     {
-        $total_orders = isset($existingCustomer['total_orders']) ? $existingCustomer['total_orders'] : 0;
-        $order_frequency = isset($existingCustomer['order_frequency']) ? $existingCustomer['order_frequency'] : 0;
+        $billing_phone = $existingCustomer['phone'];
+        $billing_email = $existingCustomer['email'];
+
+        $total_orders = $this->get_total_orders($billing_phone, $billing_email);
+        $order_frequency = $this->calculate_order_frequency($billing_phone, $billing_email);
 
         
-        $tags = '';
+        $tags = 'fraud';
     
         // Assign "New" tag for first-time customers
         if ($total_orders == 1) {
@@ -288,10 +303,6 @@ class CustomerHandler {
         // Assign "VIP" tag if the customer orders frequently
         else if ($total_orders > 20 && $order_frequency < 1) {
             $tags = 'vip';
-        }
-
-        else {
-            $tags = 'fraud';
         }
     
         return $tags;
@@ -312,6 +323,8 @@ class CustomerHandler {
         $args = [
             'status'      => ['wc-completed'],
             'limit'       => -1, // Fetch all completed orders
+
+            ...getMetaDataOfOrderForArgs()
         ];
     
         // Prioritize phone, then fallback to email
@@ -474,13 +487,14 @@ class CustomerHandler {
         $order_frequency = isset($existing_customer_data['order_frequency']) ? $existing_customer_data['order_frequency'] : 0;
         return  $order_frequency;
     }    
-
-    
+   
     private function get_failed_orders_count($billing_phone, $billing_email) {
         $args = [
             'status'      => ['wc-failed', 'wc-cancelled'],
             'limit'       => -1,
-            'return'      => 'ids'
+            'return'      => 'ids',
+
+            ...getMetaDataOfOrderForArgs()
         ];
     
         if ($billing_phone) {
@@ -513,5 +527,4 @@ class CustomerHandler {
     
         return (int) $blacklist;
     }
-    
 }

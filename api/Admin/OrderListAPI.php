@@ -102,6 +102,7 @@ class OrderListAPI
      */
     public function get_orders($request)
     {
+        $customerHandler = new \WooEasyLife\Frontend\CustomerHandler();
         $status   = $request->get_param('status');
         $per_page = intval($request->get_param('per_page'));
         $page     = intval($request->get_param('page'));
@@ -118,6 +119,7 @@ class OrderListAPI
             'paginate'      => true, // Enable pagination
             'orderby' => 'id',
             'order'   => 'DESC', // Descending order
+            ... getMetaDataOfOrderForArgs()
         ];
     
         // Add search conditions
@@ -163,12 +165,14 @@ class OrderListAPI
             $created_via = $order->get_meta('_created_via', true);
             $courier_data = get_courier_data_from_order($order);
             $is_repeat_customer = is_repeat_customer($order);
-            $customer_custom_data = \WooEasyLife\Frontend\CustomerHandler::get_customer_data($_billing_phone, $_billing_email);
+            $customer_custom_data = $customerHandler->handle_customer_data(null, $order);
 
             $data[] = [
                 'id'            => $order->get_id(),
                 'status'        => $order->get_status(),
                 'total'         => $order->get_total(),
+                'is_wel_order_handled' => $order->get_meta('is_wel_order_handled', true),
+                'is_wel_balance_cut'   => $order->get_meta('is_wel_balance_cut', true),
                 'customer_custom_data' => $customer_custom_data,
                 'total_order_per_customer_for_current_order_status' => $total_order_per_customer_for_current_order_status,
                 'date_created'  => $order->get_date_created() ? $order->get_date_created()->date('M j, Y \a\t g:i A') : null,
@@ -246,6 +250,7 @@ class OrderListAPI
                 'limit'  => -1,
                 'type'     => 'shop_order',
                 'return' => 'ids',
+                ...getMetaDataOfOrderForArgs()
             ];
             $orders = wc_get_orders($args);
             $order_count = count($orders);

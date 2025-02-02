@@ -61,6 +61,7 @@ Dashboard:
 ✅ fraud check bulk request guluke chunk kore nite hobe
 
 
+
 --------heigh priority task------------
 👉🏻 Send message for abandoned order customer
 👉🏻 Order list filter by courier partner
@@ -69,8 +70,26 @@ Dashboard:
 👉🏻 api key chara on reload a dash board and list page visitkora jay
 
 
+balance cut handle
+====================
+step: 1
+-----------
+set:
+   is_wel_order_handled = 1 //1 = true as order meta
 
+step: 2
+-----------
+when place order, send request to package balance api,
+check response if response has 
 
+if(is_order_limit_over and is_order_limit_over == true){
+   is_wel_balance_cut = 0 //0=false as order meta information
+}else {
+   is_wel_balance_cut = 1 //1=true as order meta information
+}
+
+get order from all place by checking the two status true:
+is_wel_order_handled == 1 && is_wel_balance_cut == 1
 
 
 

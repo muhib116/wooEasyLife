@@ -249,6 +249,8 @@ function get_orders_by_billing_phone_or_email_and_status($billing_phone, $billin
         'return'    => 'objects', // Fetch full order objects
         'type'     => 'shop_order',
         'limit' => -1,
+
+        ...getMetaDataOfOrderForArgs()
     ];
 
     if (!empty($billing_phone)) {
@@ -488,4 +490,23 @@ function get_order_source($order) {
 
 function get_api_end_point ($path) {
     return "https://api.wpsalehub.com/api/$path";
+}
+
+
+function getMetaDataOfOrderForArgs (){
+    return [
+        'meta_query'    => [
+            'relation' => 'AND', // Both conditions must be met
+            [
+                'key'     =>  'is_wel_order_handled',
+                'value'   => '1', // WooCommerce stores boolean values as '1' (true) or '' (false)
+                'compare' => '='
+            ],
+            [
+                'key'     => 'is_wel_balance_cut',
+                'value'   => '1', // Checking if balance_cut is true
+                'compare' => '='
+            ],
+        ]
+    ];
 }

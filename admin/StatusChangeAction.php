@@ -1,7 +1,9 @@
 <?php
 namespace WooEasyLife\Admin;
 
-class SMSForStatusChange {
+use WooEasyLife\Frontend\CustomerHandler;
+
+class StatusChangeAction {
     public function __construct()
     {
         add_action('woocommerce_order_status_changed', [$this, 'handle_order_status_change'], 10, 3);
