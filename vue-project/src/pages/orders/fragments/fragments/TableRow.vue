@@ -112,20 +112,20 @@
                 <span
                     title="Lifetime total orders"
                 >
-                    📦 Orders: 
+                    📦 LTO: 
                     {{order?.customer_custom_data?.total_orders}}
                 </span>
                 <span
                     title="Lifetime total complete orders"
                 >
-                    ✅ Orders: 
+                    ✅ LTCO: 
                     {{order?.customer_custom_data?.total_complete_orders}}
                 </span>
                 <span
                     title="Total spent amount"
                     class="text-green-500"
                 >
-                    💰 Spent: 
+                    💰 TSA: 
                     <span
                         v-html="order?.currency_symbol || 'tk'"
                     ></span>{{order?.customer_custom_data?.total_spent}}
@@ -134,21 +134,21 @@
                     title="Order frequency per day"
                     class="text-orange-400"
                 >
-                    ⏳ Frequency: 
+                    ⏳ OFPD: 
                     {{order?.customer_custom_data?.order_frequency}}
                 </span>
                 <span
                     class="capitalize"
                     title="Customer Type"
                 >
-                        ⚠️ Type: 
+                        ⚠️ CT: 
                     {{order?.customer_custom_data?.customer_type}}
                 </span>
                 <span
                     title="Customer fraud score"
                     class="text-red-500"
                 >
-                    🚨 Fraud score: 
+                    🚨 CFS: 
                     {{order?.customer_custom_data?.fraud_score || 0}}%
                 </span>
             </div>
