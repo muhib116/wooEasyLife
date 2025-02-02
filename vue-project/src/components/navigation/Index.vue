@@ -5,7 +5,7 @@
         <a href="#" class="flex items-center">
           <img
             class="w-auto max-w-[120px]"
-            :src="`${remoteApiBaseURL}/app-logo`"
+            :src="`https://api.wpsalehub.com/app-logo`"
             alt="WPSaleHub"
           />
         </a>

@@ -221,8 +221,8 @@ const handleLicenseValidations = (err) =>
 {
   isValidLicenseKey.value = false;
   const msg = err.response.data.message
-  localStorage.removeItem('license_key')
-  licenseKey.value = ''
+  // localStorage.removeItem('license_key')
+  // licenseKey.value = ''
 
   switch(msg) {
     case 'Expired': 

@@ -4,7 +4,8 @@ namespace WooEasyLife\Frontend;
 class Remote_UsePackageHistory {
     public function __construct()
     {
-        add_action('woocommerce_checkout_order_processed', [$this, 'confirmOrderPlaced'], 11, 1);
+        add_action('woocommerce_thankyou', [$this, 'confirmOrderPlaced'], 11, 1);
+        // add_action('woocommerce_checkout_order_processed', [$this, 'confirmOrderPlaced'], 11, 1);
     }
     public function confirmOrderPlaced($order_id) {
         global $license_key;
@@ -67,6 +68,9 @@ class Remote_UsePackageHistory {
             'timeout'     => 45,
             'sslverify'   => false,
         ]);
+
+        print_r($response);
+        wp_die();
     
         // Check for errors in the response
         if (is_wp_error($response)) {
