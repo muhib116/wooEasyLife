@@ -6,6 +6,7 @@
     >
         <Table.Td
             @click="setSelectedOrder(order)"  
+            class="cursor-pointer hover:bg-green-50"
         >
             <input
                 type="checkbox"
@@ -13,9 +14,7 @@
                 :checked="[...selectedOrders].find(item => item.id == order.id)"
             />
         </Table.Td>
-        <Table.Td
-            @click="setSelectedOrder(order)"  
-        >
+        <Table.Td >
             <div
                 class="flex gap-2"
             >
@@ -297,9 +296,9 @@
         </Table.Td>
         <Table.Td
             @click="setSelectedOrder(order)"  
-            class="whitespace-nowrap" 
+            class="whitespace-nowrap pointer-events-none"
         >
-            <button class="relative order-status capitalize px-3 py-1" :class="`status-${order.status}`">
+            <button class="relative order-status capitalize px-3 py-1 pointer-events-auto" :class="`status-${order.status}`">
                 {{ order.status=='processing' ? 'New Order' : order.status.replaceAll('-', ' ') }}
 
                 <span 
@@ -312,45 +311,31 @@
                 </span>
             </button>
         </Table.Td>
-        <Table.Td>
-            <div class="flex flex-col items-center gap-2">
+        <Table.Td class="pointer-events-none">
+            <div class="grid gap-2">
                 <button
-                    class="relative flex flex-col whitespace-nowrap justify-center items-center text-orange-500"
+                    class="relative flex flex-col whitespace-nowrap justify-center items-center text-white bg-orange-500 w-full text-center py-1 px-2 rounded-sm pointer-events-auto hover:brightness-95"
                     @click="toggleNotesModel = true"
                 >
-                    <Icon
-                        name="PhNote"
-                        size="20"
-                    />
                     Notes
                 </button>
                 <button
-                    class="relative flex flex-col whitespace-nowrap justify-center items-center text-sky-500"
+                    class="relative flex flex-col whitespace-nowrap justify-center items-center text-white bg-sky-500 w-full text-center py-1 px-2 rounded-sm pointer-events-auto hover:brightness-95"
                     @click="toggleModel = true"
                 >
-                    <Icon
-                        name="PhMapPinLine"
-                        size="20"
-                    />
                     Address
                 </button>
+                <button
+                    class="relative flex flex-col whitespace-nowrap justify-center items-center text-white bg-blue-500 w-full text-center py-1 px-2 rounded-sm pointer-events-auto hover:brightness-95"
+                    title="Order details"
+                    @click="(e) => {
+                        e.preventDefault();
+                        setActiveOrder(order)
+                    }"
+                >
+                    Order Details
+                </button>
             </div>
-        </Table.Td>
-        <Table.Td class="pointer-events-none">
-            <button
-                class="relative flex flex-col whitespace-nowrap justify-center items-center text-blue-500 pointer-events-auto"
-                title="Order details"
-                @click="(e) => {
-                    e.preventDefault();
-                    setActiveOrder(order)
-                }"
-            >
-                <Icon
-                    name="PhFileText"
-                    size="20"
-                />
-                Details
-            </button>
         </Table.Td>
     </Table.Tr>
 

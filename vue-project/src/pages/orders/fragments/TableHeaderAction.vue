@@ -70,6 +70,22 @@
                 />
                 Courier Status
             </Button.Native>
+
+            <Button.Native
+                class="opacity-100 w-fit text-white bg-sky-500 shadow rounded-sm px-1 py-1"
+                title="Refresh CourierData"
+                @onClick="refreshBulkCourierData"
+            >
+                <Icon
+                    name="PhArrowSquareIn"
+                    size="16"
+                    weight="bold"
+                    class="rotate-[180deg]"
+                />
+                Import previous new order
+            </Button.Native>
+
+
         </div>
 
         <div>

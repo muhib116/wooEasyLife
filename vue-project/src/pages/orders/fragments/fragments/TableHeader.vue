@@ -17,8 +17,7 @@
         <Table.Th>Shipping</Table.Th>
         <Table.Th>Payment</Table.Th>
         <Table.Th>Status</Table.Th>
-        <Table.Th>More</Table.Th>
-        <Table.Th>Action</Table.Th>
+        <Table.Th class="text-center">Action</Table.Th>
     </Table.THead>
 </template>
 
