@@ -1,7 +1,9 @@
 import { createOrUpdateWPOptionItem, getWPOptionItem } from "@/api"
 import { getUser } from "@/remoteApi"
-import { onMounted, ref } from "vue"
-import { userData } from '@/layout/useLayout.ts'
+import { inject, onMounted, ref } from "vue"
+import {
+    userData
+} from '@/service/useServiceProvider'
 
 const licenseKey = ref(localStorage.getItem('license_key'))
 const isValidLicenseKey = ref(true)

@@ -4,7 +4,6 @@ import { onMounted, ref } from "vue"
 
 
 const configData = ref()
-export const userData = ref({})
 export const useLayout = () => {
     const loadConfig = async () => {
         if(configData.value) return
@@ -26,7 +25,6 @@ export const useLayout = () => {
     return {
         loadConfig,
         configData,
-        userData,
         internetStatusMessage
     }
 }

@@ -4,10 +4,10 @@ namespace WooEasyLife\Frontend;
 class Remote_UsePackageHistory {
     public function __construct()
     {
-        add_action('woocommerce_thankyou', [$this, 'confirmOrderPlaced'], 11, 1);
-        // add_action('woocommerce_order_status_changed', [$this, 'confirmOrderPlaced'], 11, 1);
+        add_action('woocommerce_order_status_changed', [$this, 'confirmOrderPlaced'], 11, 4);
     }
-    public function confirmOrderPlaced($order_id, $old_status, $new_status) {
+    public function confirmOrderPlaced($order_id, $old_status, $new_status, $order) {
+
         if($new_status != 'processing') {
             return;
         }
@@ -16,8 +16,7 @@ class Remote_UsePackageHistory {
         $url = get_api_end_point("package-order-use");
     
         // Get the WooCommerce order object
-        $order = wc_get_order($order_id);
-    
+        
         if (!$order) {
             return [
                 'status'  => 'error',
@@ -89,14 +88,11 @@ class Remote_UsePackageHistory {
         $response_body = json_decode($response_body, true) ?: $response_body;
 
         $order->update_meta_data( 'is_wel_balance_cut', 1);
-        if(!$response_body['is_order_limit_over']){
+        if($response_body['is_order_limit_over']){
             $order->update_meta_data( 'is_wel_balance_cut', 0);
         }
 
         $order->save();
-
-        // print_r($response_body);
-        // wp_die();
         return [
             'status'  => 'success',
             'message' => $response_body,

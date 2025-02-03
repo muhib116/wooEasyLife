@@ -220,7 +220,7 @@ export const getTutorials = async () => {
 const handleLicenseValidations = (err) => 
 {
   isValidLicenseKey.value = false;
-  const msg = err.response.data.message
+  const msg = err.response?.data?.message
   // localStorage.removeItem('license_key')
   // licenseKey.value = ''
 

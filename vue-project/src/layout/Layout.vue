@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
     import { Navigation, Loader, MessageBox } from '@components'
-    import { onBeforeMount, provide } from 'vue'
+    import { onBeforeMount, provide, inject } from 'vue'
     import { useCourier } from '@/pages/config/courier/useCourier'
     import { useNotification } from './useNotification'
     import { useLayout } from './useLayout'
@@ -60,10 +60,12 @@
     const {
         configData,
         loadConfig,
-        userData,
         internetStatusMessage
     } = _useLayout
 
+    const {
+        userData
+    } = inject('useServiceProvider')
 
     onBeforeMount(async () => {
         await loadConfig()
