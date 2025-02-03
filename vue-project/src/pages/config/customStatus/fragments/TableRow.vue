@@ -43,7 +43,7 @@
             description: string
             is_default: boolean
         },
-        id: string
+        id: string | number
     }>()
 
     const {

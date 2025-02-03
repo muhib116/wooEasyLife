@@ -1,6 +1,6 @@
 import { createOrUpdateWPOptionItem, getWPOptionItem } from "@/api"
 import { getUser } from "@/remoteApi"
-import { inject, onMounted, ref } from "vue"
+import { onMounted, ref } from "vue"
 import {
     userData
 } from '@/service/useServiceProvider'

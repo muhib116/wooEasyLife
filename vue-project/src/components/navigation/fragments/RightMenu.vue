@@ -2,6 +2,9 @@
   <div class="flex">
     <ul class="flex items-center">
       <li>
+        <Balance />
+      </li>
+      <li>
         <button
           v-if="isValidLicenseKey"
           class="pointer-events-none bg-[#f0fdf4] border border-green-200 px-3 py-1 text-green-600 hover:text-green-600 rounded cursor-pointer font-normal mr-4"
@@ -56,6 +59,7 @@
 import { Icon, Button } from "@components"
 import { useLicense } from "@/pages/config/license/UseLicense"
 import { setActiveTutorialList } from '@/tutorials/useTutorials'
+import Balance from './Balance.vue'
 
 const { isValidLicenseKey } = useLicense()
 </script>

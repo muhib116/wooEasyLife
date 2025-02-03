@@ -18,7 +18,7 @@
             </Table.THead>
             <Table.TBody>
                 <TableRow
-                    v-for="(item: object, id: string) in statusList"
+                    v-for="(item, id) in statusList"
                     :key="id"
                     :item="item"
                     :id="id"

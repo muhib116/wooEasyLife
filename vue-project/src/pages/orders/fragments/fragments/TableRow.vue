@@ -270,7 +270,7 @@
                 </span>
                 <span
                     class="truncate"
-                    :title="`Shipping methods: ${order.shipping_methods.join(', ') || 'N/A'}`"
+                    :title="`Shipping methods: ${order?.shipping_methods?.join(', ') || 'N/A'}`"
                 >
                     📍 {{ order.shipping_methods.join(', ') || 'N/A' }}
                 </span>
@@ -291,7 +291,7 @@
             <div class="whitespace-nowrap">
                 💰 Discount: {{ order.discount_total }}
                 <br/>
-                🎟️ Coupons: {{ order.applied_coupons.join(', ') || 'N/A' }}
+                🎟️ Coupons: {{ order?.applied_coupons?.join(', ') || 'N/A' }}
             </div>
         </Table.Td>
         <Table.Td
@@ -299,10 +299,10 @@
             class="whitespace-nowrap pointer-events-none"
         >
             <button class="relative order-status capitalize px-3 py-1 pointer-events-auto" :class="`status-${order.status}`">
-                {{ order.status=='processing' ? 'New Order' : order.status.replaceAll('-', ' ') }}
+                {{ order.status=='processing' ? 'New Order' : order?.status?.replace(/-/g, ' ') }}
 
                 <span 
-                    v-if="order.total_order_per_customer_for_current_order_status > 1"
+                    v-if="(order?.total_order_per_customer_for_current_order_status || 0) > 1"
                     title="Multiple order place"
                     class="cursor-pointer absolute -top-2 right-0 w-5 bg-red-500 aspect-square border-none text-white rounded-full text-[10px] hover:scale-110 shadow duration-300"
                     @click="toggleMultiOrderModel = true"
@@ -393,8 +393,32 @@
     import Notes from './notes/Index.vue'
 
     defineProps<{
-        order: object
-    }>()
+        order: {
+            customer_custom_data?: {
+                fraud_score?: string | number;
+            };
+            customer_report?: {
+                total_order?: string | number;
+                confirmed?: string | number;
+                success_rate?: string;
+            };
+            courier_data?: {
+                partner?: string;
+                parcel_tracking_link?: string;
+                consignment_id?: string;
+                status?: string;
+            };
+            payment_method_title?: string;
+            shipping_methods?: string[];
+            currency_symbol?: string;
+            shipping_cost?: string | number;
+            product_price?: string | number;
+            discount_total?: string | number;
+            applied_coupons?: string[];
+            status?: string;
+            total_order_per_customer_for_current_order_status?: number | undefined;
+        };
+    }>();
 
     const {
         setActiveOrder,

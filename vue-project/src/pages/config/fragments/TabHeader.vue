@@ -1,7 +1,7 @@
 <template>
     <div v-if="data?.length" class="flex justify-center">
         <button 
-            v-for="(item: string, index: number) in data"
+            v-for="(item, index) in data"
             :key="index"
             class="capitalize px-5 py-2 font-bold"
             :class="[

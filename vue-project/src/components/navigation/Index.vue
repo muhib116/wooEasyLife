@@ -33,7 +33,6 @@
 <script setup lang="ts">
 import { Container } from "@layout";
 import { inject } from "vue";
-import { remoteApiBaseURL } from "@/remoteApi";
 import RightMenu from "./fragments/RightMenu.vue";
 
 const { configData } = inject("configData");

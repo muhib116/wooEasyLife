@@ -7,10 +7,11 @@ import { useLicense } from "@/pages/config/license/UseLicense";
 const { licenseKey, isValidLicenseKey, licenseAlertMessage } = useLicense(false);
 
 export const remoteApiBaseURL = "https://api.wpsalehub.com/api";
+
 const headers = computed(() => ({
   headers: {
     Authorization: "Bearer " + licenseKey.value,
-  },
+  }
 }));
 
 // remote function
