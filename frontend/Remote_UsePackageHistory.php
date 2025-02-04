@@ -54,7 +54,10 @@ class Remote_UsePackageHistory {
         // Encode data properly for API request
         $data = json_encode([
             'order_count' => 1,
-            'use_details' => $cart_contents,
+            'use_details' => [[
+                "cart_contents" => $cart_contents,
+                "total_value" => $total_value
+            ]]
         ]);
     
         $headers = [

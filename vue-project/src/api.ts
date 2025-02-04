@@ -286,3 +286,10 @@ export const updateAbandonedOrderStatus = async (
   return data;
 };
 // abandoned order start
+
+
+export const includePastNewOrdersToWELPlugin = async () => {
+  const timestamp = new Date().getTime(); // Generate a unique timestamp
+  const { data } = await axios.put(`${localApiBaseURL}/include-past-new-orders-to-wel-plugin?nocache=${timestamp}`);
+  return data;
+};

@@ -9,7 +9,6 @@ export default function (router) {
 
   router.beforeEach(async (to, from, next) => {
     try {
-      // Load the license key if not already loaded
       if (!licenseKey.value) {
         await loadLicenseKey();
       }

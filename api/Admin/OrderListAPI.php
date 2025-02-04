@@ -2,9 +2,10 @@
 
 namespace WooEasyLife\API\Admin;
 
+use WooEasyLife\Admin\HandlePastNewOrders;
+
 class OrderListAPI
 {
-
     public function __construct()
     {
         add_action('rest_api_init', [$this, 'register_routes']);
@@ -15,6 +16,8 @@ class OrderListAPI
      */
     public function register_routes()
     {
+        $handlePastNewOrders = new HandlePastNewOrders();
+
         register_rest_route(
             __API_NAMESPACE, // Namespace and version.
             '/orders',         // Endpoint: /orders
@@ -44,6 +47,7 @@ class OrderListAPI
                 ],
             ]
         );
+
         register_rest_route(
             __API_NAMESPACE, // Namespace and version.
             '/status-with-counts',         // Endpoint: /status-with-counts
@@ -83,12 +87,23 @@ class OrderListAPI
                 'permission_callback' => api_permission_check()
             ]
         );
+
         register_rest_route(
             __API_NAMESPACE, 
             '/update-courier-data',
             [
                 'methods'  => 'POST',
                 'callback' => [$this, 'update_courier_data'], // Ensure this function exists and is callable
+                'permission_callback' => api_permission_check(),
+            ]
+        );
+
+        register_rest_route(
+            __API_NAMESPACE, 
+            '/include-past-new-orders-to-wel-plugin',
+            [
+                'methods'  => 'PUT',
+                'callback' => [$handlePastNewOrders, 'include_past_new_orders_to_wel_plugin'], // Ensure this function exists and is callable
                 'permission_callback' => api_permission_check(),
             ]
         );
@@ -482,7 +497,7 @@ class OrderListAPI
                 ], 200);
             }
         }
-    }
+    } 
 }
 
 

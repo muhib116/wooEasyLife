@@ -1,4 +1,4 @@
-import { onMounted, ref, watch } from "vue";
+import { inject, onMounted, ref, watch } from "vue";
 import {
   changeStatus,
   getOrderList,
@@ -7,6 +7,7 @@ import {
   ip_phone_or_email_block_bulk_entry,
   checkFraudCustomer,
   updateCourierData,
+  includePastNewOrdersToWELPlugin
 } from "@/api";
 import { manageCourier } from "./useHandleCourierEntry";
 import { normalizePhoneNumber } from "@/helper";
@@ -27,9 +28,9 @@ export const useOrders = () => {
   const selectedStatus = ref(null);
   const alertMessage = ref<{
     title: string;
-    type: "success" | "danger" | "warning" | "info";
+    type: "" | "success" | "danger" | "warning" | "info";
   }>();
-
+  const { userData } = inject('useServiceProvider')
   const courierStatusInfo = {
     pending: "Consignment is not delivered or cancelled yet.",
     delivered_approval_pending:
@@ -411,6 +412,62 @@ export const useOrders = () => {
     return statuses[courier_status];
   };
 
+  const include_past_new_orders_thats_not_handled_by_wel_plugin = async (totalNewOrders: number, btn: { isLoading: boolean }) => 
+  {
+    let alertMsg = `Are you sure you want to include your past new orders? \nIf you confirm, a total of ${totalNewOrders} will be deducted from your balance.`;
+    if(!confirm(alertMsg)) return
+    if(totalNewOrders > userData.value.remaining_order) {
+      alertMessage.value = {
+        type: 'info',
+        title: `
+          <h3 class="text-lg">You don’t have enough balance to complete this action.</h3>
+
+          <p>Your current balance is <strong>${userData.value.remaining_order}</strong>, your minimum balance should <strong>${totalNewOrders}</strong>.</p>
+          <hr class="border-[currentColor] my-2" />
+          <p>
+            Recharge your balance and try again!
+            <br />
+            Thank you.
+          </p>
+
+        `
+      }
+
+      return;
+    }
+
+    try {
+      btn.isLoading = true;
+      const data = await includePastNewOrdersToWELPlugin();
+      
+      alertMessage.value = {
+        type: 'success',
+        title: data.message,
+      }
+      
+      loadOrderStatusList();
+      await getOrders();
+
+    } catch (err) {
+      console.error("Error including past new orders:", err);
+      
+      alertMessage.value = {
+        type: 'danger',
+        title: "Failed to update orders. Please try again.",
+      }
+    } 
+    finally {
+      btn.isLoading = false;
+  
+      setTimeout(() => {
+        alertMessage.value = {
+          title: "",
+          type: "",
+        };
+      }, 5000);
+    }
+  }
+
   watch(
     () => selectedOrders,
     (newVal) => {
@@ -454,5 +511,6 @@ export const useOrders = () => {
     loadOrderStatusList,
     handlePhoneNumberBlock,
     refreshBulkCourierData,
+    include_past_new_orders_thats_not_handled_by_wel_plugin
   };
 };

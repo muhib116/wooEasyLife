@@ -72,9 +72,10 @@
             </Button.Native>
 
             <Button.Native
-                class="opacity-100 w-fit text-white bg-sky-500 shadow rounded-sm px-1 py-1"
-                title="Refresh CourierData"
-                @onClick="refreshBulkCourierData"
+                v-if="orders[0]?.total_new_orders_not_handled_by_wel_plugin"
+                class="opacity-100 w-fit text-white bg-green-500 shadow rounded-sm px-1 py-1"
+                title="Include your previous new orders that are missing from this order list."
+                @onClick="btn => include_past_new_orders_thats_not_handled_by_wel_plugin(orders[0].total_new_orders_not_handled_by_wel_plugin, btn)"
             >
                 <Icon
                     name="PhArrowSquareIn"
@@ -82,7 +83,8 @@
                     weight="bold"
                     class="rotate-[180deg]"
                 />
-                Import previous new order
+                Include Past New Orders
+                ({{ orders[0].total_new_orders_not_handled_by_wel_plugin }})
             </Button.Native>
 
 
@@ -135,7 +137,9 @@
         selectedOrders,
         showInvoices,
         toggleNewOrder,
-        refreshBulkCourierData
+        refreshBulkCourierData,
+        orders,
+        include_past_new_orders_thats_not_handled_by_wel_plugin
     } = inject('useOrders')
 
     const actionBtns = computed(() => [

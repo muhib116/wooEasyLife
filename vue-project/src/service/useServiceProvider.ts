@@ -12,6 +12,7 @@ export const licenseAlertMessage = ref({
 export const setUserData = (data) => {
     userData.value = data
 }
+
 export const loadUserData = async () => {
     const data = await getUser() //this function calling to check authentication, read inside the code
     setUserData(data)
@@ -19,7 +20,6 @@ export const loadUserData = async () => {
 
 export const useServiceProvider = () => 
 {
-
     return {
         userData,
         licenseKey,
