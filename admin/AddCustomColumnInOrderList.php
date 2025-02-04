@@ -32,12 +32,26 @@ class AddCustomColumnInOrderList {
     /**
      * Populate the custom column with data.
      */
-    public function wooeasylife_populate_custom_order_column($column, $post_id) {
+    public function wooeasylife_populate_custom_order_column($column, $post_id) 
+    {
+        $order = wc_get_order($post_id);
+
+        if($column == 'order_number'){
+            $isHandledByWELPlugin =  $order->get_meta('is_wel_order_handled');
+            if($isHandledByWELPlugin){
+                echo "<img 
+                        src='https://api.wpsalehub.com/app-logo' 
+                        title='Handled by WooEasyLife Plugin'
+                        style='height: 15px;display:block;filter: drop-shadow(1px 1px 1px #0002);background: #fff;padding: 2px 4px;border-radius: 4px;'
+                    />
+                ";
+            }
+        }
+
         if ('fraud-data' === $column) {
             global $wpdb;
     
             // Get the order object
-            $order = wc_get_order($post_id);
             if (!$order) {
                 echo __('N/A', 'wooeasylife');
                 return;
@@ -138,25 +152,12 @@ class AddCustomColumnInOrderList {
     }
 
 
-
-
     public function wooeasylife_add_preview_popup_html() {
         $current_screen = get_current_screen();
         if ($current_screen && $current_screen->id === 'woocommerce_page_wc-orders') {
             include_once plugin_dir_path(__DIR__) . 'includes/orderList/OrderDetails.php';
         }
     }
-    
-
-
-
-
-
-
-
-
-
-
     
 
     /**

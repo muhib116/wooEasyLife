@@ -9,8 +9,6 @@ class HandlePastNewOrders {
         $url = get_api_end_point("package-order-use");
         $data = $this->get_past_new_orders_not_handled_by_wel_plugin();
 
-        return $this->update_meta_data_of_past_orders($data['orders']);
-
         $headers = [
             'Authorization' => 'Bearer ' . $license_key,
             'Content-Type'  => 'application/json', // JSON format
@@ -127,9 +125,9 @@ class HandlePastNewOrders {
             }
     
             try {
-                // $order->update_meta_data('is_wel_order_handled', 1);
-                // $order->update_meta_data('is_wel_balance_cut', 1);
-                // $order->save();
+                $order->update_meta_data('is_wel_order_handled', 1);
+                $order->update_meta_data('is_wel_balance_cut', 1);
+                $order->save();
                 $updatedOrders++;
             } catch (\Exception $e) {
                 $failedOrders++;

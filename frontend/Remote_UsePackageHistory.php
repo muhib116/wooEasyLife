@@ -85,7 +85,6 @@ class Remote_UsePackageHistory {
 
         $order->update_meta_data('is_wel_order_handled', 1);
 
-    
         // Decode and return the response
         $response_body = wp_remote_retrieve_body($response);
         $response_body = json_decode($response_body, true) ?: $response_body;

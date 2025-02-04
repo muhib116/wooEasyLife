@@ -30,7 +30,7 @@ export const useOrders = () => {
     title: string;
     type: "" | "success" | "danger" | "warning" | "info";
   }>();
-  const { userData } = inject('useServiceProvider')
+  const { userData, loadUserData } = inject('useServiceProvider')
   const courierStatusInfo = {
     pending: "Consignment is not delivered or cancelled yet.",
     delivered_approval_pending:
@@ -445,6 +445,7 @@ export const useOrders = () => {
         title: data.message,
       }
       
+      await loadUserData();
       loadOrderStatusList();
       await getOrders();
 
