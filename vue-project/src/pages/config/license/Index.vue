@@ -83,11 +83,14 @@
     import { Card, Input, Icon, Loader, Button, Heading } from '@components'
     import { useLicense } from './UseLicense'
     import LicenseAlert from './LicenseAlert.vue'
+import { inject } from 'vue';
 
     const {
         isLoading,
-        licenseKey,
         ActivateLicense,
-        isValidLicenseKey
     } = useLicense()
+    const {
+        licenseKey,
+        isValidLicenseKey
+    } = inject('useServiceProvider')
 </script>

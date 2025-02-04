@@ -2,9 +2,10 @@ import axios from "axios";
 import { createSMSHistory } from "./api";
 import { computed } from "vue";
 import { normalizePhoneNumber } from "./helper";
-import { useLicense } from "@/pages/config/license/UseLicense";
-
-const { licenseKey, isValidLicenseKey, licenseAlertMessage } = useLicense(false);
+import {
+  licenseKey,
+  isValidLicenseKey
+} from '@/service/useServiceProvider'
 
 export const remoteApiBaseURL = "https://api.wpsalehub.com/api";
 

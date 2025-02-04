@@ -57,9 +57,9 @@
 
 <script setup lang="ts">
 import { Icon, Button } from "@components"
-import { useLicense } from "@/pages/config/license/UseLicense"
 import { setActiveTutorialList } from '@/tutorials/useTutorials'
 import Balance from './Balance.vue'
+import { inject } from "vue"
 
-const { isValidLicenseKey } = useLicense()
+const { isValidLicenseKey } = inject('useServiceProvider')
 </script>

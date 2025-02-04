@@ -10,7 +10,7 @@
     import {
         MessageBox
     } from '@components'
-    import { useLicense } from "@/pages/config/license/UseLicense";
+    import { inject } from 'vue'
 
-    const { licenseKey, isValidLicenseKey, licenseAlertMessage } = useLicense(false);
+    const { licenseAlertMessage } = inject('useServiceProvider');
 </script>

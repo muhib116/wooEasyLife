@@ -48,14 +48,13 @@
     import { useCourier } from '@/pages/config/courier/useCourier'
     import { useNotification } from './useNotification'
     import { useLayout } from './useLayout'
-    import { useLicense } from '@/pages/config/license/UseLicense'
     import Tutorials from '@/tutorials/Index.vue'
 
     const isDevelopmentMode =  import.meta.env.DEV
     const _useCourierConfig = useCourier()
     const { loadCourierConfigData } = _useCourierConfig
 
-    const { isValidLicenseKey } = useLicense(false)
+    const { isValidLicenseKey } = inject('useServiceProvider')
     const _useLayout = useLayout()
     const {
         configData,

@@ -1,16 +1,10 @@
 import { createOrUpdateWPOptionItem, getWPOptionItem } from "@/api"
-import { getUser } from "@/remoteApi"
 import { onMounted, ref } from "vue"
 import {
-    userData
+    licenseKey,
+    isValidLicenseKey,
+    loadUserData
 } from '@/service/useServiceProvider'
-
-const licenseKey = ref(localStorage.getItem('license_key'))
-const isValidLicenseKey = ref(true)
-const licenseAlertMessage = ref({
-    type: '',
-    title: ''
-})
 
 export const useLicense = (mountable: boolean = true) => {
     const isLoading = ref(false)
@@ -24,8 +18,7 @@ export const useLicense = (mountable: boolean = true) => {
         }
 
         if(licenseKey.value){
-            const data = await getUser() //this function calling to check authentication, read inside the code
-            userData.value = data
+            loadUserData()
         }
 
         return licenseKey.value
@@ -66,11 +59,9 @@ export const useLicense = (mountable: boolean = true) => {
             }
         })
     }
+    
     return {
         isLoading,
-        licenseKey,
-        isValidLicenseKey,
-        licenseAlertMessage,
         loadLicenseKey,
         ActivateLicense
     }

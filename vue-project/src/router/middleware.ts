@@ -1,7 +1,11 @@
 import { useLicense } from "@/pages/config/license/UseLicense";
+import {
+  licenseKey,
+  isValidLicenseKey
+} from '@/service/useServiceProvider'
 
 export default function (router) {
-  const { licenseKey, isValidLicenseKey, loadLicenseKey } = useLicense(false);
+  const { loadLicenseKey } = useLicense(false);
 
   router.beforeEach(async (to, from, next) => {
     try {

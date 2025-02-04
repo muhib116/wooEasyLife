@@ -1,6 +1,6 @@
 <template>
     <button class="px-2 rounded bg-green-500 text-white mr-4">
-        Balance: {{ userData.remaining_order }}
+        Balance: {{ userData?.remaining_order || 0 }}
     </button>
 </template>
 
