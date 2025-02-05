@@ -299,6 +299,11 @@ function _storeFraudData($fraud_data)
 }
 
 function normalize_phone_number($phone) {
+    // Ensure $phone is a string before processing
+    if (!is_string($phone) || empty($phone)) {
+        return ''; // Return an empty string or handle it appropriately
+    }
+
     // Remove all non-digit characters
     $normalized = preg_replace('/\D/', '', $phone);
 

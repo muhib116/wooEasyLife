@@ -4,8 +4,11 @@ import { computed } from "vue";
 import { normalizePhoneNumber } from "./helper";
 import {
   licenseKey,
-  isValidLicenseKey
+  isValidLicenseKey,
+  licenseAlertMessage,
+  redirectToLicensePage
 } from '@/service/useServiceProvider'
+// import { licenseAlertMessage } from '@/pages/config/license/useLicenseAlert'
 
 export const remoteApiBaseURL = "https://api.wpsalehub.com/api";
 
@@ -218,15 +221,11 @@ export const getTutorials = async () => {
 }
 
 
-
 const handleLicenseValidations = (err) => 
 {
-  isValidLicenseKey.value = false;
-  const msg = err.response?.data?.message
-  // localStorage.removeItem('license_key')
-  // licenseKey.value = ''
+  const msg = err.response?.data?.message.replace('.', '').trim()
 
-  switch(msg) {
+  switch (msg) {
     case 'Expired': 
       licenseAlertMessage.value = {
         title: `
@@ -237,23 +236,24 @@ const handleLicenseValidations = (err) =>
           </p>
         `,
         type: 'danger'
-      }
-      break
-      
-      case 'Invalid token':
-        licenseAlertMessage.value = {
-          title: `
-            <strong style="font-size: 18px;">Invalid License!</strong>
-            <br />
-            <p>
-                The license key you entered is invalid. Don’t worry—we’re here to assist! Reach out to us to obtain your license key.
-            </p>
-          `,
-          type: 'danger'
-        }
-    break
+      };
+      break;
+
+    case 'Invalid Token':
+      licenseAlertMessage.value = {
+        title: `
+          <strong style="font-size: 18px;">Invalid License!</strong>
+          <br />
+          <p>
+              The license key you entered is invalid. Don’t worry—we’re here to assist! Reach out to us to obtain your license key.
+          </p>
+        `,
+        type: 'danger'
+      };
+      break;
 
     case 'Unauthenticated':
+    case 'Token not found': 
       licenseAlertMessage.value = {
         title: `
           <strong style="font-size: 18px;">License key not found!</strong>
@@ -263,20 +263,43 @@ const handleLicenseValidations = (err) =>
           </p>
         `,
         type: 'danger'
-      }
-    break
+      };
+      break;
 
-    case 'Token not found':
+    case 'Invalid domain':
       licenseAlertMessage.value = {
         title: `
-          <strong style="font-size: 18px;">License key not found!</strong>
+          <strong style="font-size: 18px;">Domain is not authorized!</strong>
           <br />
           <p>
-              The license key you entered is invalid. Don’t worry—we’re here to assist! Reach out to us to obtain your license key.
+              The domain you are using is not authorized. No worries—we’re here to help! Please contact us to verify your domain and ensure proper licensing access.
           </p>
         `,
         type: 'danger'
-      }
-    break
+      };
+      break;
+
+    default:
+      // Optional: Handle unexpected cases
+      licenseAlertMessage.value = {
+        title: `
+          <strong style="font-size: 18px;">Unknown License Issue</strong>
+          <br />
+          <p>
+              An unknown issue has occurred with your license. Please contact support for assistance.
+          </p>
+        `,
+        type: 'warning'
+      };
+      break;
+  }
+
+
+  if(err.response.status == 401) {
+    licenseKey.value = ''
+    isValidLicenseKey.value = false;
+    localStorage.removeItem('license_key')
+
+    redirectToLicensePage()
   }
 }

@@ -8,9 +8,15 @@
     import {
         useServiceProvider
     } from './useServiceProvider'
+    import { useRouter, useRoute } from 'vue-router'
 
     const _useServiceProvider = useServiceProvider()
-    const { loadUserData, userData } = _useServiceProvider
+    const { 
+        loadUserData, 
+        userData,
+        router,
+        route
+    } = _useServiceProvider
 
     const getNoticeOfBalanceOver = (balance: number) => {
         let balanceNotice = {
@@ -53,6 +59,8 @@
         return balanceNotice;
     }
 
+    router.value = useRouter()
+    route.value = useRoute()
 
     onMounted(async () => {
         if(isEmpty(userData.value)) {

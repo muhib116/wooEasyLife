@@ -274,13 +274,13 @@ class OrderListAPI
             'limit'     => -1,
             'type'      => 'shop_order',
             'return'    => 'ids', // Only retrieve order IDs
-            'meta_query' => [
-                'relation' => 'AND',
-                [
-                    'key'     => 'is_wel_order_handled',
-                    'compare' => 'NOT EXISTS', // Meta key does not exist
+                'meta_query' => [
+                    'relation' => 'AND',
+                    [
+                        'key'     => 'is_wel_order_handled',
+                        'compare' => 'NOT EXISTS', // Meta key does not exist
+                    ]
                 ]
-            ]
         ]);
         
         $order_ids = $order_query->get_orders();
@@ -302,22 +302,11 @@ class OrderListAPI
                     'value'   => '1', // Checking if it's explicitly set to "true" (1)
                     'compare' => '='
                 ],
+                'relation' => 'AND', // Either it's explicitly false (0), empty, or does not exist
                 [
-                    'relation' => 'OR', // Either it's explicitly false (0), empty, or does not exist
-                    [
-                        'key'     => 'is_wel_balance_cut',
-                        'value'   => '0',
-                        'compare' => '='
-                    ],
-                    [
-                        'key'     => 'is_wel_balance_cut',
-                        'compare' => 'NOT EXISTS' // Key doesn't exist
-                    ],
-                    [
-                        'key'     => 'is_wel_balance_cut',
-                        'value'   => '',
-                        'compare' => '='
-                    ]
+                    'key'     => 'is_wel_balance_cut',
+                    'value'   => "0",
+                    'compare' => '='
                 ]
             ]
 

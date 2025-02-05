@@ -20,10 +20,13 @@ export default function (router) {
         return next();
       }
 
-      // Load license key only if not already available
+      // Ensure the license key is loaded before proceeding
       if (!licenseKey.value) {
         await loadLicenseKey();
       }
+
+      // Wait for reactivity to update
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       // Redirect to license page if the license is invalid or missing
       if (!isValidLicenseKey.value) {
@@ -39,7 +42,6 @@ export default function (router) {
       return next();
     } catch (error) {
       console.error("Error in route guard:", error);
-      // Redirect to license page in case of an error
       return next({ name: "license" });
     }
   });

@@ -3,7 +3,7 @@
         'name' => 'wooeasylife/wooeasylife-plugin',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '3c8c8e0e442eda7be010465dba8bb591f3936541',
+        'reference' => 'e496c05036dca671730e51c59537e4bf66a3061a',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'wooeasylife/wooeasylife-plugin' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '3c8c8e0e442eda7be010465dba8bb591f3936541',
+            'reference' => 'e496c05036dca671730e51c59537e4bf66a3061a',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

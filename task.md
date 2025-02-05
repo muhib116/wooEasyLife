@@ -73,6 +73,9 @@ Dashboard:
 👉🏻 landing page view calculation
 👉🏻 api key add hoyna
 👉🏻 api key chara on reload a dash board and list page visitkora jay
+👉🏻 The table "customer_data" was not created. Please deactivate and reactivate the "WooEasyLife" plugin.
+👉🏻 balance cut issue fix
+
 
 
 balance cut handle

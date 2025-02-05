@@ -63,6 +63,5 @@ export const useLicense = (mountable: boolean = true) => {
     return {
         isLoading,
         loadLicenseKey,
-        ActivateLicense
-    }
+        ActivateLicense,    }
 }

@@ -4,6 +4,7 @@ namespace WooEasyLife\Admin\DBTable;
 if (!class_exists('CustomerDataTable')) :
 class CustomerDataTable {
     public $table_name = '';
+
     public function __construct() {
         global $wpdb;
         $this->table_name = $wpdb->prefix . __PREFIX . 'customer_data';
@@ -15,13 +16,12 @@ class CustomerDataTable {
     public function create() {
         global $wpdb;
 
-        // Define table name
         $charset_collate = $wpdb->get_charset_collate();
 
         // SQL to create the table
-        $sql = "CREATE TABLE IF NOT EXISTS $this->table_name (
+        $sql = "CREATE TABLE IF NOT EXISTS {$this->table_name} (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            customer_id BIGINT UNSIGNED NULL COMMENT 'This customer id used for wp registered user id', --this customer id used for registered user id
+            customer_id BIGINT UNSIGNED NULL COMMENT 'Registered WP user ID if available',
             order_id BIGINT UNSIGNED NOT NULL,
             phone VARCHAR(20) NULL,
             email VARCHAR(100) NULL,
@@ -32,7 +32,7 @@ class CustomerDataTable {
             state VARCHAR(100) NULL,
             postcode VARCHAR(20) NULL,
             country VARCHAR(10) NULL,
-            tags TEXT NULL, 
+            tags TEXT NULL,
             total_orders INT(11) DEFAULT 0,
             total_complete_orders INT(11) DEFAULT 0,
             last_order_date DATETIME NULL,
@@ -60,8 +60,7 @@ class CustomerDataTable {
      */
     public function delete() {
         global $wpdb;
-
-        $wpdb->query("DROP TABLE IF EXISTS $this->table_name");
+        $wpdb->query("DROP TABLE IF EXISTS {$this->table_name}");
     }
 }
 endif;

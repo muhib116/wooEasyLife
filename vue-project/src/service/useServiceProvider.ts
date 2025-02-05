@@ -18,14 +18,27 @@ export const loadUserData = async () => {
     setUserData(data)
 }
 
+
+export const router = ref()
+export const route = ref()
+export const redirectToLicensePage = () => {
+    if(route.value.name == 'license') return
+    router.value && router.value?.push({
+        name: 'license'
+    })
+}
+
 export const useServiceProvider = () => 
 {
     return {
+        route,
+        router,
         userData,
         licenseKey,
         isValidLicenseKey,
         licenseAlertMessage,
         setUserData,
         loadUserData,
+        redirectToLicensePage,
     }
 }

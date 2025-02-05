@@ -44,10 +44,10 @@ class PluginLifecycleHandle {
     public static function woo_easy_life_deactivation_function() {
         global $config_data;
 
-        // if ($config_data['clear_data_when_deactivate_plugin'] ?? false) {
+        if ($config_data['clear_data_when_deactivate_plugin'] ?? false) {
             $handleDBTable = new Admin\DBTable\HandleDBTable();
             self::cleanPluginData($handleDBTable);
-        // }
+        }
     }
 
     /**
