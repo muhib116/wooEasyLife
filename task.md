@@ -61,12 +61,12 @@ Dashboard:
 ✅ fraud check bulk request guluke chunk kore nite hobe
 ✅ order limit navigation a show korte hobe
 ✅ order limit er alert dekhate hobe
+✅ dui package kinar majkhaner order gulu process korte hobe
 
 
 
 --------heigh priority task------------
 👉🏻 sms recharge korte hobe
-👉🏻 dui package kinar majkhaner order gulu process korte hobe
 
 👉🏻 Send message for abandoned order customer
 👉🏻 Order list filter by courier partner
