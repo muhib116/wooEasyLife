@@ -13,9 +13,17 @@ export const setUserData = (data) => {
     userData.value = data
 }
 
+export const userDataLoading = ref(false)
 export const loadUserData = async () => {
-    const data = await getUser() //this function calling to check authentication, read inside the code
-    setUserData(data)
+    try {
+        userDataLoading.value = true
+        const data = await getUser() //this function calling to check authentication, read inside the code
+        setUserData(data)
+    } catch(err) {
+        console.error(err)
+    } finally {
+        userDataLoading.value = false
+    }
 }
 
 
@@ -35,6 +43,7 @@ export const useServiceProvider = () =>
         router,
         userData,
         licenseKey,
+        userDataLoading,
         isValidLicenseKey,
         licenseAlertMessage,
         setUserData,

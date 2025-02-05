@@ -59,6 +59,7 @@
             </template>
 
             <Button.Native
+                v-if="configData.courier_automation"
                 class="opacity-100 w-fit text-white bg-sky-500 shadow rounded-sm px-1 py-1"
                 title="Refresh CourierData"
                 @onClick="refreshBulkCourierData"
@@ -86,6 +87,7 @@
                 Include Past New Orders
                 ({{ orders[0].total_new_orders_not_handled_by_wel_plugin }})
             </Button.Native>
+
             <Button.Native
                 v-if="orders[0]?.total_new_order_handled_by_wel_but_balance_cut_failed && userData?.remaining_order > 0"
                 class="opacity-100 w-fit text-white bg-sky-500 shadow rounded-sm px-1 py-1"

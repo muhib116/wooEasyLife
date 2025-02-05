@@ -66,6 +66,55 @@ class HandlePastNewOrders {
         $this->update_meta_data_of_past_orders($data['orders']);
     }
 
+    private function update_meta_data_of_past_orders($orders) 
+    {
+        if (empty($orders) || !is_array($orders)) {
+            return [
+                'status'  => 'error',
+                'message' => 'No valid orders provided.',
+            ];
+        }
+    
+        $updatedOrders = 0;
+        $failedOrders = 0;
+    
+        foreach ($orders as $order) {
+            if (!is_object($order) || !method_exists($order, 'update_meta_data') || !method_exists($order, 'save')) {
+                $failedOrders++;
+                continue;
+            }
+    
+            try {
+                $order->update_meta_data('is_wel_order_handled', 1);
+                $order->update_meta_data('is_wel_balance_cut', 1);
+                $order->save();
+                $updatedOrders++;
+            } catch (\Exception $e) {
+                $failedOrders++;
+            }
+        }
+    
+        if ($updatedOrders > 0) {
+            return new \WP_REST_Response([
+                'status'  => 'success',
+                'message' => "Your ($updatedOrders) <strong>Past New orders</strong> have been successfully added to this table.",
+                'data' => [
+                    'updatedOrders' => $updatedOrders,
+                    'failedOrders' => $failedOrders
+                ]
+            ], 200);
+        }
+
+        return new \WP_REST_Response([
+            'status'  => 'error',
+            'message' => "Failed to update orders. Please try again.",
+            'data' => [
+                'updatedOrders' => $updatedOrders,
+                'failedOrders' => $failedOrders
+            ]
+        ], 400);
+    }
+
     private function get_past_new_orders_not_handled_by_wel_plugin() 
     {
         $orders = $this->get_past_new_orders();
@@ -189,54 +238,5 @@ class HandlePastNewOrders {
         
         $orders = wc_get_orders($args);
         return $orders;
-    }
-
-    private function update_meta_data_of_past_orders($orders) 
-    {
-        if (empty($orders) || !is_array($orders)) {
-            return [
-                'status'  => 'error',
-                'message' => 'No valid orders provided.',
-            ];
-        }
-    
-        $updatedOrders = 0;
-        $failedOrders = 0;
-    
-        foreach ($orders as $order) {
-            if (!is_object($order) || !method_exists($order, 'update_meta_data') || !method_exists($order, 'save')) {
-                $failedOrders++;
-                continue;
-            }
-    
-            try {
-                $order->update_meta_data('is_wel_order_handled', 1);
-                $order->update_meta_data('is_wel_balance_cut', 1);
-                $order->save();
-                $updatedOrders++;
-            } catch (\Exception $e) {
-                $failedOrders++;
-            }
-        }
-    
-        if ($updatedOrders > 0) {
-            return new \WP_REST_Response([
-                'status'  => 'success',
-                'message' => "Your ($updatedOrders) <strong>Past New orders</strong> have been successfully added to this table.",
-                'data' => [
-                    'updatedOrders' => $updatedOrders,
-                    'failedOrders' => $failedOrders
-                ]
-            ], 200);
-        }
-
-        return new \WP_REST_Response([
-            'status'  => 'error',
-            'message' => "Failed to update orders. Please try again.",
-            'data' => [
-                'updatedOrders' => $updatedOrders,
-                'failedOrders' => $failedOrders
-            ]
-        ], 400);
     }
 }

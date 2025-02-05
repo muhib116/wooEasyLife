@@ -66,7 +66,7 @@
                 class="text-[12px] flex gap-1 items-center"
                 :title="`${order.billing_address.address_1}, ${order.billing_address.address_2}`"
             >
-                <p class="max-w-[200px] truncate">
+                <p class="max-w-[240px]">
                     🏠 
                     {{ order.billing_address.address_1 }},
                     {{ order.billing_address.address_2 }}
