@@ -6,12 +6,15 @@
     :style="styles[type.toLowerCase()]"
 >
     <Icon
+        v-if="!cleanBox"
         :name="icons[type.toLowerCase()]"
         size="24"
     />
     <div>
-      <span class="font-semibold"><span class="capitalize">{{ type }}</span> alert!</span> 
-      <br />
+        <div v-if="!cleanBox">
+            <span class="font-semibold"><span class="capitalize">{{ type }}</span> alert!</span> 
+            <br />
+        </div>
       <div v-html="title"></div>
     </div>
   </div>  
@@ -22,7 +25,8 @@
 
     defineProps<{
         type: "success" | "danger" | "warning" | "info"
-        title: string
+        title: string,
+        cleanBox: boolean
     }>()
 
     const styles = {

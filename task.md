@@ -59,12 +59,12 @@ Dashboard:
 ✅ black list theke remove korar somoy customer data update korte hobe
 ✅ new order place howar shate shate fraud data entry
 ✅ fraud check bulk request guluke chunk kore nite hobe
+✅ order limit navigation a show korte hobe
+✅ order limit er alert dekhate hobe
 
 
 
 --------heigh priority task------------
-👉🏻 order limit navigation a show korte hobe
-👉🏻 order limit er alert dekhate hobe
 👉🏻 sms recharge korte hobe
 👉🏻 dui package kinar majkhaner order gulu process korte hobe
 

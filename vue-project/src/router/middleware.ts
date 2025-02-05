@@ -1,34 +1,46 @@
 import { useLicense } from "@/pages/config/license/UseLicense";
 import {
+  userData,
   licenseKey,
   isValidLicenseKey
-} from '@/service/useServiceProvider'
+} from '@/service/useServiceProvider';
+
+const premiumRoutesName = [
+  'missingOrders',
+  'fraudCheck',
+];
 
 export default function (router) {
   const { loadLicenseKey } = useLicense(false);
 
   router.beforeEach(async (to, from, next) => {
     try {
-      if (!licenseKey.value) {
-        await loadLicenseKey();
-      }
-
-      // Allow access to the license route without validation
+      // Allow access to the license page without validation
       if (to.name === "license") {
         return next();
       }
 
-      // Redirect to the license route if the key is invalid or missing
+      // Load license key only if not already available
+      if (!licenseKey.value) {
+        await loadLicenseKey();
+      }
+
+      // Redirect to license page if the license is invalid or missing
       if (!isValidLicenseKey.value) {
         return next({ name: "license" });
       }
 
-      // Proceed to the intended route
-      next();
+      // Restrict premium routes if balance is depleted
+      if (premiumRoutesName.includes(to.name) && (userData.value?.remaining_order ?? 0) <= 0) {
+        return next({ name: "RestrictionAlert" });
+      }
+
+      // Allow navigation to the intended route
+      return next();
     } catch (error) {
-      console.error("Error validating license:", error);
-      // Redirect to the license page in case of an error
-      next({ name: "license" });
+      console.error("Error in route guard:", error);
+      // Redirect to license page in case of an error
+      return next({ name: "license" });
     }
   });
 

@@ -8,23 +8,26 @@
             :class="isDevelopmentMode ? 'top-0' : 'top-8'"
         />
 
-        <!-- messages start -->
-        <MessageBox
-            v-if="!!hasNewOrder"
-            title="New Order Received 🎉"
-            type="success"
-        />
-        <MessageBox
-            v-if="userData?.notice && userData?.notice?.message"
-            :title="userData?.notice?.message"
-            :type="userData?.notice?.type"
-        />
-        <MessageBox
-            v-if="internetStatusMessage.title"
-            :type="internetStatusMessage.type"
-            :title="internetStatusMessage.title"
-        />
-        <!-- messages end -->
+        <template v-if="!hideAlerts">
+            <!-- messages start -->
+            <MessageBox
+                v-if="!!hasNewOrder"
+                title="New Order Received 🎉"
+                type="success"
+            />
+            <MessageBox
+                v-if="userData?.notice && userData?.notice?.message"
+                :title="userData?.notice?.message"
+                :type="userData?.notice?.type"
+                cleanBox
+            />
+            <MessageBox
+                v-if="internetStatusMessage.title"
+                :type="internetStatusMessage.type"
+                :title="internetStatusMessage.title"
+            />
+            <!-- messages end -->
+        </template>
 
 
         <main class="print:mt-0 mt-6">
@@ -49,6 +52,10 @@
     import { useNotification } from './useNotification'
     import { useLayout } from './useLayout'
     import Tutorials from '@/tutorials/Index.vue'
+
+    defineProps<{
+        hideAlerts: boolean
+    }>()
 
     const isDevelopmentMode =  import.meta.env.DEV
     const _useCourierConfig = useCourier()

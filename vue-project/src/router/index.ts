@@ -4,6 +4,7 @@ import {
   createWebHistory,
 } from "vue-router";
 import HomeView from "@/pages/dashboard/Index.vue";
+import RestrictionAlert from "@/pages/RestrictionAlert.vue";
 import OrdersView from "@/pages/orders/Index.vue";
 import MissingOrderView from "@/pages/missingOrder/Index.vue";
 import FraudCheckerView from "@/pages/fraudChecker/Index.vue";
@@ -36,6 +37,11 @@ const router = createRouter({
       path: "/missing-orders",
       name: "missingOrders",
       component: MissingOrderView,
+    },
+    {
+      path: "/restriction-alert",
+      name: "RestrictionAlert",
+      component: RestrictionAlert,
     },
     {
       path: "/fraud-check",
