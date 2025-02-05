@@ -8,7 +8,6 @@ import {
   licenseAlertMessage,
   redirectToLicensePage
 } from '@/service/useServiceProvider'
-// import { licenseAlertMessage } from '@/pages/config/license/useLicenseAlert'
 
 export const remoteApiBaseURL = "https://api.wpsalehub.com/api";
 
@@ -225,6 +224,16 @@ const handleLicenseValidations = (err) =>
 {
   const msg = err.response?.data?.message.replace('.', '').trim()
 
+  if(msg == 'Invalid domain') {
+    handleRedirect(err.response.status)
+
+    licenseKey.value = ''
+    isValidLicenseKey.value = false;
+    localStorage.removeItem('license_key')
+
+    return 
+  }
+  
   switch (msg) {
     case 'Expired': 
       licenseAlertMessage.value = {
@@ -237,7 +246,7 @@ const handleLicenseValidations = (err) =>
         `,
         type: 'danger'
       };
-      break;
+    break;
 
     case 'Invalid Token':
       licenseAlertMessage.value = {
@@ -250,7 +259,7 @@ const handleLicenseValidations = (err) =>
         `,
         type: 'danger'
       };
-      break;
+    break;
 
     case 'Unauthenticated':
     case 'Token not found': 
@@ -264,20 +273,7 @@ const handleLicenseValidations = (err) =>
         `,
         type: 'danger'
       };
-      break;
-
-    case 'Invalid domain':
-      licenseAlertMessage.value = {
-        title: `
-          <strong style="font-size: 18px;">Domain is not authorized!</strong>
-          <br />
-          <p>
-              The domain you are using is not authorized. No worries—we’re here to help! Please contact us to verify your domain and ensure proper licensing access.
-          </p>
-        `,
-        type: 'danger'
-      };
-      break;
+    break;
 
     default:
       // Optional: Handle unexpected cases
@@ -291,15 +287,14 @@ const handleLicenseValidations = (err) =>
         `,
         type: 'warning'
       };
-      break;
+    break;
   }
 
+  handleRedirect(err.response.status)
+}
 
-  if(err.response.status == 401) {
-    licenseKey.value = ''
-    isValidLicenseKey.value = false;
-    localStorage.removeItem('license_key')
-
+const handleRedirect = (code) => {
+  if(code == 401) {
     redirectToLicensePage()
   }
 }
