@@ -3,7 +3,8 @@ import { onMounted, ref } from "vue"
 import {
     licenseKey,
     isValidLicenseKey,
-    loadUserData
+    loadUserData,
+    licenseAlertMessage
 } from '@/service/useServiceProvider'
 
 export const useLicense = (mountable: boolean = true) => {
@@ -11,13 +12,12 @@ export const useLicense = (mountable: boolean = true) => {
 
     const loadLicenseKey = async () => 
     {
+        console.log(licenseKey.value, 'licenseKey.value')
         if(!licenseKey.value){
             const { data } = await getWPOptionItem({option_name: 'license', key: 'key'})
             licenseKey.value = data.value
             localStorage.setItem('license_key', data.value)
-        }
-
-        if(licenseKey.value){
+        } else {
             loadUserData()
         }
 
@@ -40,7 +40,12 @@ export const useLicense = (mountable: boolean = true) => {
                 value: licenseKey.value?.trim() || ''
             })
             if(licenseKey.value) {
+                localStorage.setItem('license_key', licenseKey.value)
                 await loadLicenseKey()
+                licenseAlertMessage.value = {
+                    type: "success",
+                    title: 'License key saved successfully.'
+                }
             }
         } finally {
             isLoading.value = false
@@ -50,7 +55,11 @@ export const useLicense = (mountable: boolean = true) => {
 
     if(mountable){
         onMounted(async () => {
-            if(!licenseKey.value) return
+            if(!licenseKey.value?.trim()){
+                isValidLicenseKey.value = false
+                return
+            }
+            
             try {
                 isLoading.value = true
                 await loadLicenseKey()
@@ -63,5 +72,6 @@ export const useLicense = (mountable: boolean = true) => {
     return {
         isLoading,
         loadLicenseKey,
-        ActivateLicense,    }
+        ActivateLicense
+    }
 }

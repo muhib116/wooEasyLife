@@ -22,12 +22,13 @@
             <Input.Primary
                 type="password"
                 label="Enter License Key"
+                placeholder="fd0xxxxxxxxxxxxxxxxxxxxxxxxxx98yhj"
                 v-model="licenseKey"
                 :disabled="isValidLicenseKey"
             />
             <Button.Primary 
                 class="ml-auto"
-                :class="!isValidLicenseKey ? '!bg-green-500' : '!bg-red-500'"
+                :class="!licenseKey?.trim() || !isValidLicenseKey ? '!bg-green-500' : '!bg-red-500'"
                 @onClick="(btn) => {
                     ActivateLicense(btn, isValidLicenseKey)
                 }"
@@ -83,7 +84,7 @@
     import { Card, Input, Icon, Loader, Button, Heading } from '@components'
     import { useLicense } from './UseLicense'
     import LicenseAlert from './LicenseAlert.vue'
-import { inject } from 'vue';
+    import { inject } from 'vue'
 
     const {
         isLoading,
