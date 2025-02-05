@@ -1,6 +1,6 @@
 <template>
     <button 
-        class="px-2 rounded bg-green-500 text-white mr-4"
+        class="px-2 rounded font-bold text-white mr-4"
         :class="{
             'animate-bounce' : balance <= 5
         }"
@@ -21,7 +21,7 @@
 
     const balance = ref(userData.value?.remaining_order || 0);
     const getBgColor = computed(() => {
-        let color = '#444';
+        let color = '#00b002';
 
         if (balance.value <= 20 && balance.value > 10) {
             color = '#f97315';

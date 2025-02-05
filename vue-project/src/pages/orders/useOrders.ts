@@ -7,7 +7,8 @@ import {
   ip_phone_or_email_block_bulk_entry,
   checkFraudCustomer,
   updateCourierData,
-  includePastNewOrdersToWELPlugin
+  includePastNewOrdersToWELPlugin,
+  includeMissingNewOrdersOfFailedBalanceCut
 } from "@/api";
 import { manageCourier } from "./useHandleCourierEntry";
 import { normalizePhoneNumber } from "@/helper";
@@ -469,9 +470,9 @@ export const useOrders = () => {
     }
   }
 
-  const include_balance_cut_failed_new_orders = async (totalOrders: Number, btn: { isLoading: boolean}) => {
+  const include_balance_cut_failed_new_orders = async (totalNewOrders: Number, btn: { isLoading: boolean}) => {
 
-    let alertMsg = `Are you sure you want to include your past new orders? \nIf you confirm, a total of ${totalNewOrders} will be deducted from your balance.`;
+    let alertMsg = `Are you sure you want to include your missing new orders? \nIf you confirm, a total of ${totalNewOrders} will be deducted from your balance.`;
     if(!confirm(alertMsg)) return
     if(totalNewOrders > userData.value.remaining_order) {
       alertMessage.value = {
@@ -495,7 +496,7 @@ export const useOrders = () => {
 
     try {
       btn.isLoading = true;
-      const data = await includePastNewOrdersToWELPlugin();
+      const data = await includeMissingNewOrdersOfFailedBalanceCut();
       
       alertMessage.value = {
         type: 'success',
@@ -507,7 +508,7 @@ export const useOrders = () => {
       await getOrders();
 
     } catch (err) {
-      console.error("Error including past new orders:", err);
+      console.error("Error including missing new orders:", err);
       
       alertMessage.value = {
         type: 'danger',

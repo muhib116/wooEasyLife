@@ -293,3 +293,9 @@ export const includePastNewOrdersToWELPlugin = async () => {
   const { data } = await axios.put(`${localApiBaseURL}/include-past-new-orders-to-wel-plugin?nocache=${timestamp}`);
   return data;
 };
+
+export const includeMissingNewOrdersOfFailedBalanceCut = async () => {
+  const timestamp = new Date().getTime(); // Generate a unique timestamp
+  const { data } = await axios.put(`${localApiBaseURL}/include-missing-new-orders-for-balance-cut-failed?nocache=${timestamp}`);
+  return data;
+};

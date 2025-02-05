@@ -34,10 +34,59 @@ class HandlePastNewOrders {
 
         $this->update_meta_data_of_past_orders($data['orders']);
     }
+    public function include_missing_new_orders_for_balance_cut_issue() {
+        global $license_key;
+
+        $url = get_api_end_point("package-order-use");
+        $data = $this->get_missing_new_orders_for_balance_cut_issue();
+
+        $headers = [
+            'Authorization' => 'Bearer ' . $license_key,
+            'Content-Type'  => 'application/json', // JSON format
+            'origin' => site_url()
+        ];
+
+        // Use wp_remote_post for HTTP requests
+        $response = wp_remote_post($url, [
+            'method'      => 'POST',
+            'body'        => json_encode($data['remote_api_data']),
+            'headers'     => $headers,
+            'timeout'     => 45,
+            'sslverify'   => false,
+        ]);
+
+        // Check for errors in the response
+        if (is_wp_error($response)) {
+            return [
+                'status'  => 'error',
+                'message' => $response->get_error_message(),
+            ];
+        }
+
+        $this->update_meta_data_of_past_orders($data['orders']);
+    }
 
     private function get_past_new_orders_not_handled_by_wel_plugin() 
     {
         $orders = $this->get_past_new_orders();
+        $cartContents = [];
+
+        foreach($orders as $order) {
+            $cartContents[] = $this->get_order_item($order);
+        }
+        
+        return [
+            'orders' => $orders,
+            "remote_api_data" => [
+                'order_count' => count($orders),
+                'use_details' => $cartContents
+            ]
+        ];     
+    }
+
+    private function get_missing_new_orders_for_balance_cut_issue() 
+    {
+        $orders = $this->get_missing_new_orders();
         $cartContents = [];
 
         foreach($orders as $order) {
@@ -98,6 +147,42 @@ class HandlePastNewOrders {
                 [
                     'key'     => 'is_wel_order_handled',
                     'compare' => 'NOT EXISTS', // Meta key does not exist
+                ]
+            ]
+        ];
+        
+        $orders = wc_get_orders($args);
+        return $orders;
+    }
+
+    private function get_missing_new_orders() {
+        $args = [
+            'status'    => ['wc-processing'],
+            'limit'     => -1,
+            'type'      => 'shop_order',
+            'meta_query' => [
+                'relation' => 'AND',
+                [
+                    'key'     => 'is_wel_order_handled',
+                    'value'   => '1', // Checking if it's explicitly set to "true" (1)
+                    'compare' => '='
+                ],
+                [
+                    'relation' => 'OR', // Either it's explicitly false (0), empty, or does not exist
+                    [
+                        'key'     => 'is_wel_balance_cut',
+                        'value'   => '0',
+                        'compare' => '='
+                    ],
+                    [
+                        'key'     => 'is_wel_balance_cut',
+                        'compare' => 'NOT EXISTS' // Key doesn't exist
+                    ],
+                    [
+                        'key'     => 'is_wel_balance_cut',
+                        'value'   => '',
+                        'compare' => '='
+                    ]
                 ]
             ]
         ];

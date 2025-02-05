@@ -107,6 +107,15 @@ class OrderListAPI
                 'permission_callback' => api_permission_check(),
             ]
         );
+        register_rest_route(
+            __API_NAMESPACE, 
+            '/include-missing-new-orders-for-balance-cut-failed',
+            [
+                'methods'  => 'PUT',
+                'callback' => [$handlePastNewOrders, 'include_missing_new_orders_for_balance_cut_issue'], // Ensure this function exists and is callable
+                'permission_callback' => api_permission_check(),
+            ]
+        );
     }
 
     /**
