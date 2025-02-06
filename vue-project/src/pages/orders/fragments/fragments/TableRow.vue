@@ -218,9 +218,12 @@
         >
             <h3 
                 title="Delivery success probability"
-                class="font-semibold w-fit mx-auto flex gap-3 items-center text-white mb-2 bg-gray-500 px-3 py-1 rounded-sm"
+                class="font-semibold w-fit mx-auto flex gap-3 items-center text-white mb-2 bg-sky-500 px-3 py-1 rounded-sm"
+                :style="{
+                    background: `hsl(${ (getDeliveryProbability(order)/100) * 120 }deg 75% 35% / 80%)`
+                }"
             >
-                DSP: {{ getDeliveryProbability(order) }}
+                DSP: {{ getDeliveryProbability(order) }}%
                 <Icon
                     class="text-red-100 cursor-pointer"
                     title="This is just a prediction based on available data. \nWe do not guarantee the accuracy of the outcome, as various external factors may influence the actual results."
@@ -468,6 +471,6 @@
         // Ensure probability stays within 0-100%
         probability = Math.max(0, Math.min(probability * 100, 100));
 
-        return Math.round(probability) + "%"; // Return probability as a rounded percentage
+        return Math.round(probability); // Return probability as a rounded percentage
     }
 </script>
