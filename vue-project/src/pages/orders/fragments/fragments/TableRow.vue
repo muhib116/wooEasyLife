@@ -218,9 +218,10 @@
         >
             <h3 
                 title="Delivery success probability"
-                class="font-semibold w-fit mx-auto flex gap-3 items-center text-white mb-2 bg-sky-500 px-3 py-1 rounded-sm"
+                class="font-semibold w-fit flex gap-3 mb-3 items-center bg-sky-500 px-3 py-1 rounded-sm"
                 :style="{
-                    background: `hsl(${ (getDeliveryProbability(order)/100) * 120 }deg 75% 35% / 80%)`
+                    background: `hsl(${ (getDeliveryProbability(order)/100) * 120 }deg 75% 35%)`,
+                    color: '#fff'
                 }"
             >
                 DSP: {{ getDeliveryProbability(order) }}%
@@ -451,7 +452,8 @@
 
     const getDeliveryProbability = (order) => {
         // Ensure success rate is a number and remove '%' if present
-        const courierSuccessRate = parseFloat((order?.customer_report?.success_rate || "0").toString().replace('%', ''));
+        let courier_success_rate =  order?.customer_report?.success_rate.replace('%', '')
+        const courierSuccessRate = parseFloat((courier_success_rate || 0))
 
         // Ensure fraud score is a number
         const systemFraudScore = parseFloat(order?.customer_custom_data?.fraud_score) || 0;

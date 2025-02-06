@@ -23,6 +23,22 @@ export const getContrastColor = (hexColor: string) => {
     // Return white (#ffffff) for dark backgrounds, black (#000000) for light backgrounds
     return luminance > 0.5 ? '#000000' : '#ffffff'
 }
+export const hslToHex = (h, s, l) => {
+    // Adjust lightness for darker shades to make them slightly lighter
+    if (l < 25) {
+        l = l + (25 - l) * 0.5; // Increase darkness by 50% towards mid-lightness
+    }
+    
+    l /= 100;
+    const a = s * Math.min(l, 1 - l) / 100;
+    const f = n => {
+        const k = (n + h / 30) % 12;
+        const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+        return Math.round(255 * color).toString(16).padStart(2, '0');
+    };
+    
+    return `#${f(0)}${f(8)}${f(4)}`;
+}
 
 export const generateSlug = (title: string) => {
     return title
