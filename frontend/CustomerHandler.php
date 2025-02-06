@@ -201,11 +201,15 @@ class CustomerHandler {
             return 0; // No valid identifier, return 0
         }
     
-        $args = array_merge([
+        // $args = array_merge([
+        //     'limit'       => -1,
+        //     'return'      => 'ids',
+        // ], getMetaDataOfOrderForArgs());
+    
+        $args = [
             'limit'       => -1,
             'return'      => 'ids',
-            
-        ], getMetaDataOfOrderForArgs());
+        ];
 
         if($onlyCompleteOrder) {
             $args['status'] = 'wc-completed';
@@ -234,11 +238,17 @@ class CustomerHandler {
             return 0; // No valid identifier, return 0 frequency
         }
 
-        $args = array_merge([
+        // $args = array_merge([
+        //     'limit'       => -1,
+        //     'return'      => 'ids',
+            
+        // ], getMetaDataOfOrderForArgs());
+
+        $args = [
             'limit'       => -1,
             'return'      => 'ids',
             
-        ], getMetaDataOfOrderForArgs());
+        ];
 
         if($billing_phone){
             $args['billing_phone'] = $billing_phone;
@@ -318,11 +328,17 @@ class CustomerHandler {
         }
     
         // Build WooCommerce query args
-        $args = array_merge([
+        // $args = array_merge([
+        //     'status'      => ['wc-completed'],
+        //     'limit'       => -1, // Fetch all completed orders
+            
+        // ], getMetaDataOfOrderForArgs());
+
+        $args = [
             'status'      => ['wc-completed'],
             'limit'       => -1, // Fetch all completed orders
             
-        ], getMetaDataOfOrderForArgs());
+        ];
     
         // Prioritize phone, then fallback to email
         if (!empty($billing_phone)) {
@@ -357,6 +373,30 @@ class CustomerHandler {
         // 2️⃣ **🏠 Mismatched Billing & Shipping Address → Potential fraud**
         if ($order->get_billing_address_1() !== $order->get_shipping_address_1()) {
             $score += 10;
+        }
+
+        // 📦 **Check for Address Length to Minimize Delivery Risk**
+        $min_length = 10; // Minimum length for a valid address
+        $short_address_penalty = 5; // Penalty score for short addresses
+
+        // If Billing Address 1 is too short, increase delivery risk score
+        if (strlen(trim($order->get_billing_address_1())) < $min_length) {
+            $score += $short_address_penalty;
+        }
+
+        // If Shipping Address 1 is too short, increase delivery risk score
+        if (strlen(trim($order->get_shipping_address_1())) < $min_length) {
+            $score += $short_address_penalty;
+        }
+
+        // Billing Address 2 is often optional, but if present and too short, add a smaller penalty
+        if (!empty(trim($order->get_billing_address_2())) && strlen(trim($order->get_billing_address_2())) < $min_length) {
+            $score += 2;
+        }
+
+        // Similarly, check Shipping Address 2
+        if (!empty(trim($order->get_shipping_address_2())) && strlen(trim($order->get_shipping_address_2())) < $min_length) {
+            $score += 2;
         }
     
         // 3️⃣ **📧 Email & Phone Number Usage → Multiple accounts using the same info**
@@ -487,12 +527,16 @@ class CustomerHandler {
     }    
    
     private function get_failed_orders_count($billing_phone, $billing_email) {
+        // $args = array_merge([
+        //     'status'      => ['wc-failed', 'wc-cancelled'],
+        //     'limit'       => -1,
+        //     'return'      => 'ids',
+        // ], getMetaDataOfOrderForArgs());
         $args = array_merge([
             'status'      => ['wc-failed', 'wc-cancelled'],
             'limit'       => -1,
             'return'      => 'ids',
-            
-        ], getMetaDataOfOrderForArgs());
+        ]);
     
         if ($billing_phone) {
             $args['billing_phone'] = $billing_phone;

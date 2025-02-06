@@ -10,24 +10,33 @@
 
         <div
             v-if="!hideAlerts"
-            class="fixed bottom-4 right-4 z-50"
+            class="fixed bottom-4 right-4 z-50 pointer-events-none"
         >
             <!-- messages start -->
             <MessageBox
                 v-if="!!hasNewOrder"
                 title="New Order Received 🎉"
                 type="success"
+                @onClose="hasNewOrder = false"
             />
             <MessageBox
                 v-if="userData?.notice && userData?.notice?.message"
                 :title="userData?.notice?.message"
                 :type="userData?.notice?.type"
                 cleanBox
+
+                @onClose="() => {
+                    userData.notice.message = ''
+                }"
             />
             <MessageBox
                 v-if="internetStatusMessage.title"
                 :type="internetStatusMessage.type"
                 :title="internetStatusMessage.title"
+
+                @onClose="() => {
+                    internetStatusMessage.title = ''
+                }"
             />
             <!-- messages end -->
         </div>

@@ -72,7 +72,9 @@ Dashboard:
 
 --------heigh priority task------------
 👉🏻 sms recharge korte hobe
+👉🏻 new customer er fraud score dekhay 10%
 👉🏻 The table "customer_data" was not created. Please deactivate and reactivate the "WooEasyLife" plugin.
+
 
 👉🏻 Send message for abandoned order customer
 👉🏻 Order list filter by courier partner

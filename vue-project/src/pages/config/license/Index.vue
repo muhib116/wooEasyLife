@@ -20,7 +20,6 @@
             :class="isValidLicenseKey ? 'bg-green-50 border border-green-400' : 'bg-red-50/50 border border-red-400'"
         >
             <Input.Primary
-                type="password"
                 label="Enter License Key"
                 placeholder="fd0xxxxxxxxxxxxxxxxxxxxxxxxxx98yhj"
                 v-model="licenseKey"

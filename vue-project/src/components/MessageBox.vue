@@ -2,16 +2,16 @@
 
     <div 
         v-if="title"
-        class="flex items-center text-sm p-4 mb-4 border-l-4 border-current gap-3 relative" role="alert"
+        class="flex items-center shadow rounded text-sm p-4 mb-4 border-l-4 border-current gap-3 relative" role="alert"
         :style="styles[type.toLowerCase()]"
     >
         <button 
-            class="absolute top-3 right-3 aspect-squire bg-white rounded p-1 hover:text-red-500 hover:scale-110 border border-transparent hover:border-[currentColor]"
-            @click="$emit('close')"
+            class="absolute top-2 right-2 aspect-squire bg-white rounded p-[2px] hover:text-red-500 hover:scale-110 border border-gray-200 hover:border-[currentColor] pointer-events-auto"
+            @click="$emit('onClose')"
         >
             <Icon
                 name="PhX"
-                size="20"
+                size="18"
                 weight="bold"
             />
         </button>
