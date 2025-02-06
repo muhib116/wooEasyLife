@@ -8,7 +8,10 @@
             :class="isDevelopmentMode ? 'top-0' : 'top-8'"
         />
 
-        <template v-if="!hideAlerts">
+        <div
+            v-if="!hideAlerts"
+            class="fixed bottom-4 right-4 z-50"
+        >
             <!-- messages start -->
             <MessageBox
                 v-if="!!hasNewOrder"
@@ -27,7 +30,7 @@
                 :title="internetStatusMessage.title"
             />
             <!-- messages end -->
-        </template>
+        </div>
 
 
         <main class="print:mt-0 mt-6">

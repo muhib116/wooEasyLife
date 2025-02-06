@@ -201,12 +201,11 @@ class CustomerHandler {
             return 0; // No valid identifier, return 0
         }
     
-        $args = [
+        $args = array_merge([
             'limit'       => -1,
             'return'      => 'ids',
-
-            ...getMetaDataOfOrderForArgs()
-        ];
+            
+        ], getMetaDataOfOrderForArgs());
 
         if($onlyCompleteOrder) {
             $args['status'] = 'wc-completed';
@@ -235,12 +234,11 @@ class CustomerHandler {
             return 0; // No valid identifier, return 0 frequency
         }
 
-        $args = [
+        $args = array_merge([
             'limit'       => -1,
             'return'      => 'ids',
-
-            ...getMetaDataOfOrderForArgs()
-        ];
+            
+        ], getMetaDataOfOrderForArgs());
 
         if($billing_phone){
             $args['billing_phone'] = $billing_phone;
@@ -320,12 +318,11 @@ class CustomerHandler {
         }
     
         // Build WooCommerce query args
-        $args = [
+        $args = array_merge([
             'status'      => ['wc-completed'],
             'limit'       => -1, // Fetch all completed orders
-
-            ...getMetaDataOfOrderForArgs()
-        ];
+            
+        ], getMetaDataOfOrderForArgs());
     
         // Prioritize phone, then fallback to email
         if (!empty($billing_phone)) {
@@ -490,13 +487,12 @@ class CustomerHandler {
     }    
    
     private function get_failed_orders_count($billing_phone, $billing_email) {
-        $args = [
+        $args = array_merge([
             'status'      => ['wc-failed', 'wc-cancelled'],
             'limit'       => -1,
             'return'      => 'ids',
-
-            ...getMetaDataOfOrderForArgs()
-        ];
+            
+        ], getMetaDataOfOrderForArgs());
     
         if ($billing_phone) {
             $args['billing_phone'] = $billing_phone;

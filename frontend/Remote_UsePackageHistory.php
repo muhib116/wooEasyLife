@@ -65,6 +65,8 @@ class Remote_UsePackageHistory {
             'Content-Type'  => 'application/json', // JSON format
             'origin' => site_url()
         ];
+
+        error_log($data);
     
         // Use wp_remote_post for HTTP requests
         $response = wp_remote_post($url, [
@@ -74,6 +76,9 @@ class Remote_UsePackageHistory {
             'timeout'     => 45,
             'sslverify'   => false,
         ]);
+
+        error_log(json_encode($response));
+
 
         // Check for errors in the response
         if (is_wp_error($response)) {
@@ -90,7 +95,7 @@ class Remote_UsePackageHistory {
         $response_body = json_decode($response_body, true) ?: $response_body;
 
         $order->update_meta_data( 'is_wel_balance_cut', 1);
-        if($response_body['is_order_limit_over']){
+        if(is_array($response_body) && $response_body['is_order_limit_over']){
             $order->update_meta_data( 'is_wel_balance_cut', 0);
         }
 

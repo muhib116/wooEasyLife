@@ -1,6 +1,7 @@
 <template>
     <Card.Native class="relative min-h-[200px]">
         <MessageBox
+            class="fixed top-10 right-4 z-50"
             :title="alertMessage.message"
             :type="alertMessage.type"
         />

@@ -1,23 +1,33 @@
 <template>
 
-<div 
-    v-if="title"
-    class="flex items-center text-sm p-4 mb-4 border-l-4 border-current gap-3" role="alert"
-    :style="styles[type.toLowerCase()]"
->
-    <Icon
-        v-if="!cleanBox"
-        :name="icons[type.toLowerCase()]"
-        size="24"
-    />
-    <div>
-        <div v-if="!cleanBox">
-            <span class="font-semibold"><span class="capitalize">{{ type }}</span> alert!</span> 
-            <br />
+    <div 
+        v-if="title"
+        class="flex items-center text-sm p-4 mb-4 border-l-4 border-current gap-3 relative" role="alert"
+        :style="styles[type.toLowerCase()]"
+    >
+        <button 
+            class="absolute top-3 right-3 aspect-squire bg-white rounded p-1 hover:text-red-500 hover:scale-110 border border-transparent hover:border-[currentColor]"
+            @click="$emit('close')"
+        >
+            <Icon
+                name="PhX"
+                size="20"
+                weight="bold"
+            />
+        </button>
+        <Icon
+            v-if="!cleanBox"
+            :name="icons[type.toLowerCase()]"
+            size="24"
+        />
+        <div>
+            <div v-if="!cleanBox">
+                <span class="font-semibold"><span class="capitalize">{{ type }}</span> alert!</span> 
+                <br />
+            </div>
+        <div v-html="title"></div>
         </div>
-      <div v-html="title"></div>
-    </div>
-  </div>  
+    </div>  
 </template>
 
 <script setup lang="ts">

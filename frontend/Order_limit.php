@@ -18,14 +18,13 @@ class Order_limit {
             $billing_phone = isset($_POST['billing_phone']) ? sanitize_text_field($_POST['billing_phone']) : '';
 
             // Query to count orders for the given email or phone number
-            $args = [
+            $args = array_merge([
                 'billing_phone' => normalize_phone_number($billing_phone),
                 'post_type'   => 'shop_order',
                 'post_status' => 'wc-processing', // You can also include other statuses if needed
                 'return'      => 'ids',
-
-                ...getMetaDataOfOrderForArgs()
-            ];
+                
+            ], getMetaDataOfOrderForArgs());
         
             $orders = wc_get_orders($args);
             $order_count = count($orders);

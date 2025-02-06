@@ -62,19 +62,22 @@ Dashboard:
 ✅ order limit navigation a show korte hobe
 ✅ order limit er alert dekhate hobe
 ✅ dui package kinar majkhaner order gulu process korte hobe
+✅ balance cut issue fix
+✅ api key chara on reload a dash board and list page visitkora jay
+✅ api key add hoyna
+
+✅ 
 
 
 
 --------heigh priority task------------
 👉🏻 sms recharge korte hobe
+👉🏻 The table "customer_data" was not created. Please deactivate and reactivate the "WooEasyLife" plugin.
 
 👉🏻 Send message for abandoned order customer
 👉🏻 Order list filter by courier partner
 👉🏻 landing page view calculation
-👉🏻 api key add hoyna
-👉🏻 api key chara on reload a dash board and list page visitkora jay
-👉🏻 The table "customer_data" was not created. Please deactivate and reactivate the "WooEasyLife" plugin.
-👉🏻 balance cut issue fix
+
 
 
 

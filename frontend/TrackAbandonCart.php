@@ -194,15 +194,14 @@ class TrackAbandonCart {
         }
 
         // Query WooCommerce for all completed orders with the same billing phone
-        $args = [
+        $args = array_merge([
             'billing_phone' => normalize_phone_number($billing_phone),
             'status'        => 'wc-completed',
             'type'          => 'shop_order',
             'limit'         => -1,
             'return'        => 'ids', // Only retrieve order IDs
-
-            ...getMetaDataOfOrderForArgs()
-        ];
+            
+        ], getMetaDataOfOrderForArgs());
 
         $completed_orders = wc_get_orders($args);
 

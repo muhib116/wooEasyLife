@@ -249,8 +249,7 @@ function get_orders_by_billing_phone_or_email_and_status($billing_phone, $billin
         'return'    => 'objects', // Fetch full order objects
         'type'     => 'shop_order',
         'limit' => -1,
-
-        ...getMetaDataOfOrderForArgs()
+        getMetaDataOfOrderForArgs()
     ];
 
     if (!empty($billing_phone)) {

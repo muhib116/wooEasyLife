@@ -136,7 +136,7 @@ class OrderListAPI
         $total_new_order_handled_by_wel_but_balance_cut_failed = $this->get_total_new_order_handled_by_wel_but_balance_cut_failed();
     
         // Use WooCommerce Order Query to fetch orders with pagination and search
-        $args = [
+        $args = array_merge([
             'status'        => $status,
             'limit'         => $per_page,
             'page'          => $page,
@@ -145,8 +145,7 @@ class OrderListAPI
             'paginate'      => true, // Enable pagination
             'orderby' => 'id',
             'order'   => 'DESC', // Descending order
-            ... getMetaDataOfOrderForArgs()
-        ];
+        ], getMetaDataOfOrderForArgs());
     
         // Add search conditions
         if (!empty($search)) {
@@ -323,13 +322,14 @@ class OrderListAPI
         $statuses = wc_get_order_statuses(); // Retrieve all order statuses
         foreach ($statuses as $status_key => $status_label) {
             // Query orders by status
-            $args = [
+            $args = array_merge([
                 'status' => str_replace('wc-', '', $status_key), // Remove 'wc-' prefix for the query
                 'limit'  => -1,
-                'type'     => 'shop_order',
+                'type'   => 'shop_order',
                 'return' => 'ids',
-                ...getMetaDataOfOrderForArgs()
-            ];
+                
+            ], getMetaDataOfOrderForArgs());
+
             $orders = wc_get_orders($args);
             $order_count = count($orders);
 

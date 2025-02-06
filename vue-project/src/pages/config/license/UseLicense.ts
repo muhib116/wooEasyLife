@@ -12,7 +12,6 @@ export const useLicense = (mountable: boolean = true) => {
 
     const loadLicenseKey = async () => 
     {
-        console.log(licenseKey.value, 'licenseKey.value')
         if(!licenseKey.value){
             const { data } = await getWPOptionItem({option_name: 'license', key: 'key'})
             licenseKey.value = data.value
