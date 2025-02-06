@@ -139,6 +139,24 @@ export const steadfastBulkStatusCheck = async (payload: {
 // courier end
 
 // sms integration start
+export const smsRecharge = async (payload: {
+  account_number: string,
+  total_amount: number,
+  total_charge: number,
+  transaction_method: string,
+  transaction_id: string,
+}) => {
+  try {
+    const { data } = await axios.post(
+      `${remoteApiBaseURL}/sms/recharge`,
+      payload,
+      headers.value
+    );
+    return data;
+  } catch (err) {
+    handleLicenseValidations(err)
+  }
+}
 export const sendSMS = async (payload: {
   phone: string;
   content: string;

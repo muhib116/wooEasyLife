@@ -1,6 +1,18 @@
-import { ref } from "vue"
+import { validateBDPhoneNumber } from "@/helper"
+import { smsRecharge } from "@/remoteApi"
+import { inject, ref } from "vue"
 
 export const useRecharge = () => {
+    const {
+        loadUserData
+    } = inject('useServiceProvider')
+
+    const alertMessage = ref({
+        title: '',
+        type: '',
+        wait: 5000
+    })
+    const minRechargeAmount = 50
     const data = [
         {
             logo: 'https://wpsalehub.com/wp-content/uploads/2025/01/image-14.webp',
@@ -39,23 +51,26 @@ export const useRecharge = () => {
     ]
 
     const form = ref<{
-        payableAmount: number
         rechargeableAmount: number | null
+        transactionCharge: number | 0
+        payableAmount: number
         transactionId: string
         accountNumber: string
-        selectedPaymentGetaway: string
+        transaction_method: string
     }>({
         payableAmount: 0,
+        transactionCharge: 0,
         rechargeableAmount: null,
         transactionId: '',
         accountNumber: '',
-        selectedPaymentGetaway: ''
+        transaction_method: ''
     })
 
-    const payableAmount = (fee: number) => {
+    const getPayableAmount = (fee: number) => {
         let amount = 0
         if(form.value.rechargeableAmount){
-            amount = form.value.rechargeableAmount + (form.value.rechargeableAmount * (fee / 100))
+            form.value.transactionCharge =  (form.value.rechargeableAmount * (fee / 100))
+            amount = form.value.rechargeableAmount + form.value.transactionCharge
         }
 
         amount = Math.round(amount)
@@ -63,14 +78,112 @@ export const useRecharge = () => {
         return amount
     }
 
-    const rechargeBalance = (btn) => {
-        console.log(form.value)
+    const rechargeBalance = async (btn) => {
+        const payload = {
+            account_number: form.value.accountNumber,
+            transaction_method: form.value.transaction_method,
+            total_amount: form.value.payableAmount,
+            total_charge: form.value.transactionCharge,
+            transaction_id: form.value.transactionId,
+        }
+
+        if(
+            !payload.account_number.trim() 
+            || !payload.transaction_method.trim()
+            || !payload.total_amount
+            || !payload.transaction_id.trim()
+        ) {
+            alertMessage.value = {
+                ...alertMessage.value,
+                type: 'danger',
+                title: `Please ensure all fields marked with * are filled in.`,
+            }
+            return
+        }
+
+        if(payload.transaction_method == 'bKash' && !validateBDPhoneNumber(payload.account_number)) {
+            alertMessage.value = {
+                ...alertMessage.value,
+                type: 'danger',
+                title: `The bKash number you provided (${payload.account_number} is invalid.`,
+            }
+            return
+        }
+        if(payload.transaction_method == 'Rocket' && !validateBDPhoneNumber(payload.account_number.slice(0, -1))) {
+            alertMessage.value = {
+                ...alertMessage.value,
+                type: 'danger',
+                title: `The Rocket number you provided (${payload.account_number}) is invalid.`,
+            }
+            return
+        }
+        if(payload.total_amount < minRechargeAmount) {
+            alertMessage.value = {
+                ...alertMessage.value,
+                type: 'danger',
+                title: `Minimum recharge amount ${minRechargeAmount}tk`,
+            }
+
+            return
+        }
+
+        try {
+            btn.isLoading = true
+            const response = await smsRecharge(payload)
+            /**
+             * {
+                "status": true,
+                "message": "Success",
+                "data": {
+                    "user_id": 2,
+                    "created_by": 2,
+                    "total_amount": "51.00",
+                    "transaction_charge": "0.93",
+                    "transaction_method": "bKash",
+                    "transaction_id": "Ea sit recusandae P",
+                    "account_number": "01770989591",
+                    "domain": "localhost",
+                    "status": "pending",
+                    "updated_at": "2025-02-06T12:04:07.000000Z",
+                    "created_at": "2025-02-06T12:04:07.000000Z",
+                    "id": 1
+                }
+            }
+             */
+            
+            if(response.status) {
+                alertMessage.value = {
+                    type: 'success',
+                    title: 'Your SMS recharge request has been successfully submitted. <br> Our admin will verify your transaction within <strong>24 hours</strong>.',
+                    wait: 10000
+                }
+                await loadUserData()
+            } else {
+                alertMessage.value = {
+                    type: 'warning',
+                    title: response.message,
+                    wait: 5000
+                }
+            }
+            
+        } catch (err) {
+            console.error(err)
+            alertMessage.value = {
+                ...alertMessage.value,
+                type: 'danger',
+                title: err.response.data.message,
+            }
+        } finally {
+            btn.isLoading = false
+        }
     }
 
     return {
         data,
         form,
-        payableAmount,
-        rechargeBalance
+        getPayableAmount,
+        rechargeBalance,
+        minRechargeAmount,
+        alertMessage
     }
 }

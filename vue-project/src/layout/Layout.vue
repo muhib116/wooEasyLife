@@ -10,7 +10,7 @@
 
         <div
             v-if="!hideAlerts"
-            class="fixed bottom-4 right-4 z-50 pointer-events-none"
+            class="fixed bottom-4 right-4 z-50"
         >
             <!-- messages start -->
             <MessageBox

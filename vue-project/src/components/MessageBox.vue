@@ -2,11 +2,11 @@
 
     <div 
         v-if="title"
-        class="flex items-center shadow rounded text-sm p-4 mb-4 border-l-4 border-current gap-3 relative" role="alert"
+        class="group flex items-center shadow rounded text-sm p-4 mb-4 border-l-4 border-current gap-3 relative z-50" role="alert"
         :style="styles[type.toLowerCase()]"
     >
         <button 
-            class="absolute top-2 right-2 aspect-squire bg-white rounded p-[2px] hover:text-red-500 hover:scale-110 border border-gray-200 hover:border-[currentColor] pointer-events-auto"
+            class="invisible group-hover:visible absolute top-2 right-2 aspect-squire bg-white/30 rounded p-[2px] hover:text-red-500 hover:scale-110 border border-gray-200 hover:border-[currentColor]"
             @click="$emit('onClose')"
         >
             <Icon
@@ -32,11 +32,14 @@
 
 <script setup lang="ts">
     import { Icon } from '@components'
+    import { watchEffect } from 'vue'
 
-    defineProps<{
+    const emit = defineEmits(['onClose'])
+    const props = defineProps<{
         type: "success" | "danger" | "warning" | "info"
         title: string,
-        cleanBox: boolean
+        cleanBox: boolean,
+        wait: number // in secound
     }>()
 
     const styles = {
@@ -64,4 +67,13 @@
         warning: 'PhWarning',
         info: 'PhQuestion',
     }
+
+    watchEffect(() => {
+        if(props.wait) {
+            console.log(props.wait)
+            setTimeout(() => {
+                emit('onClose')
+            }, props.wait)
+        }
+    })
 </script>
