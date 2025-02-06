@@ -15,10 +15,10 @@
                 <div
                     class="cursor-pointer selection-none flex justify-between items-center border pl-4"
                     @click="() => {
-                        if(selectedPaymentGetaway?.paymentPartner == item.paymentPartner){
-                            selectedPaymentGetaway = null
+                        if(form.selectedPaymentGetaway == item.paymentPartner){
+                            form.selectedPaymentGetaway = ''
                         }else {
-                            selectedPaymentGetaway = item
+                            form.selectedPaymentGetaway = item.paymentPartner
                         }
                     }"
                 >
@@ -33,7 +33,7 @@
                 </div>
     
                 <div
-                    v-if="selectedPaymentGetaway?.paymentPartner == item.paymentPartner"
+                    v-if="form.selectedPaymentGetaway == item.paymentPartner"
                     class="p-5 border border-t-0 rounded-b text-lg"
                 >
                     <div class="font-semibold">
@@ -77,6 +77,10 @@
                     <br />
                     <div v-html="item.instructions"></div>
                     <br />
+
+                    <Button.Primary @onClick="rechargeBalance">
+                        Recharge Now
+                    </Button.Primary>
                 </div>
             </div>
         </div>
@@ -88,13 +92,13 @@
     import {
         Input,
         Card,
-        Heading
+        Heading,
+        Button
     } from '@components'
 
     const {
         data,
         form,
-        selectedPaymentGetaway,
-        payableAmount
+        rechargeBalance
     } = useRecharge()
 </script>

@@ -1,4 +1,4 @@
-import { computed, ref } from "vue"
+import { ref } from "vue"
 
 export const useRecharge = () => {
     const data = [
@@ -38,18 +38,18 @@ export const useRecharge = () => {
         }
     ]
 
-    const selectedPaymentGetaway = ref<{paymentPartner: string} | null>(null)
-
     const form = ref<{
         payableAmount: number
         rechargeableAmount: number | null
         transactionId: string
         accountNumber: string
+        selectedPaymentGetaway: string
     }>({
         payableAmount: 0,
         rechargeableAmount: null,
         transactionId: '',
         accountNumber: '',
+        selectedPaymentGetaway: ''
     })
 
     const payableAmount = (fee: number) => {
@@ -63,10 +63,14 @@ export const useRecharge = () => {
         return amount
     }
 
+    const rechargeBalance = (btn) => {
+        console.log(form.value)
+    }
+
     return {
         data,
         form,
-        selectedPaymentGetaway,
-        payableAmount
+        payableAmount,
+        rechargeBalance
     }
 }
