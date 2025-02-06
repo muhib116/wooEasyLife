@@ -216,22 +216,22 @@
             @click="setSelectedOrder(order)"  
             class="whitespace-nowrap"
         >
-            <h3 
+            <span 
                 title="Delivery success probability"
                 class="font-semibold w-fit flex gap-3 mb-3 items-center bg-sky-500 px-3 py-1 rounded-sm"
                 :style="{
-                    background: `hsl(${ (getDeliveryProbability(order)/100) * 120 }deg 75% 35%)`,
+                    background: +getDeliveryProbability >=0 ? `hsl(${ (+getDeliveryProbability / 100) * 120 }deg 75% 35%)` : `red`,
                     color: '#fff'
                 }"
             >
-                DSP: {{ getDeliveryProbability(order) }}%
+                {{ +getDeliveryProbability >= 0 ? `DSP: ${getDeliveryProbability}%` : getDeliveryProbability }}
                 <Icon
                     class="text-red-100 cursor-pointer"
                     title="This is just a prediction based on available data. \nWe do not guarantee the accuracy of the outcome, as various external factors may influence the actual results."
                     name="PhInfo"
                     size="20"
                 />
-            </h3>
+            </span>
 
             <div 
                 v-if="Object.keys(order?.courier_data)?.length"
@@ -401,15 +401,15 @@
 </template>
 
 <script setup lang="ts">
-    import { Table, Icon, Loader, Modal, Button } from '@components'
-    import { inject, ref } from 'vue'
+    import { Table, Icon, Loader, Modal } from '@components'
+    import { computed, inject, ref } from 'vue'
     import Address from './address/Index.vue'
     import { baseUrl } from '@/api'
     import FraudHistory from './FraudHistory.vue'
     import MultipleOrders from './MultipleOrders.vue'
     import Notes from './notes/Index.vue'
 
-    defineProps<{
+    const props = defineProps<{
         order: {
             customer_custom_data?: {
                 fraud_score?: string | number;
@@ -450,10 +450,17 @@
     const toggleMultiOrderModel = ref(false)
     const toggleNotesModel = ref(false)
 
-    const getDeliveryProbability = (order) => {
-        // Ensure success rate is a number and remove '%' if present
-        let courier_success_rate =  order?.customer_report?.success_rate.replace('%', '')
-        const courierSuccessRate = parseFloat((courier_success_rate || 0))
+    const getDeliveryProbability = computed(() => {
+        let order = props.order
+        // Get success rate and ensure it's a valid number
+        let successRate = order?.customer_report?.success_rate;
+
+        if (isNaN(parseFloat(successRate))) {
+            successRate = '0'; // Default to 0% if it's an invalid value
+        }
+
+        // Remove '%' if present and parse it as a float
+        const courierSuccessRate = parseFloat(successRate.replace('%', '')) || 0;
 
         // Ensure fraud score is a number
         const systemFraudScore = parseFloat(order?.customer_custom_data?.fraud_score) || 0;
@@ -473,6 +480,6 @@
         // Ensure probability stays within 0-100%
         probability = Math.max(0, Math.min(probability * 100, 100));
 
-        return Math.round(probability); // Return probability as a rounded percentage
-    }
+        return Math.round(probability) || 'Unpredicted'; // Return probability as a rounded percentage
+    })
 </script>
