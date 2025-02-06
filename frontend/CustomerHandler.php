@@ -399,22 +399,6 @@ class CustomerHandler {
             $score += 2;
         }
     
-        // 3️⃣ **📧 Email & Phone Number Usage → Multiple accounts using the same info**
-        $duplicate_email = $this->check_duplicate_customer_data('email', $billing_email);
-        $duplicate_phone = $this->check_duplicate_customer_data('phone', $billing_phone);
-    
-        if ($duplicate_email >= 3) {
-            $score += 15;
-        } elseif ($duplicate_email >= 2) {
-            $score += 8;
-        }
-    
-        if ($duplicate_phone >= 3) {
-            $score += 15;
-        } elseif ($duplicate_phone >= 2) {
-            $score += 8;
-        }
-    
         // 4️⃣ **🛑 Blacklist Check → If customer email, phone, or IP is blacklisted**
         $totalBlacklistedRecord = $this->is_blacklisted($billing_phone, $billing_email, $customer_ip);
         if ($totalBlacklistedRecord) {
@@ -545,16 +529,6 @@ class CustomerHandler {
         }
     
         return count(wc_get_orders($args));
-    }
-
-    private function check_duplicate_customer_data($type, $value) {
-        global $wpdb;
-        $column = $type === 'email' ? 'email' : 'phone';
-    
-        return (int) $wpdb->get_var($wpdb->prepare(
-            "SELECT COUNT(*) FROM {$this->table_name} WHERE {$column} = %s",
-            $value
-        ));
     }
     
     private function is_blacklisted($phone, $email, $ip) {
